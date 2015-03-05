@@ -1,6 +1,10 @@
 package fonts;
 
+<<<<<<< HEAD:FontEditor/src/fonts/FontLetter.java
 import splines.RationalBezierCurve;
+=======
+import spbstu.cg.spline.RationalBezierCurve;
+>>>>>>> f0fe22a... MORE POINT CLASSES!!!! Alse Spline class added...:FontEditor/src/spbstu/cg/font/FontLetter.java
 
 import java.util.ArrayList;
 

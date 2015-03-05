@@ -9,16 +9,26 @@ import java.util.Vector;
  */
 /* TODO: implement class */
 public class Font {
-    private String name = "Default Font Name";
+    static final String DEFAULT_FONT_NAME = "Default Font Name";
+    private String name = DEFAULT_FONT_NAME;
     private ArrayList<FontLetter> letters;
 
-    Font(){}
-
-    public void saveFontToFile(String fileName) {}
+    Font(){
+    // TODO: implement
+    }
 
     public void addLetter(FontLetter letter){
         letters.add(letter);
     };
+
+    public FontLetter getLetter(int i) {
+        if(i < 0 || i > letters.size()-1)
+            return null;
+
+        return letters.get(i);
+    }
+
+    public int size() {return letters.size(); }
 
     public String getName() {
         return name;

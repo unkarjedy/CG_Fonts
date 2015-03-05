@@ -6,4 +6,12 @@ package splines;
 /* TODO: implement class */
 public class RationalBezierCurve {
 
+
+    public enum ControlPointType {
+        NO_CONTROLL_POINT,
+        CORNER,
+        CUSP,
+        SMOOTH,
+        SYMMETRICAL
+    }
 }

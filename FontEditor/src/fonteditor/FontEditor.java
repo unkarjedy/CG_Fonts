@@ -82,16 +82,16 @@ public class FontEditor extends JFrame {
     private void createMenuBar() {
         JMenuBar menubar = new JMenuBar();
 
-        ImageIcon iconNew = new ImageIcon("new.png");
-        ImageIcon iconOpen = new ImageIcon("open.png");
-        ImageIcon iconSave = new ImageIcon("save.png");
-        ImageIcon iconExit = new ImageIcon("exit.png");
+        ImageIcon iconNew = new ImageIcon("res/newFile.png");
+        ImageIcon iconOpen = new ImageIcon("res/openFile.png");
+        ImageIcon iconSave = new ImageIcon("res/saveFile.png");
+        ImageIcon iconExit = new ImageIcon("res/exit.png");
 
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
         JMenu newMenu = new JMenu(new MenuItemAction("New", iconNew, KeyEvent.VK_N));
-        JMenuItem newFontMi = new JMenuItem(new MenuItemAction("New Font Project", iconNew, KeyEvent.VK_F));
+        JMenuItem newFontMi = new JMenuItem(new MenuItemAction("New Font Project", iconNew, KeyEvent.VK_P));
         JMenuItem newLetterMi = new JMenuItem(new MenuItemAction("New Letter", iconNew, KeyEvent.VK_L));
         newMenu.add(newFontMi);
         newMenu.add(newLetterMi);
@@ -129,16 +129,13 @@ public class FontEditor extends JFrame {
 
         JToolBar toolbar = new JToolBar();
 
-        ImageIcon newi = new ImageIcon("res/item.png");
-        Image image = newi.getImage(); // transform it
-        Image newimg = image.getScaledInstance(15, 15,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way
-        newi = new ImageIcon(newimg);
-//        ImageIcon open = new ImageIcon("res/item.png");
-//        ImageIcon save = new ImageIcon("res/item.png");
+        ImageIcon iconNew = new ImageIcon("res/newFile.png");
+        ImageIcon iconOpen = new ImageIcon("res/openFile.png");
+        ImageIcon iconSave = new ImageIcon("res/saveFile.png");
 
-        JButton newb = new JButton(newi);
-        JButton openb = new JButton(newi);
-        JButton saveb = new JButton(newi);
+        JButton newb = new JButton(iconNew);
+        JButton openb = new JButton(iconOpen);
+        JButton saveb = new JButton(iconSave);
 
         toolbar.add(newb);
         toolbar.add(openb);

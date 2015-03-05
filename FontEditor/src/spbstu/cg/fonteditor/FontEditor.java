@@ -3,9 +3,15 @@ package fonteditor;
 /**
  * Created by user on 27.02.2015.
  */
+<<<<<<< HEAD:FontEditor/src/fonteditor/FontEditor.java
 import fonteditor.panels.ControlPanel;
 import fonteditor.panels.CurveEditorPanel;
 import fonteditor.panels.FontProjectsPanel;
+=======
+import spbstu.cg.fonteditor.view.ControlPanel;
+import spbstu.cg.fonteditor.view.LetterEditorPanel;
+import spbstu.cg.fonteditor.view.FontProjectsPanel;
+>>>>>>> 8ac496b... Some shit added:FontEditor/src/spbstu/cg/fonteditor/FontEditor.java
 
 import java.awt.*;
 import java.awt.event.*;
@@ -17,7 +23,7 @@ public class FontEditor extends JFrame {
     private JPopupMenu pmenu;
 
     FontProjectsPanel projectsPanel;
-    CurveEditorPanel curveEditorPanel;
+    LetterEditorPanel letterEditorPanel;
     ControlPanel controlPanel;
 
     public FontEditor() {
@@ -58,11 +64,11 @@ public class FontEditor extends JFrame {
     }
 
     private Component buildCurveEditorPanel() {
-        curveEditorPanel = new CurveEditorPanel();
+        letterEditorPanel = new LetterEditorPanel();
 
         JPanel wrapper = new JPanel(new BorderLayout());
         //wrapper.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.WEST);
-        wrapper.add(curveEditorPanel);
+        wrapper.add(letterEditorPanel);
         wrapper.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 
         return wrapper;

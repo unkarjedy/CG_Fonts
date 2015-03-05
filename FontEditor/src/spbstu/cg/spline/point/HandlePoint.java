@@ -1,4 +1,4 @@
-package spbstu.cg.splines;
+package spbstu.cg.spline.point;
 
 /**
  * Created by Egor Gorbunov on 05.03.2015.

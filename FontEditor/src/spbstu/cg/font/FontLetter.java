@@ -1,6 +1,6 @@
 package spbstu.cg.font;
 
-import spbstu.cg.splines.RationalBezierCurve;
+import spbstu.cg.spline.RationalBezierCurve;
 
 import java.util.ArrayList;
 

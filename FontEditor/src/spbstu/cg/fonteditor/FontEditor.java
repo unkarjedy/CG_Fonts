@@ -1,11 +1,11 @@
-package fonteditor;
+package spbstu.cg.fonteditor;
 
 /**
  * Created by user on 27.02.2015.
  */
-import fonteditor.panels.ControlPanel;
-import fonteditor.panels.CurveEditorPanel;
-import fonteditor.panels.FontProjectsPanel;
+import spbstu.cg.fonteditor.panels.ControlPanel;
+import spbstu.cg.fonteditor.panels.CurveEditorPanel;
+import spbstu.cg.fonteditor.panels.FontProjectsPanel;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,8 +1,6 @@
-package fonts;
+package spbstu.cg.font;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by user on 28.02.2015.

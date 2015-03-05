@@ -1,4 +1,4 @@
-package spbstu.cg.fonteditor.panels;
+package spbstu.cg.fonteditor.view;
 
 import javax.swing.*;
 import java.awt.*;

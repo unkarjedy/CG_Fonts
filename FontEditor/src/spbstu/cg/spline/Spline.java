@@ -16,7 +16,9 @@ import java.util.Iterator;
  */
 public class Spline implements Iterable<ControlPoint> {
     private static final short POINT_AVERAGE_CAPACITY = 20;
+
     ArrayList<ControlPoint> controlPoints;
+
 
     public Spline() {
         controlPoints = new ArrayList<ControlPoint>(POINT_AVERAGE_CAPACITY);

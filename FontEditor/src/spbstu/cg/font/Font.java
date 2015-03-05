@@ -9,17 +9,17 @@ import java.util.ArrayList;
 public class Font {
     static final String DEFAULT_FONT_NAME = "Default Font Name";
     private String name = DEFAULT_FONT_NAME;
-    private ArrayList<FontLetter> letters;
+    private ArrayList<Letter> letters;
 
     Font(){
     // TODO: implement
     }
 
-    public void addLetter(FontLetter letter){
+    public void addLetter(Letter letter){
         letters.add(letter);
     };
 
-    public FontLetter getLetter(int i) {
+    public Letter getLetter(int i) {
         if(i < 0 || i > letters.size()-1)
             return null;
 

@@ -1,7 +1,5 @@
 package spbstu.cg.spline.point;
 
-import spbstu.cg.spline.point.ControlPoint;
-
 /**
  * Created by Egor Gorbunov on 05.03.2015.
  * Email: egor_mailbox@ya.ru

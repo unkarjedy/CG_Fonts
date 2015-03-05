@@ -1,4 +1,4 @@
-package spbstu.cg.fonteditor.panels;
+package spbstu.cg.fonteditor.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,8 +6,8 @@ import java.awt.*;
 /**
  * Created by user on 28.02.2015.
  */
-public class CurveEditorPanel extends JPanel {
-    public CurveEditorPanel(){
+public class LetterEditorPanel extends JPanel {
+    public LetterEditorPanel(){
         super(new BorderLayout());
 
         JPanel verticalBoxPanel = new JPanel();

@@ -1,27 +1,19 @@
-package spbstu.cg.fonteditor;
-
-/**
- * Created by user on 27.02.2015.
- */
-
-import spbstu.cg.fonteditor.view.ControlPanel;
-import spbstu.cg.fonteditor.view.FontProjectsPanel;
-import spbstu.cg.fonteditor.view.LetterEditorPanel;
-
-import java.awt.*;
-import java.awt.event.*;
+package spbstu.cg.fonteditor.view;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 
-public class FontEditor extends JFrame {
-    private JPopupMenu pmenu;
+public class FontEditorView extends JFrame {
+    private FontProjectsPanel projectsPanel;
+    private LetterEditorView letterEditor;
+    private ControlPanel controlPanel;
 
-    FontProjectsPanel projectsPanel;
-    LetterEditorPanel letterEditorPanel;
-    ControlPanel controlPanel;
-
-    public FontEditor() {
+    public FontEditorView() {
         initUI();
     }
 
@@ -38,34 +30,31 @@ public class FontEditor extends JFrame {
 
 
         setTitle("Font Editor");
-        /* pack(); */
-        setSize(800, 400);
+        pack();
+        setSize(900, 600);
         setResizable(false);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-
 
     private Component buildFontProjectPanel() {
         //ImageIcon icon = new ImageIcon(getClass().getResource("simulator.png"));
         projectsPanel = new FontProjectsPanel();
 
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.EAST);
+        JSeparator sep = new JSeparator(JSeparator.VERTICAL);
+        sep.setForeground(Color.gray);
+        wrapper.add(sep, BorderLayout.EAST);
         wrapper.add(projectsPanel);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 3));
+
 
         return wrapper;
     }
 
     private Component buildCurveEditorPanel() {
-        letterEditorPanel = new LetterEditorPanel();
-
+        letterEditor = new LetterEditorView();
         JPanel wrapper = new JPanel(new BorderLayout());
-        //wrapper.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.WEST);
-        wrapper.add(letterEditorPanel);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
-
+        wrapper.add(letterEditor);
         return wrapper;
     }
 
@@ -73,15 +62,16 @@ public class FontEditor extends JFrame {
         controlPanel = new ControlPanel();
 
         JPanel wrapper = new JPanel(new BorderLayout());
-        wrapper.add(new JSeparator(JSeparator.VERTICAL), BorderLayout.WEST);
+        JSeparator sep = new JSeparator(JSeparator.VERTICAL);
+        sep.setForeground(Color.gray);
+        wrapper.add(sep, BorderLayout.WEST);
         wrapper.add(controlPanel);
-        wrapper.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 
         return wrapper;
     }
 
     private void createMenuBar() {
-        JMenuBar menubar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
         ImageIcon iconNew = new ImageIcon("res/newFile.png");
         ImageIcon iconOpen = new ImageIcon("res/openFile.png");
@@ -106,7 +96,7 @@ public class FontEditor extends JFrame {
         JMenuItem exitMi = new JMenuItem("Exit", iconExit);
         exitMi.setMnemonic(KeyEvent.VK_E);
         exitMi.setToolTipText("Exit application");
-        exitMi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+        exitMi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, InputEvent.CTRL_MASK));
 
         exitMi.addActionListener(new ActionListener() {
             @Override
@@ -121,26 +111,26 @@ public class FontEditor extends JFrame {
         fileMenu.addSeparator();
         fileMenu.add(exitMi);
 
-        menubar.add(fileMenu);
+        menuBar.add(fileMenu);
 
-        setJMenuBar(menubar);
+        setJMenuBar(menuBar);
     }
 
     private void createToolBars() {
 
         JToolBar toolbar = new JToolBar();
 
-        ImageIcon iconNew = new ImageIcon("res/newFile.png");
-        ImageIcon iconOpen = new ImageIcon("res/openFile.png");
-        ImageIcon iconSave = new ImageIcon("res/saveFile.png");
+        ImageIcon iconNew = new ImageIcon(this.getClass().getResource("/newFile.png").getFile());
+        ImageIcon iconOpen = new ImageIcon(this.getClass().getResource("/openFile.png").getFile());
+        ImageIcon iconSave = new ImageIcon(this.getClass().getResource("/saveFile.png").getFile());
 
-        JButton newb = new JButton(iconNew);
-        JButton openb = new JButton(iconOpen);
-        JButton saveb = new JButton(iconSave);
+        JButton buttonNew = new JButton(iconNew);
+        JButton buttonOpen = new JButton(iconOpen);
+        JButton buttonSave = new JButton(iconSave);
 
-        toolbar.add(newb);
-        toolbar.add(openb);
-        toolbar.add(saveb);
+        toolbar.add(buttonNew);
+        toolbar.add(buttonOpen);
+        toolbar.add(buttonSave);
 
 
 //        exitb.addActionListener(new ActionListener() {
@@ -169,14 +159,11 @@ public class FontEditor extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
+    public LetterEditorView getLetterEditor() {
+        return letterEditor;
+    }
 
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                FontEditor ex = new FontEditor();
-                ex.setVisible(true);
-            }
-        });
+    public ControlPanel getControlPanel() {
+        return controlPanel;
     }
 }

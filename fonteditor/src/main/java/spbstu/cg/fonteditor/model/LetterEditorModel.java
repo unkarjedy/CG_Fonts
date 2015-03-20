@@ -5,6 +5,8 @@ import spbstu.cg.fontcommons.*;
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.Point;
 
+import java.util.List;
+
 /**
  * Created by Egor on 06.03.2015.
  * Email: egor_mailbox@ya.ru
@@ -27,31 +29,57 @@ public class LetterEditorModel {
     private Spline activeSpline;
 
     /**
-     * Currently active point TODO: DO WE NEED IT?
+     * Currently active point
      */
     private Point activePoint = null;
 
+    /**
+     * Point under cursor
+     */
+    private Point underCursorPoint = null;
+
+
+    public LetterEditorModel() {
+        currentLetter = new Letter("Letter", 100, 100); // TODO: delete hardcode
+        activeSpline = new Spline();
+        currentLetter.addSpline(activeSpline);
+    }
+
     public void moveActivePoint(Point moveVector) {
         if (activePoint == null)
-            return; // TODO: new NullPointerException() would be better I think, but...
+            return;
 
         activePoint.move(moveVector);
+    }
+
+    /**
+     * Returns neares point (for now only Control Point) to given one
+     */
+    public Point findNearestPoint(Point p) {
+        for (ControlPoint point : activeSpline) {
+            if (PointUtils.getSquaredDist(point, p) < 10.0) {
+                return point;
+            }
+        }
+        return null;
     }
 
     /**
      * Method, which tries to find a point near given coordinates
      * and activates is (sets as an active point)
      * @param point
+     * @return false if no point activated
      */
-    public void activatePoint(Point point) {
+    public boolean activatePoint(Point point) {
         // TODO: implement
+        return false;
     }
 
 
     /**
      * Simply changes class of the active point
      *
-     * @param newPointType new type - the Class which must extend {@link spbstu.cg.spline.point.ControlPoint}.
+     * @param newPointType new type - the Class which must extend {@link spbstu.cg.fontcommons.point.ControlPoint}.
      */
     public void changeActivePointType(Class<? extends ControlPoint> newPointType) {
         if (activePoint == null)
@@ -66,5 +94,37 @@ public class LetterEditorModel {
         }
 
 
+    }
+
+    public void addControlPoint(ControlPoint point) {
+        activeSpline.addControlPoint(point);
+    }
+
+    /**
+     * Finds nearest point to cursor, returns true if it exists and
+     * mark that point as a underCursorPoint.
+     */
+    public boolean setCurrentCursorPos(Point pos) {
+        Point p = findNearestPoint(pos);
+        if (p != null) {
+            setUnderCursorPoint(p);
+            return true;
+        }
+        else {
+            setUnderCursorPoint(null);
+            return false;
+        }
+    }
+
+    public Point getUnderCursorPoint() {
+        return underCursorPoint;
+    }
+
+    public void setUnderCursorPoint(Point underCursorPoint) {
+        this.underCursorPoint = underCursorPoint;
+    }
+
+    public List<Spline> getSplines() {
+        return currentLetter.getSplines();
     }
 }

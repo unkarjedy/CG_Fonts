@@ -24,7 +24,8 @@ public class LetterEditorModel {
     private Letter currentLetter;
 
     /**
-     * Not yet completed spline
+     * Not yet completed spline, but it already added to currentLetter! (it just the last one
+     * in the list of splines of the currentLetter)
      */
     private Spline activeSpline;
 
@@ -45,6 +46,12 @@ public class LetterEditorModel {
         currentLetter.addSpline(activeSpline);
     }
 
+    /**
+     * Moves point underCursorPoint (which is supposed to reference the point, which is
+     * under users cursor) to new coordinates.
+     * @return true if underCursorPoint is not null (so the cursor is really points on some point)
+     *         false else
+     */
     public boolean moveUnderCursorPointTo(float x, float y) {
         if (underCursorPoint == null)
             return false;
@@ -70,9 +77,11 @@ public class LetterEditorModel {
      * and activates is (sets as an active point)
      * @return false if no point activated
      */
-    public boolean activatePoint(float x, float y) {
+    public Point activatePoint(float x, float y) {
         Point p = findNearestPoint(x, y);
-        return p != null;
+        if (p != null)
+            activePoint = p;
+        return p;
     }
 
 
@@ -85,15 +94,13 @@ public class LetterEditorModel {
         if (activePoint == null)
             throw new NullPointerException();
 
-        // TODO: Oh yeah, baby. Love reflection. Do we need this?
+        // TODO: Oh yeah, baby. Love reflection.
         try {
             activePoint = newPointType.getDeclaredConstructor(int.class, int.class).
                     newInstance(activePoint.getX(), activePoint.getY());
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Ffffuuuuuuu
         }
-
-
     }
 
     public void addControlPoint(ControlPoint point) {
@@ -120,5 +127,9 @@ public class LetterEditorModel {
 
     public List<Spline> getSplines() {
         return currentLetter.getSplines();
+    }
+
+    public void setActivePoint(Point activePoint) {
+        this.activePoint = activePoint;
     }
 }

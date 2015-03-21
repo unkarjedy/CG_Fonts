@@ -32,10 +32,10 @@ public class FontEditorController {
         letterEditor.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                boolean isPointPressed = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY()) != null;
-                if (!isPointPressed) {
+                Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
+                if (touchedPoint == null) {
                     if (SwingUtilities.isRightMouseButton(e)) {
-                        // TODO: code, which opens point settings on control panel
+                        // TODO: code, which finishes the spline
                     } else {
                         ControlPoint point = new CornerControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
@@ -43,6 +43,10 @@ public class FontEditorController {
                         view.getLetterEditor().setSplines(letterEditorModel.getSplines());
                         view.getLetterEditor().repaint();
                     }
+                } else {
+                    letterEditorModel.setActivePoint(touchedPoint);
+                    view.getLetterEditor().setActivePoint(touchedPoint);
+                    view.getLetterEditor().repaint();
                 }
 
             }

@@ -17,12 +17,14 @@ public class LetterEditorView extends JComponent {
     // state
     private Point pointUnderCursor;
     private List<Spline> splines;
+    private Point activePoint;
 
     public LetterEditorView(){
         bounds = null;
         g2D = null;
         pointUnderCursor = null;
         splines = null;
+        activePoint = null;
 
         JPanel verticalBoxPanel = new JPanel();
         verticalBoxPanel.setLayout(new BoxLayout(verticalBoxPanel, BoxLayout.Y_AXIS));
@@ -48,8 +50,11 @@ public class LetterEditorView extends JComponent {
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
 
+        if (activePoint != null) {
+            PointDrawer.drawActivePointCircle(activePoint, g2D);
+        }
         if (pointUnderCursor != null) {
-            PointDrawer.drawActiveCircle(pointUnderCursor, g2D);
+            PointDrawer.drawUnderCursorCircle(pointUnderCursor, g2D);
         }
         if (splines != null) {
             drawSplines();
@@ -86,5 +91,9 @@ public class LetterEditorView extends JComponent {
     private void setupGraphics(Graphics2D g2) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+    public void setActivePoint(Point activePoint) {
+        this.activePoint = activePoint;
     }
 }

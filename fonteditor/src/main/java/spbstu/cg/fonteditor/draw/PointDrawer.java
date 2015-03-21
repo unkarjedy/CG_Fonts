@@ -6,7 +6,6 @@ import spbstu.cg.fontcommons.point.Point;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by Egor Gorbunov on 20.03.2015.
@@ -17,7 +16,8 @@ public class PointDrawer {
     private static final Map<Class<? extends Point>, Integer> RADIUS_MAP;
     private static final Map<Class<? extends Point>, Color> COLOR_MAP;
     private static final int ACTIVE_CIRCLE_RADIUS_ADD = 4;
-    private static final Color ACTIVE_CIRCLE_COLOR = Color.red;
+    private static final Color UNDER_CURSOR_CIRCLE_COLOR = Color.red;
+    private static final Color ACTIVE_CIRCLE_COLOR = Color.green;
 
     private static final int NUMBER_OF_POINT_TYPES = 5;
     private static final int CONTROL_POINT_RADIUS = 4;
@@ -54,9 +54,17 @@ public class PointDrawer {
                 RADIUS_MAP.get(point.getClass()) * 2);
     }
 
-    public static void drawActiveCircle(final Point point, Graphics2D g2D) {
-        g2D.setColor(ACTIVE_CIRCLE_COLOR);
+    public static void drawUnderCursorCircle(final Point point, Graphics2D g2D) {
+        g2D.setColor(UNDER_CURSOR_CIRCLE_COLOR);
 
+
+        int radius = RADIUS_MAP.get(point.getClass()) + ACTIVE_CIRCLE_RADIUS_ADD;
+        g2D.fillOval(((int) point.getX()) - radius,
+                ((int) point.getY()) - radius, radius * 2, radius * 2);
+    }
+
+    public static void drawActivePointCircle(final Point point, Graphics2D g2D) {
+        g2D.setColor(ACTIVE_CIRCLE_COLOR);
 
         int radius = RADIUS_MAP.get(point.getClass()) + ACTIVE_CIRCLE_RADIUS_ADD;
         g2D.fillOval(((int) point.getX()) - radius,

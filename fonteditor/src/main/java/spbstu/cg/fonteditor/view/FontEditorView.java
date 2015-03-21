@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor.view;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +13,9 @@ public class FontEditorView extends JFrame {
     private FontProjectsPanel projectsPanel;
     private LetterEditorView letterEditor;
     private ControlPanel controlPanel;
+    private JPanel statusBar;
+    private JLabel statusBarText;
+
 
     public FontEditorView() {
         initUI();
@@ -20,6 +24,7 @@ public class FontEditorView extends JFrame {
     private void initUI() {
         createMenuBar();
         createToolBars();
+        createStatusBar();
 
         JSeparator separator = new JSeparator();
         separator.setForeground(Color.gray);
@@ -36,6 +41,22 @@ public class FontEditorView extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
+
+    private void createStatusBar() {
+        statusBar = new JPanel();
+        statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
+        this.add(statusBar, BorderLayout.SOUTH);
+        statusBar.setPreferredSize(new Dimension(this.getWidth(), 16));
+        statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
+        statusBarText = new JLabel("...");
+        statusBarText.setHorizontalAlignment(SwingConstants.LEFT);
+        statusBar.add(statusBarText);
+    }
+
+    public void setStatusBarMessage(String s) {
+        statusBarText.setText(s);
+    }
+
 
     private Component buildFontProjectPanel() {
         //ImageIcon icon = new ImageIcon(getClass().getResource("simulator.png"));

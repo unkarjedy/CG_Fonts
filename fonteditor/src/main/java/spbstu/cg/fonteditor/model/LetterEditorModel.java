@@ -45,19 +45,20 @@ public class LetterEditorModel {
         currentLetter.addSpline(activeSpline);
     }
 
-    public void moveActivePoint(Point moveVector) {
-        if (activePoint == null)
-            return;
+    public boolean moveUnderCursorPointTo(float x, float y) {
+        if (underCursorPoint == null)
+            return false;
 
-        activePoint.move(moveVector);
+        underCursorPoint.move(x - underCursorPoint.getX(), y - underCursorPoint.getY());
+        return true;
     }
 
     /**
      * Returns neares point (for now only Control Point) to given one
      */
-    public Point findNearestPoint(Point p) {
+    public Point findNearestPoint(float x, float y) {
         for (ControlPoint point : activeSpline) {
-            if (PointUtils.getSquaredDist(point, p) < 10.0) {
+            if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < 10.0) {
                 return point;
             }
         }
@@ -67,12 +68,11 @@ public class LetterEditorModel {
     /**
      * Method, which tries to find a point near given coordinates
      * and activates is (sets as an active point)
-     * @param point
      * @return false if no point activated
      */
-    public boolean activatePoint(Point point) {
-        // TODO: implement
-        return false;
+    public boolean activatePoint(float x, float y) {
+        Point p = findNearestPoint(x, y);
+        return p != null;
     }
 
 
@@ -104,16 +104,10 @@ public class LetterEditorModel {
      * Finds nearest point to cursor, returns true if it exists and
      * mark that point as a underCursorPoint.
      */
-    public boolean setCurrentCursorPos(Point pos) {
-        Point p = findNearestPoint(pos);
-        if (p != null) {
-            setUnderCursorPoint(p);
-            return true;
-        }
-        else {
-            setUnderCursorPoint(null);
-            return false;
-        }
+    public Point setCurrentCursorPos(float x, float y) {
+        Point p = findNearestPoint(x, y);
+        setUnderCursorPoint(p);
+        return p;
     }
 
     public Point getUnderCursorPoint() {

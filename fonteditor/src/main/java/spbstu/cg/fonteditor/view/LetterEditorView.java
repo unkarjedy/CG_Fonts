@@ -11,9 +11,19 @@ import java.util.List;
 
 
 public class LetterEditorView extends JComponent {
-    Rectangle bounds;
+    private Rectangle bounds;
+    private Graphics2D g2D;
+
+    // state
+    private Point pointUnderCursor;
+    private List<Spline> splines;
+
     public LetterEditorView(){
         bounds = null;
+        g2D = null;
+        pointUnderCursor = null;
+        splines = null;
+
         JPanel verticalBoxPanel = new JPanel();
         verticalBoxPanel.setLayout(new BoxLayout(verticalBoxPanel, BoxLayout.Y_AXIS));
 
@@ -32,35 +42,49 @@ public class LetterEditorView extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2D = (Graphics2D) g;
+        g2D = (Graphics2D) g;
+        setupGraphics(g2D);
         g2D.setColor(Color.white);
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
+
+        if (pointUnderCursor != null) {
+            PointDrawer.drawActiveCircle(pointUnderCursor, g2D);
+        }
+        if (splines != null) {
+            drawSplines();
+        }
     }
 
-    public void drawPoint(ControlPoint point) {
-        PointDrawer.draw(point, (Graphics2D) this.getGraphics());
+    public void setPointUnderCursor(Point p) {
+        pointUnderCursor = p;
     }
 
-    public void activate(Point p) {
-        if (p == null)
-            return;
-        PointDrawer.drawActiveCircle(p, (Graphics2D) this.getGraphics());
+    public void setSplines(List<Spline> splines) {
+        this.splines = splines;
     }
 
-    public void reDrawSplines(List<Spline> splines) {
-        super.update(getGraphics());
+    @Override
+    public void repaint() {
+        super.repaint();
+    }
 
+    public void drawSplines() {
         for (Spline spline : splines) {
             Point prev = null;
             for (ControlPoint point : spline) {
-                PointDrawer.draw(point, (Graphics2D) super.getGraphics());
+                PointDrawer.draw(point, g2D);
                 if (prev != null) {
-                    (getGraphics()).drawLine((int) point.getX(),
+                    g2D.drawLine((int) point.getX(),
                             (int) point.getY(), (int) prev.getX(), (int) prev.getY());
                 }
                 prev = point;
             }
         }
+    }
+
+    private void setupGraphics(Graphics2D g2) {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
     }
 }

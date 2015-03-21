@@ -14,9 +14,14 @@ public class Point {
         this.y = y;
     }
 
-    public void move(Point moveVector) {
-        x += moveVector.getX();
-        y += moveVector.getY();
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void move(float dx, float dy) {
+        x += dx;
+        y += dy;
     }
 
     public float getX() {

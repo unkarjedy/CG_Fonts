@@ -32,8 +32,8 @@ public class HandlePoint extends Point {
     }
 
     @Override
-    public void move(Point moveVec) {
-        super.move(moveVec);
+    public void move(float dx, float dy) {
+        super.move(dx, dy);
         controlPoint.handlePointMoved(index);
     }
 }

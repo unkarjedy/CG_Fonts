@@ -7,6 +7,7 @@ import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.FontEditorView;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 
+import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -31,16 +32,24 @@ public class FontEditorController {
         letterEditor.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ControlPoint p = new CornerControlPoint(e.getX(), e.getY());
-                boolean isActivated = letterEditorModel.activatePoint(p);
-                if (!isActivated) {
-                    letterEditorModel.addControlPoint(p);
-                    view.getLetterEditor().drawPoint(p);
+                boolean isPointPressed = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY()) != null;
+                if (!isPointPressed) {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        // TODO: code, which opens point settings on control panel
+                    } else {
+                        ControlPoint point = new CornerControlPoint(e.getX(), e.getY());
+                        letterEditorModel.addControlPoint(point);
+                        view.getLetterEditor().setPointUnderCursor(point);
+                        view.getLetterEditor().setSplines(letterEditorModel.getSplines());
+                        view.getLetterEditor().repaint();
+                    }
                 }
+
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
+
             }
 
             @Override
@@ -63,20 +72,18 @@ public class FontEditorController {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-
+                if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY()))
+                    view.getLetterEditor().repaint();
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                boolean needReDraw = letterEditorModel.getUnderCursorPoint() != null;
-                boolean isPoint = letterEditorModel.setCurrentCursorPos(new Point(e.getX(), e.getY()));
-                if (isPoint) {
-                    view.getLetterEditor().activate(letterEditorModel.getUnderCursorPoint());
+                Point prevPoint = letterEditorModel.getUnderCursorPoint();
+                Point cur = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
+                if (cur != prevPoint) {
+                    view.getLetterEditor().setPointUnderCursor(cur);
+                    view.getLetterEditor().repaint();
                 }
-                needReDraw = needReDraw != isPoint;
-
-                if (needReDraw)
-                    view.getLetterEditor().reDrawSplines(letterEditorModel.getSplines());
             }
         });
     }

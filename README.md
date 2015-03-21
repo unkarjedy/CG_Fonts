@@ -31,4 +31,7 @@ CG lab1
 Москва. ДИАЛОГ-МИФИ. 1996. 
 2.	https://ru.wikipedia.org/wiki/TrueType
 
+# Current state:
+![alt tag](http://tinyurl.com/n2ndrty)
+
 

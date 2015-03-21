@@ -25,19 +25,6 @@ public class LetterEditorView extends JComponent {
         pointUnderCursor = null;
         splines = null;
         activePoint = null;
-
-        JPanel verticalBoxPanel = new JPanel();
-        verticalBoxPanel.setLayout(new BoxLayout(verticalBoxPanel, BoxLayout.Y_AXIS));
-
-        JLabel projectNameLabel = new JLabel("Spline Editor");
-        projectNameLabel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
-        verticalBoxPanel.add(projectNameLabel);
-
-        JSeparator separator = new JSeparator();
-        separator.setForeground(Color.gray);
-        verticalBoxPanel.add(separator);
-
-        add(verticalBoxPanel, BorderLayout.NORTH);
     }
 
     @Override
@@ -61,19 +48,6 @@ public class LetterEditorView extends JComponent {
         }
     }
 
-    public void setPointUnderCursor(Point p) {
-        pointUnderCursor = p;
-    }
-
-    public void setSplines(List<Spline> splines) {
-        this.splines = splines;
-    }
-
-    @Override
-    public void repaint() {
-        super.repaint();
-    }
-
     public void drawSplines() {
         for (Spline spline : splines) {
             Point prev = null;
@@ -88,12 +62,22 @@ public class LetterEditorView extends JComponent {
         }
     }
 
-    private void setupGraphics(Graphics2D g2) {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+    public void setPointUnderCursor(Point p) {
+        pointUnderCursor = p;
+    }
+
+    public void setSplines(List<Spline> splines) {
+        this.splines = splines;
     }
 
     public void setActivePoint(Point activePoint) {
         this.activePoint = activePoint;
     }
+
+    private void setupGraphics(Graphics2D g2) {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+
 }

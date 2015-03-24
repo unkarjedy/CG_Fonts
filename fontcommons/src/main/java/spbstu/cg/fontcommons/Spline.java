@@ -1,6 +1,7 @@
 package spbstu.cg.fontcommons;
 
 import spbstu.cg.fontcommons.point.ControlPoint;
+import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 
 import java.util.ArrayList;
@@ -17,7 +18,18 @@ import java.util.List;
  * to describe a point on the Bézier Curve.
  */
 public class Spline implements Iterable<ControlPoint> {
-    private static final short POINT_AVERAGE_CAPACITY = 20;
+    private static final short POINT_AVERAGE_CAPACITY = 30;
+
+    /**
+     * Main array. It contains control points {@link spbstu.cg.fontcommons.point.ControlPoint}.
+     * There is a contract on how points are stored, because later we need to build a Bezier curves
+     * on that points, so:
+     *      1) array is ordered, so every Bezier curve must be built on two neighboring control points
+     *      2) handle points of every control point are ordered too. Consider 2 control points (a) and (b), they
+     *         has ordered pairs of handle points: (a): a_h1, a_h2; (b): b_h1, b_h2
+     *         to build curve on (a) and (b) you need to use that ordered fourth: (a, a_h2, b_h1, b). But point a_h1
+     *         is related to previous Bezier curve and b_h2 related to next one and so on.
+     */
     private ArrayList<ControlPoint> controlPoints;
 
 
@@ -26,7 +38,46 @@ public class Spline implements Iterable<ControlPoint> {
     }
 
     public void addControlPoint(ControlPoint point) {
+        final float COEF = 1 / 5.0f;
         controlPoints.add(point);
+
+        // adding h1 and h2 handle points for the curve (prev, h1, h2, cur), cur - last added point.
+        if (controlPoints.size() != 1) {
+            ControlPoint prev = controlPoints.get(controlPoints.size() - 2);
+            float initDist = (float) Math.sqrt(PointUtils.getSquaredDist(prev, point));
+
+            point.addHandlePoint(new Point(point.getX() + (prev.getX() - point.getX()) * COEF,
+                    point.getY() + (prev.getY() - point.getY()) * COEF), 0);
+            prev.addHandlePoint(new Point(prev.getX() + (point.getX() - prev.getX()) * COEF,
+                    prev.getY() + (point.getY() - prev.getY()) * COEF), 1);
+            point.handlePointMoved(0);
+            prev.handlePointMoved(1);
+
+        }
+    }
+
+    /**
+     * Simply changes class of point at given index
+     *
+     * @param newPointType new type - the Class which must extend {@link spbstu.cg.fontcommons.point.ControlPoint}.
+     */
+    public void changePointType(int index, Class<? extends ControlPoint> newPointType) {
+        if (index < 0 || index >= controlPoints.size())
+            throw new IllegalArgumentException();
+
+        ControlPoint point = controlPoints.get(index);
+
+        // TODO: Oh yeah, baby. Love reflection.
+        try {
+            ControlPoint newPoint = newPointType.getDeclaredConstructor(int.class, int.class).
+                    newInstance(point.getX(), point.getY());
+            int i = 0;
+            for (HandlePoint handlePoint : point.getHandlePoints()) {
+                newPoint.addHandlePoint(handlePoint, i++);
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Ffffuuuuuuu
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package spbstu.cg.fonteditor.view;
 
 import spbstu.cg.fontcommons.Spline;
 import spbstu.cg.fontcommons.point.ControlPoint;
+import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.draw.PointDrawer;
 
@@ -11,6 +12,11 @@ import java.util.List;
 
 
 public class LetterEditorView extends JComponent {
+    private static final Stroke DASHED_STROKE = new BasicStroke(0.8f, BasicStroke.CAP_BUTT,
+            BasicStroke.JOIN_BEVEL, 0, new float[]{5}, 0);
+    private static final Stroke SIMPLE_SOLID_STROKE = new BasicStroke(1.0f, BasicStroke.CAP_SQUARE,
+            BasicStroke.JOIN_MITER, 10.0f);
+
     private Rectangle bounds;
     private Graphics2D g2D;
 
@@ -51,13 +57,46 @@ public class LetterEditorView extends JComponent {
     public void drawSplines() {
         for (Spline spline : splines) {
             Point prev = null;
+            Point l = null, r = null;
+
+            // drawing handle points and segments (curves...)
             for (ControlPoint point : spline) {
-                PointDrawer.draw(point, g2D);
+                HandlePoint[] hps = point.getHandlePoints();
+                if (hps != null) {
+                    for (int i = 0; i < hps.length; ++i) {
+                        if (hps[i] == null)
+                            continue;
+                        if (pointUnderCursor == hps[i]) {
+                            if (i == 0) {
+                                l = prev;
+                                r = point;
+                            } else {
+                                l = point;
+                            }
+                        }
+                        g2D.setColor(Color.black);
+                        g2D.setStroke(DASHED_STROKE);
+                        g2D.drawLine((int) point.getX(), (int) point.getY(),
+                                (int) hps[i].getX(), (int) hps[i].getY());
+                        PointDrawer.draw(hps[i], g2D);
+                    }
+                }
+
                 if (prev != null) {
-                    g2D.drawLine((int) point.getX(),
-                            (int) point.getY(), (int) prev.getX(), (int) prev.getY());
+                    g2D.setStroke(SIMPLE_SOLID_STROKE);
+                    g2D.setColor(Color.black);
+                    if ((l == prev && r == point) || prev == l) {
+                        g2D.setColor(Color.red);
+                    }
+                    g2D.drawLine((int) point.getX(), (int) point.getY(),
+                            (int) prev.getX(), (int) prev.getY());
                 }
                 prev = point;
+            }
+
+            // drawing control points to be above segments...
+            for (ControlPoint point : spline) {
+                PointDrawer.draw(point, g2D);
             }
         }
     }

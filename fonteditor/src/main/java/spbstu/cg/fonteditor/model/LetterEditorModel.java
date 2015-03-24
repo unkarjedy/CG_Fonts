@@ -3,6 +3,7 @@ package spbstu.cg.fonteditor.model;
 import spbstu.cg.font.Letter;
 import spbstu.cg.fontcommons.*;
 import spbstu.cg.fontcommons.point.ControlPoint;
+import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 
 import java.util.List;
@@ -30,14 +31,19 @@ public class LetterEditorModel {
     private Spline activeSpline;
 
     /**
-     * Currently active point
+     * Currently active point and it's index in current spline
      */
     private Point activePoint = null;
+    private int activePointIndex = -1;
 
     /**
      * Point under cursor
      */
     private Point underCursorPoint = null;
+    private int touchedControlPointIndex = -1; // TODO: I don't like this
+
+
+
 
 
     public LetterEditorModel() {
@@ -60,47 +66,11 @@ public class LetterEditorModel {
         return true;
     }
 
-    /**
-     * Returns neares point (for now only Control Point) to given one
-     */
-    public Point findNearestPoint(float x, float y) {
-        for (ControlPoint point : activeSpline) {
-            if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < 10.0) {
-                return point;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Method, which tries to find a point near given coordinates
-     * and activates is (sets as an active point)
-     * @return false if no point activated
-     */
-    public Point activatePoint(float x, float y) {
-        Point p = findNearestPoint(x, y);
-        if (p != null)
-            activePoint = p;
-        return p;
-    }
-
-
-    /**
-     * Simply changes class of the active point
-     *
-     * @param newPointType new type - the Class which must extend {@link spbstu.cg.fontcommons.point.ControlPoint}.
-     */
     public void changeActivePointType(Class<? extends ControlPoint> newPointType) {
         if (activePoint == null)
             throw new NullPointerException();
 
-        // TODO: Oh yeah, baby. Love reflection.
-        try {
-            activePoint = newPointType.getDeclaredConstructor(int.class, int.class).
-                    newInstance(activePoint.getX(), activePoint.getY());
-        } catch (Exception e) {
-            e.printStackTrace(); // Ffffuuuuuuu
-        }
+        activeSpline.changePointType(activePointIndex, newPointType);
     }
 
     public void addControlPoint(ControlPoint point) {
@@ -121,15 +91,43 @@ public class LetterEditorModel {
         return underCursorPoint;
     }
 
-    public void setUnderCursorPoint(Point underCursorPoint) {
-        this.underCursorPoint = underCursorPoint;
-    }
-
     public List<Spline> getSplines() {
         return currentLetter.getSplines();
     }
 
-    public void setActivePoint(Point activePoint) {
-        this.activePoint = activePoint;
+    public void activateUnderCursorPoint() {
+        this.activePoint = underCursorPoint;
+        activePointIndex = touchedControlPointIndex;
     }
+
+    private void setUnderCursorPoint(Point underCursorPoint) {
+        this.underCursorPoint = underCursorPoint;
+        if (underCursorPoint == null)
+            touchedControlPointIndex = -1;
+    }
+
+    /**
+     * Returns neares point (for now only Control Point) to given one
+     */
+    private Point findNearestPoint(float x, float y) {
+        touchedControlPointIndex = -1;
+        int i = 0;
+        for (ControlPoint point : activeSpline) {
+            touchedControlPointIndex = i++;
+            if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < 10.0) {
+                return point;
+            }
+            if (point.getHandlePoints() != null) {
+                for (HandlePoint hp : point.getHandlePoints()) {
+                    if (hp == null)
+                        continue;
+                    if (PointUtils.getSquaredDist(hp.getX(), hp.getY(), x, y) < 10.0) {
+                        return hp;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 }

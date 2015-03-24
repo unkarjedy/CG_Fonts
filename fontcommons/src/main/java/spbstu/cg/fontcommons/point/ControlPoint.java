@@ -15,17 +15,12 @@ public abstract class ControlPoint extends Point {
         handlePoints = null;
     }
 
-    public void addHandlePoint(Point point) {
+    public void addHandlePoint(Point point, int index) {
         if (handlePoints == null)
             handlePoints = new HandlePoint[MAX_HANDLE_POINT_NUMBER];
 
-        assert handlePoints[1] == null; // first point may not be null, but second must, because it's bad to
-                                        // overwrite already existing one, i think
-
-        if (handlePoints[0] == null)
-            handlePoints[0] = new HandlePoint(point.getX(), point.getY(), this, 0);
-        else
-            handlePoints[1] = new HandlePoint(point.getX(), point.getY(), this, 1);
+        handlePoints[index] = new HandlePoint(point.getX(), point.getY(), this, index);
+        handlePointMoved(index);
     }
 
     /**

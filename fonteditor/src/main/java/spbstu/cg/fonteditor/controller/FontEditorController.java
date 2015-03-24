@@ -2,6 +2,7 @@ package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.CornerControlPoint;
+import spbstu.cg.fontcommons.point.CurveControlPoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.FontEditorView;
@@ -37,14 +38,15 @@ public class FontEditorController {
                     if (SwingUtilities.isRightMouseButton(e)) {
                         // TODO: code, which finishes the spline
                     } else {
-                        ControlPoint point = new CornerControlPoint(e.getX(), e.getY());
+                        ControlPoint point = new CurveControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
+
                         view.getLetterEditor().setPointUnderCursor(point);
                         view.getLetterEditor().setSplines(letterEditorModel.getSplines());
                         view.getLetterEditor().repaint();
                     }
                 } else {
-                    letterEditorModel.setActivePoint(touchedPoint);
+                    letterEditorModel.activateUnderCursorPoint();
                     view.getLetterEditor().setActivePoint(touchedPoint);
                     view.getLetterEditor().repaint();
                 }

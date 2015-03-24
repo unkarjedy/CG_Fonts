@@ -8,7 +8,7 @@ package spbstu.cg.fontcommons.point;
  * Control points with 2 handle points, which positioned on the same line
  * and on different sides of corner point
  */
-public class SmoothControlPoint extends ControlPoint {
+public class SmoothControlPoint extends CurveControlPoint {
     public SmoothControlPoint(float x, float y) {
         super(x, y);
     }

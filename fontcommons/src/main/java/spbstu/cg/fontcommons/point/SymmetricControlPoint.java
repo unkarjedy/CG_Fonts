@@ -5,11 +5,11 @@ package spbstu.cg.fontcommons.point;
  * Email: egor_mailbox@ya.ru
  * Github username: egorbunov
  *
- * The same as {@link spbstu.cg.spline.point.SmoothControlPoint} (maybe we need some INHERITANCE!!!! here)
+ * The same as {@link spbstu.cg.fontcommons.point.SmoothControlPoint} (maybe we need some INHERITANCE!!!! here)
  * but handle points are also have same distance to control point
  */
 
-public class SymmetricControlPoint extends ControlPoint {
+public class SymmetricControlPoint extends CurveControlPoint {
     public SymmetricControlPoint(float x, float y) {
         super(x, y);
     }

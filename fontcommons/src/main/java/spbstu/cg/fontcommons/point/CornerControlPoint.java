@@ -13,13 +13,8 @@ public class CornerControlPoint extends ControlPoint {
         super(x, y);
     }
 
-    /**
-     *
-     */
     @Override
-    public void addHandlePoint(Point point) {
-        throw new UnsupportedOperationException();
-    }
+    public void addHandlePoint(Point point, int index) {}
 
     @Override
     public void handlePointMoved(int index) {}

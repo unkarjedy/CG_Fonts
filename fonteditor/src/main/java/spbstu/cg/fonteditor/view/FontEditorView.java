@@ -37,7 +37,7 @@ public class FontEditorView extends JFrame {
         setTitle("Font Editor");
         pack();
         setSize(900, 600);
-        setResizable(false);
+        setResizable(true);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }

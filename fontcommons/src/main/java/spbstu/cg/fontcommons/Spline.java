@@ -44,7 +44,6 @@ public class Spline implements Iterable<ControlPoint> {
         // adding h1 and h2 handle points for the curve (prev, h1, h2, cur), cur - last added point.
         if (controlPoints.size() != 1) {
             ControlPoint prev = controlPoints.get(controlPoints.size() - 2);
-            float initDist = (float) Math.sqrt(PointUtils.getSquaredDist(prev, point));
 
             point.addHandlePoint(new Point(point.getX() + (prev.getX() - point.getX()) * COEF,
                     point.getY() + (prev.getY() - point.getY()) * COEF), 0);
@@ -83,5 +82,9 @@ public class Spline implements Iterable<ControlPoint> {
     @Override
     public Iterator<ControlPoint> iterator() {
         return controlPoints.iterator();
+    }
+
+    public List<ControlPoint> getControlPoints() {
+        return controlPoints;
     }
 }

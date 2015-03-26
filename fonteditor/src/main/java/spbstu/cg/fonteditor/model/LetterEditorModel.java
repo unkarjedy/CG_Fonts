@@ -5,6 +5,7 @@ import spbstu.cg.fontcommons.*;
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fonteditor.Consts;
 
 import java.util.List;
 
@@ -42,14 +43,15 @@ public class LetterEditorModel {
     private Point underCursorPoint = null;
     private int touchedControlPointIndex = -1; // TODO: I don't like this
 
-
-
+    private void activateAndAddNewSpline() {
+        activeSpline = new Spline();
+        currentLetter.addSpline(activeSpline);
+    }
 
 
     public LetterEditorModel() {
         currentLetter = new Letter("Letter", 100, 100); // TODO: delete hardcode
-        activeSpline = new Spline();
-        currentLetter.addSpline(activeSpline);
+        activateAndAddNewSpline();
     }
 
     /**
@@ -75,6 +77,27 @@ public class LetterEditorModel {
 
     public void addControlPoint(ControlPoint point) {
         activeSpline.addControlPoint(point);
+    }
+
+    /**
+     * Tries to end currently edited spline. It's okay if
+     * under cursor point is the first point of the spline.
+     * @return true if spline ended
+     */
+    public boolean endCurrentSpline() {
+        if (activeSpline.getControlPoints() == null) {
+            return false;
+        }
+        if (activeSpline.getControlPoints().size() == 0) {
+            return false;
+        }
+        if (underCursorPoint == activeSpline.getControlPoints().get(0)) {
+            activeSpline.addControlPoint(activeSpline.getControlPoints().get(0));
+            activeSpline = null;
+            activateAndAddNewSpline();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -110,19 +133,21 @@ public class LetterEditorModel {
      * Returns neares point (for now only Control Point) to given one
      */
     private Point findNearestPoint(float x, float y) {
-        touchedControlPointIndex = -1;
-        int i = 0;
-        for (ControlPoint point : activeSpline) {
-            touchedControlPointIndex = i++;
-            if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < 10.0) {
-                return point;
-            }
-            if (point.getHandlePoints() != null) {
-                for (HandlePoint hp : point.getHandlePoints()) {
-                    if (hp == null)
-                        continue;
-                    if (PointUtils.getSquaredDist(hp.getX(), hp.getY(), x, y) < 10.0) {
-                        return hp;
+        for (Spline spline : currentLetter.getSplines()) {
+            touchedControlPointIndex = -1;
+            int i = 0;
+            for (ControlPoint point : spline) {
+                touchedControlPointIndex = i++;
+                if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Consts.DISTANCE_EPS) {
+                    return point;
+                }
+                if (point.getHandlePoints() != null) {
+                    for (HandlePoint hp : point.getHandlePoints()) {
+                        if (hp == null)
+                            continue;
+                        if (PointUtils.getSquaredDist(hp.getX(), hp.getY(), x, y) < Consts.DISTANCE_EPS) {
+                            return hp;
+                        }
                     }
                 }
             }

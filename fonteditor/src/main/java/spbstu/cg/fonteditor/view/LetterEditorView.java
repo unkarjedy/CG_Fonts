@@ -8,6 +8,7 @@ import spbstu.cg.fonteditor.draw.PointDrawer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.util.List;
 
 
@@ -56,7 +57,7 @@ public class LetterEditorView extends JComponent {
 
     public void drawSplines() {
         for (Spline spline : splines) {
-            Point prev = null;
+            ControlPoint prev = null;
             Point l = null, r = null;
 
             // drawing handle points and segments (curves...)
@@ -88,8 +89,24 @@ public class LetterEditorView extends JComponent {
                     if ((l == prev && r == point) || prev == l) {
                         g2D.setColor(Color.red);
                     }
-                    g2D.drawLine((int) point.getX(), (int) point.getY(),
-                            (int) prev.getX(), (int) prev.getY());
+
+                    // TEMP CODE TODO: DELETE
+                    Path2D.Float path = new Path2D.Float();
+                    path.moveTo(prev.getX(), prev.getY());
+                    HandlePoint h1 = null;
+                    if (prev.getHandlePoints() != null)
+                        h1 = prev.getHandlePoints()[1];
+                    HandlePoint h2 = point.getHandlePoints()[0];
+                    if (point.getHandlePoints() != null) {
+                        h2 = point.getHandlePoints()[0];
+                    }
+                    if (h1 != null && h2 != null) {
+                        path.curveTo(h1.getX(), h1.getY(), h2.getX(), h2.getY(), point.getX(), point.getY());
+                        g2D.draw(path);
+                    } else {
+                        g2D.drawLine((int) point.getX(), (int) point.getY(),
+                                (int) prev.getX(), (int) prev.getY());
+                    }
                 }
                 prev = point;
             }

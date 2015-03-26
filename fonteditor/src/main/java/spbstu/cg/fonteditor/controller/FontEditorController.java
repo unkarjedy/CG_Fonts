@@ -1,10 +1,10 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.ControlPoint;
-import spbstu.cg.fontcommons.point.CornerControlPoint;
 import spbstu.cg.fontcommons.point.CurveControlPoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
+import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.FontEditorView;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 
@@ -17,8 +17,10 @@ import java.awt.event.MouseMotionListener;
  * Created by Egor on 20.03.2015.
  * Email: egor-mailbox@ya.ru
  * Github username: egorbunov
+ *
+ * Main app controller.
  */
-public class FontEditorController {
+public class FontEditorController implements ControlPanelListener{
     FontEditorView view;
     LetterEditorModel letterEditorModel;
 
@@ -34,21 +36,26 @@ public class FontEditorController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
-                if (touchedPoint == null) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        // TODO: code, which finishes the spline
-                    } else {
-                        ControlPoint point = new CurveControlPoint(e.getX(), e.getY());
-                        letterEditorModel.addControlPoint(point);
+                if (touchedPoint == null && SwingUtilities.isLeftMouseButton(e)) {
+                    // creating new control point
+                    ControlPoint point = new CurveControlPoint(e.getX(), e.getY());
+                    letterEditorModel.addControlPoint(point);
 
-                        view.getLetterEditor().setPointUnderCursor(point);
-                        view.getLetterEditor().setSplines(letterEditorModel.getSplines());
+                    view.getLetterEditor().setPointUnderCursor(point);
+                    view.getLetterEditor().setSplines(letterEditorModel.getSplines());
+                    view.getLetterEditor().repaint();
+                } else {
+                    if (SwingUtilities.isRightMouseButton(e)) {
+                        if (letterEditorModel.endCurrentSpline()) {
+                            view.setStatusBarMessage("Spline ended...");
+                        } else {
+                            view.setStatusBarMessage("Can't end current spline in that point!");
+                        }
+                    } else if (SwingUtilities.isLeftMouseButton(e)) {
+                        letterEditorModel.activateUnderCursorPoint();
+                        view.getLetterEditor().setActivePoint(touchedPoint);
                         view.getLetterEditor().repaint();
                     }
-                } else {
-                    letterEditorModel.activateUnderCursorPoint();
-                    view.getLetterEditor().setActivePoint(touchedPoint);
-                    view.getLetterEditor().repaint();
                 }
 
             }
@@ -94,4 +101,8 @@ public class FontEditorController {
         });
     }
 
+    @Override
+    public Class<? extends Point> pointTypeChanged() {
+        return null;
+    }
 }

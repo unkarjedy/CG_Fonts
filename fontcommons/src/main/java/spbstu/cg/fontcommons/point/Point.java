@@ -6,8 +6,8 @@ package spbstu.cg.fontcommons.point;
  * Github username: egorbunov
  */
 public class Point {
-    private float x;
-    private float y;
+    protected float x;
+    protected float y;
 
     public Point(float x, float y) {
         this.x = x;

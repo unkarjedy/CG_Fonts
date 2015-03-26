@@ -1,5 +1,7 @@
 package spbstu.cg.fontcommons.point;
 
+import spbstu.cg.fontcommons.PointUtils;
+
 /**
  * Created by Egor Gorbunov on 05.03.2015.
  * Email: egor_mailbox@ya.ru
@@ -16,6 +18,12 @@ public class SymmetricControlPoint extends CurveControlPoint {
 
     @Override
     public void handlePointMoved(int index) {
-        // TODO: implement me
+        HandlePoint hp1 = handlePoints[index]; // changed point
+        HandlePoint hp2 = handlePoints[1 - index];
+
+        float len1 = PointUtils.getSquaredDist(hp1, this);
+
+        hp2.x = -(hp1.x - this.x) + this.x;
+        hp2.y = -(hp1.y - this.y) + this.y;
     }
 }

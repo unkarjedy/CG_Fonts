@@ -20,7 +20,7 @@ import java.awt.event.MouseMotionListener;
  *
  * Main app controller.
  */
-public class FontEditorController implements ControlPanelListener{
+public class FontEditorController implements ControlPanelListener {
     FontEditorView view;
     LetterEditorModel letterEditorModel;
 
@@ -102,7 +102,7 @@ public class FontEditorController implements ControlPanelListener{
     }
 
     @Override
-    public Class<? extends Point> pointTypeChanged() {
-        return null;
+    public void pointTypeChanged(Class<? extends Point> newType) {
+
     }
 }

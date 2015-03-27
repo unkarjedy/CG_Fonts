@@ -5,6 +5,7 @@ import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.draw.PointDrawer;
+import spbstu.cg.fonteditor.draw.SplineDrawer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +21,7 @@ public class LetterEditorView extends JComponent {
 
     private Rectangle bounds;
     private Graphics2D g2D;
+    private final SplineDrawer splineDrawer = new SplineDrawer();
 
     // state
     private Point pointUnderCursor;
@@ -60,61 +62,8 @@ public class LetterEditorView extends JComponent {
             ControlPoint prev = null;
             Point l = null, r = null;
 
-            // drawing handle points and segments (curves...)
-            for (ControlPoint point : spline) {
-                HandlePoint[] hps = point.getHandlePoints();
-                if (hps != null) {
-                    for (int i = 0; i < hps.length; ++i) {
-                        if (hps[i] == null)
-                            continue;
-                        if (pointUnderCursor == hps[i]) {
-                            if (i == 0) {
-                                l = prev;
-                                r = point;
-                            } else {
-                                l = point;
-                            }
-                        }
-                        g2D.setColor(Color.black);
-                        g2D.setStroke(DASHED_STROKE);
-                        g2D.drawLine((int) point.getX(), (int) point.getY(),
-                                (int) hps[i].getX(), (int) hps[i].getY());
-                        PointDrawer.draw(hps[i], g2D);
-                    }
-                }
-
-                if (prev != null) {
-                    g2D.setStroke(SIMPLE_SOLID_STROKE);
-                    g2D.setColor(Color.black);
-                    if ((l == prev && r == point) || prev == l) {
-                        g2D.setColor(Color.red);
-                    }
-
-                    // TEMP CODE TODO: DELETE
-                    Path2D.Float path = new Path2D.Float();
-                    path.moveTo(prev.getX(), prev.getY());
-                    HandlePoint h1 = null;
-                    if (prev.getHandlePoints() != null)
-                        h1 = prev.getHandlePoints()[1];
-                    HandlePoint h2 = point.getHandlePoints()[0];
-                    if (point.getHandlePoints() != null) {
-                        h2 = point.getHandlePoints()[0];
-                    }
-                    if (h1 != null && h2 != null) {
-                        path.curveTo(h1.getX(), h1.getY(), h2.getX(), h2.getY(), point.getX(), point.getY());
-                        g2D.draw(path);
-                    } else {
-                        g2D.drawLine((int) point.getX(), (int) point.getY(),
-                                (int) prev.getX(), (int) prev.getY());
-                    }
-                }
-                prev = point;
-            }
-
-            // drawing control points to be above segments...
-            for (ControlPoint point : spline) {
-                PointDrawer.draw(point, g2D);
-            }
+            splineDrawer.drawHandlePointsSegments(spline, g2D);
+            splineDrawer.drawSpline(spline, g2D, true, pointUnderCursor);
         }
     }
 

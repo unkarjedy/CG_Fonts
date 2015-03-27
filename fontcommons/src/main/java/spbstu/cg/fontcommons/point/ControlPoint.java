@@ -12,13 +12,11 @@ public abstract class ControlPoint extends Point {
 
     public ControlPoint(float x, float y) {
         super(x, y);
-        handlePoints = null;
+        handlePoints = new HandlePoint[MAX_HANDLE_POINT_NUMBER];
+//        handlePoints = null;
     }
 
     public void addHandlePoint(Point point, int index) {
-        if (handlePoints == null)
-            handlePoints = new HandlePoint[MAX_HANDLE_POINT_NUMBER];
-
         handlePoints[index] = new HandlePoint(point.getX(), point.getY(), this, index);
         handlePointMoved(index);
     }

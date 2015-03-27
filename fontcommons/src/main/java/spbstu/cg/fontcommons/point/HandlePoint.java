@@ -24,6 +24,7 @@ public class HandlePoint extends Point {
             throw new NullPointerException();
 
         controlPoint = parent;
+        this.type = PointType.HANDLER;
         this.index = index;
     }
 
@@ -36,4 +37,5 @@ public class HandlePoint extends Point {
         super.move(dx, dy);
         controlPoint.handlePointMoved(index);
     }
+
 }

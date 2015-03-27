@@ -1,7 +1,6 @@
 package spbstu.cg.fonteditor.view;
 
-import spbstu.cg.fontcommons.point.CurveControlPoint;
-import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fonteditor.Consts;
 
 import javax.swing.*;
@@ -16,7 +15,8 @@ import java.util.Map;
  */
 public class ControlPanel extends JPanel implements ChangeListener {
     private ButtonGroup pointTypeBtnGroup;
-    private Map<Class<? extends Point>, JRadioButton> pointTypeButtonMap;
+    private Map<PointType, JRadioButton> pointTypeButtonMap;
+
     private JPanel pointTypeBox;
     public ControlPanel(){
         super(new BorderLayout());
@@ -34,19 +34,19 @@ public class ControlPanel extends JPanel implements ChangeListener {
         verticalBoxPanel.add(separator);
 
         // radio button group box for point type
-        pointTypeButtonMap = new LinkedHashMap<Class<? extends Point>, JRadioButton>(5);
+        pointTypeButtonMap = new LinkedHashMap<PointType, JRadioButton>(5);
         pointTypeBtnGroup = new ButtonGroup();
         pointTypeBox = new JPanel(new GridLayout(0, 1));
         pointTypeBox.setBorder(BorderFactory.createTitledBorder("Point type"));
-        for (Class<? extends Point> cl : Consts.pointTypeMap.keySet()) {
-            JRadioButton btn = new JRadioButton(Consts.pointTypeMap.get(cl));
-            pointTypeButtonMap.put(cl, btn);
+        for (PointType type : Consts.pointTypeNamesMap.keySet()) {
+            JRadioButton btn = new JRadioButton(Consts.pointTypeNamesMap.get(type));
+            pointTypeButtonMap.put(type, btn);
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
             btn.addChangeListener(this);
             btn.setEnabled(false);
         }
-        pointTypeButtonMap.get(CurveControlPoint.class).doClick();
+        pointTypeButtonMap.get(PointType.CORNER).doClick();
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
         //pointTypeBox.setVisible(true);
         verticalBoxPanel.add(pointTypeBox);

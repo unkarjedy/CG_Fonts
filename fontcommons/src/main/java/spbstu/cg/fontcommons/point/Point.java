@@ -8,6 +8,7 @@ package spbstu.cg.fontcommons.point;
 public class Point {
     protected float x;
     protected float y;
+    protected PointType type;
 
     public Point(float x, float y) {
         this.x = x;
@@ -33,4 +34,7 @@ public class Point {
     }
 
 
+    public PointType getType() {
+        return type;
+    }
 }

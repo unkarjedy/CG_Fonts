@@ -51,7 +51,6 @@ public class Spline implements Iterable<ControlPoint> {
                     prev.getY() + (point.getY() - prev.getY()) * COEF), 1);
             point.handlePointMoved(0);
             prev.handlePointMoved(1);
-
         }
     }
 

@@ -11,6 +11,7 @@ public class CornerControlPoint extends ControlPoint {
 
     public CornerControlPoint(float x, float y) {
         super(x, y);
+        type = PointType.CORNER;
     }
 
     @Override

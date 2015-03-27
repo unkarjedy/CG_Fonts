@@ -8,17 +8,30 @@ package spbstu.cg.fontcommons.point;
 public abstract class ControlPoint extends Point {
     private static final int MAX_HANDLE_POINT_NUMBER = 2;
 
-    HandlePoint[] handlePoints;
+    protected HandlePoint[] handlePoints;
 
     public ControlPoint(float x, float y) {
         super(x, y);
         handlePoints = new HandlePoint[MAX_HANDLE_POINT_NUMBER];
-//        handlePoints = null;
+        this.type = PointType.UNSUPPORTED_TYPE;
     }
 
     public void addHandlePoint(Point point, int index) {
         handlePoints[index] = new HandlePoint(point.getX(), point.getY(), this, index);
         handlePointMoved(index);
+    }
+
+    @Override
+    public void move(float dx, float dy) {
+        super.move(dx, dy);
+
+        if (handlePoints != null) {
+            for (HandlePoint hp : handlePoints) {
+                if (hp == null)
+                    continue;
+                hp.move(dx, dy);
+            }
+        }
     }
 
     /**
@@ -32,3 +45,4 @@ public abstract class ControlPoint extends Point {
         return handlePoints;
     }
 }
+

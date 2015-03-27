@@ -1,8 +1,8 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.ControlPoint;
-import spbstu.cg.fontcommons.point.CurveControlPoint;
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.SymmetricControlPoint;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.FontEditorView;
@@ -38,7 +38,7 @@ public class FontEditorController implements ControlPanelListener {
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
                 if (touchedPoint == null && SwingUtilities.isLeftMouseButton(e)) {
                     // creating new control point
-                    ControlPoint point = new CurveControlPoint(e.getX(), e.getY());
+                    ControlPoint point = new SymmetricControlPoint(e.getX(), e.getY());
                     letterEditorModel.addControlPoint(point);
 
                     view.getLetterEditor().setPointUnderCursor(point);

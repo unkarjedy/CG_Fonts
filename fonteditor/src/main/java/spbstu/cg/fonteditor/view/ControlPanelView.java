@@ -1,13 +1,11 @@
 package spbstu.cg.fonteditor.view;
 
 import spbstu.cg.fontcommons.point.PointType;
-import spbstu.cg.fonteditor.Consts;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,10 +18,10 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     private ButtonGroup pointTypeBtnGroup;
     private Map<PointType, JRadioButton> pointTypeButtonMap;
 
-    public ControlPanelView(){
+    public ControlPanelView() {
         super(new BorderLayout());
 
-        createVerticaloxPanel();
+        createVerticalBoxPanel();
         createPointTypeBox();
 
 
@@ -34,7 +32,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         setPreferredSize(new Dimension(220, 200));
     }
 
-    private void createVerticaloxPanel() {
+    private void createVerticalBoxPanel() {
         verticalBoxPanel = new JPanel();
         verticalBoxPanel.setLayout(new BoxLayout(verticalBoxPanel, BoxLayout.Y_AXIS));
 
@@ -58,16 +56,18 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         pointTypeBox = new JPanel(new GridLayout(0, 1));
         pointTypeBox.setBorder(BorderFactory.createTitledBorder("Point type"));
         for (PointType type : PointType.values()) {
-            if(!type.isControlPointType())
+            if (!type.isControlPointType())
                 continue;
 
             JRadioButton btn = new JRadioButton(type.getName());
+            //btn.setActionCommand("LOOOL");
             pointTypeButtonMap.put(type, btn);
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
             btn.addChangeListener(this);
             // btn.setEnabled(false);
         }
+
         pointTypeButtonMap.get(PointType.CORNER).doClick();
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
         setPointTypeBoxVisibility(true);
@@ -79,12 +79,12 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     public void enablePointTypesBox(boolean val) {
         pointTypeBox.setEnabled(val);
 
-        for(JRadioButton button: pointTypeButtonMap.values()){
+        for (JRadioButton button : pointTypeButtonMap.values()) {
             button.setEnabled(val);
         }
     }
 
-    public void setPointTypeBoxVisibility(boolean val){
+    public void setPointTypeBoxVisibility(boolean val) {
         pointTypeBox.setVisible(val);
     }
 
@@ -92,8 +92,13 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         ((JRadioButton) pointTypeButtonMap.get(type)).doClick();
     }
 
+    // Why?? (by Dima)
     @Override
     public void stateChanged(ChangeEvent e) {
         e.getSource();
+    }
+
+    public Map<PointType, JRadioButton> getPointTypeButtonMap() {
+        return pointTypeButtonMap;
     }
 }

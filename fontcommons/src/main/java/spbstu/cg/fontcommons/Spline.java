@@ -3,6 +3,7 @@ package spbstu.cg.fontcommons;
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.PointType;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -59,23 +60,18 @@ public class Spline implements Iterable<ControlPoint> {
      *
      * @param newPointType new type - the Class which must extend {@link spbstu.cg.fontcommons.point.ControlPoint}.
      */
-    public void changePointType(int index, Class<? extends ControlPoint> newPointType) {
-        if (index < 0 || index >= controlPoints.size())
+    public void changePointType(int index, PointType newPointType) {
+        if (index < 0 || index >= controlPoints.size()){
             throw new IllegalArgumentException();
+        }
 
         ControlPoint point = controlPoints.get(index);
+        if(point.getType() == newPointType)
+            return;
 
-        // TODO: Oh yeah, baby. Love reflection.
-        try {
-            ControlPoint newPoint = newPointType.getDeclaredConstructor(int.class, int.class).
-                    newInstance(point.getX(), point.getY());
-            int i = 0;
-            for (HandlePoint handlePoint : point.getHandlePoints()) {
-                newPoint.addHandlePoint(handlePoint, i++);
-            }
-        } catch (Exception e) {
-            e.printStackTrace(); // Ffffuuuuuuu
-        }
+        ControlPoint newPoint = PointUtils.convertToType(point, newPointType);
+
+        controlPoints.set(index, newPoint);
     }
 
     @Override

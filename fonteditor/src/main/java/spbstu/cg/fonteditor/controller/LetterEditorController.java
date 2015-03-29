@@ -20,15 +20,17 @@ import java.awt.event.MouseMotionListener;
  * Created by Egor on 20.03.2015.
  * Email: egor-mailbox@ya.ru
  * Github username: egorbunov
- *
+ * <p/>
  * Main app controller.
  */
 public class LetterEditorController extends Controller implements ControlPanelListener {
-    MainFontEditorView mainView;
-    LetterEditorModel letterEditorModel;
-    LetterEditorView letterEditorView;
+    private MainFontEditorView mainView;
+    private LetterEditorModel letterEditorModel;
+    private LetterEditorView letterEditorView;
 
-    ControlPanelView controlPanelView;
+    private ControlPanelView controlPanelView;
+
+    public int pressedButton;
 
     public LetterEditorController(MainFontEditorView view, LetterEditorModel model) {
         this.mainView = view;
@@ -40,20 +42,15 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     public void control() {
         letterEditorView.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
-
                 if (SwingUtilities.isLeftMouseButton(e)) {
-                    if(touchedPoint != null) {
-                        letterEditorModel.activateUnderCursorPoint();
-                        letterEditorView.setActivePoint(touchedPoint);
-                        letterEditorView.repaint();
-
-                        if(touchedPoint.getType().isControlPointType()){
+                    if (touchedPoint != null) {
+                        if (touchedPoint.getType().isControlPointType()) {
+                            letterEditorModel.activateUnderCursorPoint();
+                            letterEditorView.setActivePoint(touchedPoint);
                             controlPanelView.enablePointTypesBox(true);
                             controlPanelView.setPointType(touchedPoint.getType());
-                        } else {
-                            controlPanelView.enablePointTypesBox(false);
                         }
                     } else {
                         // creating new control point
@@ -62,12 +59,11 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
                         letterEditorView.setPointUnderCursor(point);
                         letterEditorView.setSplines(letterEditorModel.getSplines());
-                        letterEditorView.repaint();
                     }
                 }
 
                 if (SwingUtilities.isRightMouseButton(e)) {
-                    if(touchedPoint != null) {
+                    if (touchedPoint != null) {
                         if (letterEditorModel.endCurrentSpline()) {
                             mainView.setStatusBarMessage("Spline ended...");
                         } else {
@@ -77,16 +73,19 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
                     }
                 }
+
+                letterEditorView.repaint();
+                pressedButton = -1;
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
+                pressedButton = e.getButton();
             }
 
             @Override
@@ -104,8 +103,12 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY()))
-                    letterEditorView.repaint();
+                if (pressedButton == MouseEvent.BUTTON1) {
+                    if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY()))
+                        letterEditorView.repaint();
+                } else {
+                    mouseMoved(e);
+                }
             }
 
             @Override
@@ -122,6 +125,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     @Override
     public void pointTypeChanged(PointType newType) {
-        System.out.println("Point type changed to: " + newType.getName());
+        letterEditorModel.changeActivePointType(newType);
     }
 }

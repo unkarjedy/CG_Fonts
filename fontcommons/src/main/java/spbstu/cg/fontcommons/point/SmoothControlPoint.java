@@ -21,14 +21,13 @@ public class SmoothControlPoint extends ControlPoint {
         HandlePoint hp1 = handlePoints[index]; // changed point
         HandlePoint hp2 = handlePoints[1 - index];
 
-        // TODO: actually this can happen only if controll point is side point of spline
+        // this can happen only if controll point is side point of spline
         if(hp1 == null || hp2 == null)
             return;
 
         float len1 = PointUtils.getSquaredDist(hp1, this);
-        float len2 = PointUtils.getSquaredDist(hp2, this);
 
-        hp2.x = -len2 *(hp1.x - this.x) / len1 + this.x;
-        hp2.y = -len2 *(hp1.y - this.y) / len1 + this.y;
+        hp2.x = -(hp1.x - this.x) + this.x;
+        hp2.y = -(hp1.y - this.y) + this.y;
     }
 }

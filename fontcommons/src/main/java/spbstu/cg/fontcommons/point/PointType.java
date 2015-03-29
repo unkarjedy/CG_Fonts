@@ -14,10 +14,13 @@ public enum PointType {
     SYMMETRIC,
     HANDLER;
 
+
     public boolean isControlPointType(){
         return this != UNSUPPORTED_TYPE &&
                 this != HANDLER;
     }
+
+    PointType get() { return CORNER; }
 
     public String getName(){
         return pointTypeNamesMap.get(this);
@@ -32,4 +35,13 @@ public enum PointType {
         pointTypeNamesMap.put(PointType.SYMMETRIC, "Symmetrical");
     }
 
+    public static PointType toType(String name) {
+        for(Map.Entry<PointType, String> entry : pointTypeNamesMap.entrySet()){
+            if(entry.getValue().equals(name)){
+                return entry.getKey();
+            }
+        }
+
+        return null;
+    }
 }

@@ -5,6 +5,7 @@ import spbstu.cg.fontcommons.*;
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fonteditor.Consts;
 
 import java.util.List;
@@ -29,6 +30,12 @@ public class LetterEditorModel {
      * Not yet completed spline, but it already added to currentLetter! (it just the last one
      * in the list of splines of the currentLetter)
      */
+    private Spline currentSpline;
+
+    /**
+     *  Spline of active point. It can be any spline including
+     *  allready created
+     */
     private Spline activeSpline;
 
     /**
@@ -44,8 +51,8 @@ public class LetterEditorModel {
     private int touchedControlPointIndex = -1; // TODO: I don't like this
 
     private void activateAndAddNewSpline() {
-        activeSpline = new Spline();
-        currentLetter.addSpline(activeSpline);
+        currentSpline = new Spline();
+        currentLetter.addSpline(currentSpline);
     }
 
 
@@ -68,15 +75,15 @@ public class LetterEditorModel {
         return true;
     }
 
-    public void changeActivePointType(Class<? extends ControlPoint> newPointType) {
-        if (activePoint == null)
+    public void changeActivePointType(PointType newPointType) {
+        if (activePoint == null || activeSpline == null)
             throw new NullPointerException();
 
         activeSpline.changePointType(activePointIndex, newPointType);
     }
 
     public void addControlPoint(ControlPoint point) {
-        activeSpline.addControlPoint(point);
+        currentSpline.addControlPoint(point);
     }
 
     /**
@@ -85,16 +92,16 @@ public class LetterEditorModel {
      * @return true if spline ended
      */
     public boolean endCurrentSpline() {
-        if (activeSpline.getControlPoints() == null) {
+        if (currentSpline.getControlPoints() == null) {
             return false;
         }
-        if (activeSpline.getControlPoints().size() == 0) {
+        if (currentSpline.getControlPoints().size() == 0) {
             return false;
         }
 
-        if (underCursorPoint == activeSpline.getControlPoints().get(0)) {
-            activeSpline.addControlPoint(activeSpline.getControlPoints().get(0));
-            activeSpline = null;
+        if (underCursorPoint == currentSpline.getControlPoints().get(0)) {
+            currentSpline.addControlPoint(currentSpline.getControlPoints().get(0));
+            currentSpline = null;
             activateAndAddNewSpline();
             return true;
         }
@@ -121,7 +128,18 @@ public class LetterEditorModel {
 
     public void activateUnderCursorPoint() {
         this.activePoint = underCursorPoint;
+        activeSpline = getPointSpline(activePoint);
         activePointIndex = touchedControlPointIndex;
+    }
+
+    private Spline getPointSpline(Point point) {
+        for(Spline spline : currentLetter.getSplines()){
+            for(ControlPoint cp : spline.getControlPoints()) {
+                if(cp.equals(point))
+                    return spline;
+            }
+        }
+        return null;
     }
 
     private void setUnderCursorPoint(Point underCursorPoint) {

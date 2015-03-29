@@ -17,8 +17,10 @@ public abstract class ControlPoint extends Point {
     }
 
     public void addHandlePoint(Point point, int index) {
-        handlePoints[index] = new HandlePoint(point.getX(), point.getY(), this, index);
-        handlePointMoved(index);
+        if(point != null) {
+            handlePoints[index] = new HandlePoint(point.getX(), point.getY(), this, index);
+            handlePointMoved(index);
+        }
     }
 
     @Override

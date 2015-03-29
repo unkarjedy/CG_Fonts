@@ -22,7 +22,7 @@ public class SymmetricControlPoint extends ControlPoint {
         HandlePoint hp1 = handlePoints[index]; // changed point
         HandlePoint hp2 = handlePoints[1 - index];
 
-        // TODO: actually this can happen only if controll point is side point of spline
+        // this can happen only if controll point is side point of spline
         if(hp1 == null || hp2 == null)
             return;
 

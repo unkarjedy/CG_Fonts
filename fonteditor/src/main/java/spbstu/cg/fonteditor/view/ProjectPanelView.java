@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by user on 28.02.2015.
+ * Created by Dima Naumenko on 28.02.2015.
  */
 public class ProjectPanelView extends JPanel {
     private String projectName = "MyFont";

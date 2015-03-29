@@ -4,6 +4,8 @@ import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.point.SymmetricControlPoint;
 import spbstu.cg.fonteditor.model.ControlPanelModel;
+import spbstu.cg.fonteditor.model.LetterEditorModel;
+import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 
@@ -13,11 +15,13 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 /**
- * Created by user on 29.03.2015.
+ * Created by Dima Naumenko on 29.03.2015.
  */
 public class ControlPanelController extends Controller {
     MainFontEditorView mainView;
     ControlPanelModel controlPanelModel;
+    private ControlPanelListener controlPanelListener;
+
 
     public ControlPanelController(MainFontEditorView view, ControlPanelModel model) {
         this.mainView = view;
@@ -67,4 +71,7 @@ public class ControlPanelController extends Controller {
         });
     }
 
+    public void setControlPanelListener(ControlPanelListener controlPanelListener) {
+        this.controlPanelListener = controlPanelListener;
+    }
 }

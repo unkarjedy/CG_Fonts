@@ -28,6 +28,7 @@ public class FontEditorApp {
 
                 ControlPanelModel controlPanelModel = new ControlPanelModel();
                 ControlPanelController controlPanelController = new ControlPanelController(editor, controlPanelModel);
+                controlPanelController.setControlPanelListener(letterController);
 
                 letterController.control();
                 controlPanelController.control();

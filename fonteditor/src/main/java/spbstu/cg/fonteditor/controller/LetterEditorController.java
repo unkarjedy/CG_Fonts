@@ -2,9 +2,11 @@ package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.point.SymmetricControlPoint;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
+import spbstu.cg.fonteditor.view.ControlPanelView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 
@@ -24,16 +26,19 @@ import java.awt.event.MouseMotionListener;
 public class LetterEditorController extends Controller implements ControlPanelListener {
     MainFontEditorView mainView;
     LetterEditorModel letterEditorModel;
+    LetterEditorView letterEditorView;
+
+    ControlPanelView controlPanelView;
 
     public LetterEditorController(MainFontEditorView view, LetterEditorModel model) {
         this.mainView = view;
         letterEditorModel = model;
+        letterEditorView = mainView.getLetterEditor();
+        controlPanelView = mainView.getControlPanel();
     }
 
     public void control() {
-        final LetterEditorView letterEditor = mainView.getLetterEditor();
-
-        letterEditor.addMouseListener(new MouseListener() {
+        letterEditorView.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
@@ -41,16 +46,23 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if(touchedPoint != null) {
                         letterEditorModel.activateUnderCursorPoint();
-                        mainView.getLetterEditor().setActivePoint(touchedPoint);
-                        mainView.getLetterEditor().repaint();
+                        letterEditorView.setActivePoint(touchedPoint);
+                        letterEditorView.repaint();
+
+                        if(touchedPoint.getType().isControlPointType()){
+                            controlPanelView.enablePointTypesBox(true);
+                            controlPanelView.setPointType(touchedPoint.getType());
+                        } else {
+                            controlPanelView.enablePointTypesBox(false);
+                        }
                     } else {
                         // creating new control point
                         ControlPoint point = new SymmetricControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
 
-                        mainView.getLetterEditor().setPointUnderCursor(point);
-                        mainView.getLetterEditor().setSplines(letterEditorModel.getSplines());
-                        mainView.getLetterEditor().repaint();
+                        letterEditorView.setPointUnderCursor(point);
+                        letterEditorView.setSplines(letterEditorModel.getSplines());
+                        letterEditorView.repaint();
                     }
                 }
 
@@ -88,12 +100,12 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             }
         });
 
-        letterEditor.addMouseMotionListener(new MouseMotionListener() {
+        letterEditorView.addMouseMotionListener(new MouseMotionListener() {
 
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY()))
-                    mainView.getLetterEditor().repaint();
+                    letterEditorView.repaint();
             }
 
             @Override
@@ -101,15 +113,15 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                 Point prevPoint = letterEditorModel.getUnderCursorPoint();
                 Point cur = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
                 if (cur != prevPoint) {
-                    mainView.getLetterEditor().setPointUnderCursor(cur);
-                    mainView.getLetterEditor().repaint();
+                    letterEditorView.setPointUnderCursor(cur);
+                    letterEditorView.repaint();
                 }
             }
         });
     }
 
     @Override
-    public void pointTypeChanged(Class<? extends Point> newType) {
-
+    public void pointTypeChanged(PointType newType) {
+        System.out.println("Point type changed to: " + newType.getName());
     }
 }

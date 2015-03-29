@@ -7,11 +7,12 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by user on 28.02.2015.
+ * Created by Dima Naumenko on 28.02.2015.
  */
 public class ControlPanelView extends JPanel implements ChangeListener {
     private JPanel verticalBoxPanel; // main vertical container
@@ -56,8 +57,11 @@ public class ControlPanelView extends JPanel implements ChangeListener {
 
         pointTypeBox = new JPanel(new GridLayout(0, 1));
         pointTypeBox.setBorder(BorderFactory.createTitledBorder("Point type"));
-        for (PointType type : Consts.pointTypeNamesMap.keySet()) {
-            JRadioButton btn = new JRadioButton(Consts.pointTypeNamesMap.get(type));
+        for (PointType type : PointType.values()) {
+            if(!type.isControlPointType())
+                continue;
+
+            JRadioButton btn = new JRadioButton(type.getName());
             pointTypeButtonMap.put(type, btn);
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
@@ -66,15 +70,26 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         }
         pointTypeButtonMap.get(PointType.CORNER).doClick();
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
-        pointTypeBox.setVisible(true);
+        setPointTypeBoxVisibility(true);
+        enablePointTypesBox(false);
+
         verticalBoxPanel.add(pointTypeBox);
-        //pointTypeBox.setVisible(false);
-
     }
-
 
     public void enablePointTypesBox(boolean val) {
         pointTypeBox.setEnabled(val);
+
+        for(JRadioButton button: pointTypeButtonMap.values()){
+            button.setEnabled(val);
+        }
+    }
+
+    public void setPointTypeBoxVisibility(boolean val){
+        pointTypeBox.setVisible(val);
+    }
+
+    public void setPointType(PointType type) {
+        ((JRadioButton) pointTypeButtonMap.get(type)).doClick();
     }
 
     @Override

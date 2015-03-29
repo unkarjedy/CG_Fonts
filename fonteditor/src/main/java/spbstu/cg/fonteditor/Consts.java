@@ -12,13 +12,4 @@ import java.util.Map;
  */
 public class Consts {
     public final static float DISTANCE_EPS = 10.0f;
-    public final static Map<PointType, String > pointTypeNamesMap;
-
-    static {
-        pointTypeNamesMap = new LinkedHashMap<PointType, String>(5);
-        pointTypeNamesMap.put(PointType.CUSP,  "Corner");
-        pointTypeNamesMap.put(PointType.CORNER, "Cusp");
-        pointTypeNamesMap.put(PointType.SMOOTH, "Smooth");
-        pointTypeNamesMap.put(PointType.SYMMETRIC, "Symmetrical");
-    }
 }

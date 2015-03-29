@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor.view;
 
 import spbstu.cg.fontcommons.point.Point;
+import spbstu.cg.fontcommons.point.PointType;
 
 /**
  * Created by Egor Gorbunov on 26.03.2015.
@@ -8,5 +9,5 @@ import spbstu.cg.fontcommons.point.Point;
  * Github username: egorbunov
  */
 public interface ControlPanelListener {
-    void pointTypeChanged(Class<? extends Point> newType);
+    void pointTypeChanged(PointType newType);
 }

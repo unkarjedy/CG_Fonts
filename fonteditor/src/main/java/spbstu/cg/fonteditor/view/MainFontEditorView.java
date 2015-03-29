@@ -9,15 +9,15 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 
-public class FontEditorView extends JFrame {
-    private FontProjectsPanel projectsPanel;
+public class MainFontEditorView extends JFrame {
+    private ProjectPanelView projectsPanel;
     private LetterEditorView letterEditor;
-    private ControlPanel controlPanel;
+    private ControlPanelView controlPanel;
+
     private JPanel statusBar;
     private JLabel statusBarText;
 
-
-    public FontEditorView() {
+    public MainFontEditorView() {
         initUI();
     }
 
@@ -29,10 +29,10 @@ public class FontEditorView extends JFrame {
         JSeparator separator = new JSeparator();
         separator.setForeground(Color.gray);
 
+        // Create and place 3 panels
         add(buildFontProjectPanel(), BorderLayout.WEST);
         add(buildCurveEditorPanel(), BorderLayout.CENTER);
         add(buildControlPanel(),     BorderLayout.EAST);
-
 
         setTitle("Font Editor");
         pack();
@@ -57,17 +57,15 @@ public class FontEditorView extends JFrame {
         statusBarText.setText(s);
     }
 
-
     private Component buildFontProjectPanel() {
         //ImageIcon icon = new ImageIcon(getClass().getResource("simulator.png"));
-        projectsPanel = new FontProjectsPanel();
+        projectsPanel = new ProjectPanelView();
 
         JPanel wrapper = new JPanel(new BorderLayout());
         JSeparator sep = new JSeparator(JSeparator.VERTICAL);
         sep.setForeground(Color.gray);
         wrapper.add(sep, BorderLayout.EAST);
         wrapper.add(projectsPanel);
-
 
         return wrapper;
     }
@@ -80,7 +78,7 @@ public class FontEditorView extends JFrame {
     }
 
     private Component buildControlPanel() {
-        controlPanel = new ControlPanel();
+        controlPanel = new ControlPanelView();
 
         JPanel wrapper = new JPanel(new BorderLayout());
         JSeparator sep = new JSeparator(JSeparator.VERTICAL);
@@ -180,11 +178,16 @@ public class FontEditorView extends JFrame {
         }
     }
 
+    /*
+     * Get methods for each panel
+     */
+    public ProjectPanelView getProejctPanel() { return projectsPanel; }
+
     public LetterEditorView getLetterEditor() {
         return letterEditor;
     }
 
-    public ControlPanel getControlPanel() {
+    public ControlPanelView getControlPanel() {
         return controlPanel;
     }
 }

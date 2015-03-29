@@ -29,7 +29,7 @@ public abstract class ControlPoint extends Point {
             for (HandlePoint hp : handlePoints) {
                 if (hp == null)
                     continue;
-                hp.move(dx, dy);
+                hp.moveSafe(dx, dy);
             }
         }
     }

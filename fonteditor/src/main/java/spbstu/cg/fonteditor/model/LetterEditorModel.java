@@ -91,6 +91,7 @@ public class LetterEditorModel {
         if (activeSpline.getControlPoints().size() == 0) {
             return false;
         }
+
         if (underCursorPoint == activeSpline.getControlPoints().get(0)) {
             activeSpline.addControlPoint(activeSpline.getControlPoints().get(0));
             activeSpline = null;

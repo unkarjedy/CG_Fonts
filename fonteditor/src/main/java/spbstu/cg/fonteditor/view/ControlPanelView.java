@@ -13,15 +13,28 @@ import java.util.Map;
 /**
  * Created by user on 28.02.2015.
  */
-public class ControlPanel extends JPanel implements ChangeListener {
+public class ControlPanelView extends JPanel implements ChangeListener {
+    private JPanel verticalBoxPanel; // main vertical container
+    private JPanel pointTypeBox;
     private ButtonGroup pointTypeBtnGroup;
     private Map<PointType, JRadioButton> pointTypeButtonMap;
 
-    private JPanel pointTypeBox;
-    public ControlPanel(){
+    public ControlPanelView(){
         super(new BorderLayout());
 
-        JPanel verticalBoxPanel = new JPanel();
+        createVerticaloxPanel();
+        createPointTypeBox();
+
+
+        JLabel tmpLabel = new JLabel("ABCD");
+        tmpLabel.setAlignmentX(LEFT_ALIGNMENT);
+        verticalBoxPanel.add(tmpLabel);
+
+        setPreferredSize(new Dimension(220, 200));
+    }
+
+    private void createVerticaloxPanel() {
+        verticalBoxPanel = new JPanel();
         verticalBoxPanel.setLayout(new BoxLayout(verticalBoxPanel, BoxLayout.Y_AXIS));
 
         JLabel panelName = new JLabel("Control panel");
@@ -33,9 +46,14 @@ public class ControlPanel extends JPanel implements ChangeListener {
         separator.setForeground(Color.gray);
         verticalBoxPanel.add(separator);
 
-        // radio button group box for point type
+        add(verticalBoxPanel, BorderLayout.NORTH);
+    }
+
+    private void createPointTypeBox() {
         pointTypeButtonMap = new LinkedHashMap<PointType, JRadioButton>(5);
+
         pointTypeBtnGroup = new ButtonGroup();
+
         pointTypeBox = new JPanel(new GridLayout(0, 1));
         pointTypeBox.setBorder(BorderFactory.createTitledBorder("Point type"));
         for (PointType type : Consts.pointTypeNamesMap.keySet()) {
@@ -44,24 +62,19 @@ public class ControlPanel extends JPanel implements ChangeListener {
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
             btn.addChangeListener(this);
-            btn.setEnabled(false);
+            // btn.setEnabled(false);
         }
         pointTypeButtonMap.get(PointType.CORNER).doClick();
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
-        //pointTypeBox.setVisible(true);
+        pointTypeBox.setVisible(true);
         verticalBoxPanel.add(pointTypeBox);
         //pointTypeBox.setVisible(false);
-        JLabel ll = new JLabel("DSADSA");
-        ll.setAlignmentX(LEFT_ALIGNMENT);
-        verticalBoxPanel.add(ll);
 
-        add(verticalBoxPanel, BorderLayout.NORTH);
-        setPreferredSize(new Dimension(220, 200));
     }
 
-    public void enablePointTypesBox() {
-        pointTypeBox.setEnabled(true);
 
+    public void enablePointTypesBox(boolean val) {
+        pointTypeBox.setEnabled(val);
     }
 
     @Override

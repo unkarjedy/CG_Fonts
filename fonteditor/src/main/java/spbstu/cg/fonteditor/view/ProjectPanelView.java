@@ -6,12 +6,12 @@ import java.awt.*;
 /**
  * Created by user on 28.02.2015.
  */
-public class FontProjectsPanel extends JPanel {
+public class ProjectPanelView extends JPanel {
     private String projectName = "MyFont";
 
     private Font currentFont;
 
-    public FontProjectsPanel(){
+    public ProjectPanelView(){
         super(new BorderLayout());
 
         JPanel verticalBoxPanel = new JPanel();

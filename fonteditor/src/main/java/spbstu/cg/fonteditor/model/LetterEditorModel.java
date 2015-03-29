@@ -75,11 +75,11 @@ public class LetterEditorModel {
         return true;
     }
 
-    public void changeActivePointType(PointType newPointType) {
+    public Point changeActivePointType(PointType newPointType) {
         if (activePoint == null || activeSpline == null)
             throw new NullPointerException();
 
-        activeSpline.changePointType(activePointIndex, newPointType);
+        return activeSpline.changePointType(activePointIndex, newPointType);
     }
 
     public void addControlPoint(ControlPoint point) {

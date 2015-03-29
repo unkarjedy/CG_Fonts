@@ -21,21 +21,23 @@ public class PointUtils {
         if(point.getType() == newPointType)
             return point;
 
-        ControlPoint newPoint;
+        ControlPoint newPoint = point;
         if(point.getType() ==  PointType.SYMMETRIC) {
             if(newPointType == PointType.SMOOTH){
                 newPoint = new SmoothControlPoint(point.getX(), point.getY());
+            }
+            if(newPointType == PointType.CUSP){
+                newPoint = new CuspControlPoint(point.getX(), point.getY());
+            }
 
-                HandlePoint[] handlePoints = point.getHandlePoints();
-                for(int i = 0; i < handlePoints.length; i++) {
-                    newPoint.addHandlePoint(handlePoints[i], i);
-                }
-
-                return newPoint;
+            // copy handle points
+            HandlePoint[] handlePoints = point.getHandlePoints();
+            for(int i = 0; i < handlePoints.length; i++) {
+                newPoint.addHandlePoint(handlePoints[i], i);
             }
         }
 
 
-        return point;
+        return newPoint;
     }
 }

@@ -1,9 +1,6 @@
 package spbstu.cg.fonteditor.controller;
 
-import spbstu.cg.fontcommons.point.ControlPoint;
-import spbstu.cg.fontcommons.point.Point;
-import spbstu.cg.fontcommons.point.PointType;
-import spbstu.cg.fontcommons.point.SymmetricControlPoint;
+import spbstu.cg.fontcommons.point.*;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.ControlPanelView;
@@ -55,6 +52,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                     } else {
                         // creating new control point
                         ControlPoint point = new SymmetricControlPoint(e.getX(), e.getY());
+                        //ControlPoint point = new SmoothControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
 
                         letterEditorView.setPointUnderCursor(point);
@@ -125,6 +123,8 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     @Override
     public void pointTypeChanged(PointType newType) {
-        letterEditorModel.changeActivePointType(newType);
+        Point newPoint;
+        newPoint = letterEditorModel.changeActivePointType(newType);
+        letterEditorView.setActivePoint(newPoint);
     }
 }

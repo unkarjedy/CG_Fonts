@@ -26,8 +26,6 @@ public class SymmetricControlPoint extends ControlPoint {
         if(hp1 == null || hp2 == null)
             return;
 
-        float len1 = PointUtils.getSquaredDist(hp1, this);
-
         hp2.x = -(hp1.x - this.x) + this.x;
         hp2.y = -(hp1.y - this.y) + this.y;
     }

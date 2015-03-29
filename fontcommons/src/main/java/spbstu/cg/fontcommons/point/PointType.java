@@ -29,8 +29,8 @@ public enum PointType {
     private final static Map<PointType, String > pointTypeNamesMap;
     static {
         pointTypeNamesMap = new LinkedHashMap<PointType, String>(5);
-        pointTypeNamesMap.put(PointType.CUSP,  "Corner");
-        pointTypeNamesMap.put(PointType.CORNER, "Cusp");
+        pointTypeNamesMap.put(PointType.CUSP,  "Cusp");
+        pointTypeNamesMap.put(PointType.CORNER, "Corner");
         pointTypeNamesMap.put(PointType.SMOOTH, "Smooth");
         pointTypeNamesMap.put(PointType.SYMMETRIC, "Symmetrical");
     }

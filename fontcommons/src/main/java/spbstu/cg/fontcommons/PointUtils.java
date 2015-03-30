@@ -31,13 +31,15 @@ public class PointUtils {
         if(newPointType == PointType.CUSP){
             newPoint = new CuspControlPoint(point.getX(), point.getY());
         }
+//        if(newPointType == PointType.CORNER){
+//            newPoint = new CornerControlPoint(point.getX(), point.getY());
+//        }
 
         // copy handle points
         HandlePoint[] handlePoints = point.getHandlePoints();
         for(int i = 0; i < handlePoints.length; i++) {
             newPoint.addHandlePoint(handlePoints[i], i);
         }
-
 
         return newPoint;
     }

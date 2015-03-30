@@ -27,6 +27,7 @@ public class LetterEditorView extends JComponent {
     private Point pointUnderCursor;
     private List<Spline> splines;
     private Point activePoint;
+    private boolean drawSplineMetaData = true;
 
     public LetterEditorView(){
         bounds = null;
@@ -62,8 +63,11 @@ public class LetterEditorView extends JComponent {
             ControlPoint prev = null;
             Point l = null, r = null;
 
-            splineDrawer.drawHandlePointsSegments(spline, g2D);
-            splineDrawer.drawSpline(spline, g2D, true, pointUnderCursor);
+            splineDrawer.drawSpline(spline, g2D, pointUnderCursor);
+            if(drawSplineMetaData){
+                splineDrawer.drawHandlePointsSegments(spline, g2D);
+                splineDrawer.drawControlPoints(spline, g2D);
+            }
         }
     }
 

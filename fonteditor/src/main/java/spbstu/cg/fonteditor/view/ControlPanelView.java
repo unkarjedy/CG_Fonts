@@ -23,13 +23,17 @@ public class ControlPanelView extends JPanel implements ChangeListener {
 
         createVerticalBoxPanel();
         createPointTypeBox();
-
+        createShowMetaDataCheckBox();
 
         JLabel tmpLabel = new JLabel("ABCD");
         tmpLabel.setAlignmentX(LEFT_ALIGNMENT);
         verticalBoxPanel.add(tmpLabel);
 
         setPreferredSize(new Dimension(220, 200));
+    }
+
+    private void createShowMetaDataCheckBox() {
+
     }
 
     private void createVerticalBoxPanel() {

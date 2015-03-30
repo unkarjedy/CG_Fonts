@@ -21,44 +21,46 @@ public class SplineDrawer {
     private static final double ANGLE_THRESHOLD = 1E-4;
 
 
-
-    public void drawSpline(Spline spline, Graphics2D g2D, boolean drawControlPoints, Point pointUnderCursor) {
+    public void drawSpline(Spline spline, Graphics2D g2D, Point pointUnderCursor) {
         //drawSplineStandardJava(spline, g2D, pointUnderCursor);
-        drawSplineCasteljau(spline, g2D, pointUnderCursor);
+        // drawSplineCasteljau(spline, g2D, pointUnderCursor);
 
         // drawing control points to be above segments...
-        if (drawControlPoints)
-            for (ControlPoint point : spline)
-                PointDrawer.draw(point, g2D);
-    }
 
-    private void drawSplineCasteljau(Spline spline, Graphics2D g2D, Point pointUnderCursor) {
-        java.util.List<ControlPoint> controlPoints = spline.getControlPoints();
-        if(controlPoints.size() < 2)
-            return;
+        ControlPoint prev = null;
+        HandlePoint h1;
+        HandlePoint h2;
 
-        ControlPoint p1, p4;
-        int curr = 0;
+        for (ControlPoint curr : spline) {
+            if (prev == null) {
+                prev = curr;
+                continue;
+            }
 
-        g2D.setColor(Color.black);
-        g2D.setStroke(SIMPLE_SOLID_STROKE);
+            g2D.setStroke(SIMPLE_SOLID_STROKE);
+            g2D.setColor(Color.black);
 
-        // TODO: implement corner control points draw
-        while(true){
-            p1 = controlPoints.get(curr);
-            p4 = controlPoints.get(curr + 1);
-            if(p1 == null && p4 == null)
-                break;
+            // TEMP CODE TODO: implement drawing of Bezire curve
+//            Path2D.Float path = new Path2D.Float();
+//            path.moveTo(prev.getX(), prev.getY());
 
-            HandlePoint p2, p3;
-            p2 = p1.getHandlePoints()[1];
-            p3 = p4.getHandlePoints()[0];
+            h1 = prev.getHandlePoints()[1];
+            h2 = curr.getHandlePoints()[0];
 
-            recursiveBezier(g2D, p1, p2, p3, p4);
+            if (h1 == pointUnderCursor || h2 == pointUnderCursor) {
+                g2D.setColor(Color.red);
+            }
 
-            ++curr;
-            if(curr == controlPoints.size() - 1)
-                break;
+            if (h1 != null && h2 != null) {
+//                path.curveTo(h1.getX(), h1.getY(), h2.getX(), h2.getY(), curr.getX(), curr.getY());
+//                g2D.draw(path);
+                recursiveBezier(g2D, prev, h1, h2, curr);
+            } else {
+                g2D.drawLine((int) curr.getX(), (int) curr.getY(),
+                        (int) prev.getX(), (int) prev.getY());
+            }
+
+            prev = curr;
         }
     }
 
@@ -118,45 +120,6 @@ public class SplineDrawer {
         return x1 * x2 + y1 * y2;
     }
 
-
-    private void drawSplineStandardJava(Spline spline, Graphics2D g2D, Point pointUnderCursor) {
-        ControlPoint prev = null;
-        HandlePoint h1;
-        HandlePoint h2;
-
-        for (ControlPoint curr : spline) {
-            if (prev == null) {
-                prev = curr;
-                continue;
-            }
-
-            g2D.setStroke(SIMPLE_SOLID_STROKE);
-            g2D.setColor(Color.black);
-
-            // TEMP CODE TODO: implement drawing of Bezire curve
-            Path2D.Float path = new Path2D.Float();
-            path.moveTo(prev.getX(), prev.getY());
-
-            h1 = prev.getHandlePoints()[1];
-            h2 = curr.getHandlePoints()[0];
-
-
-            if (h1 == pointUnderCursor || h2 == pointUnderCursor) {
-                g2D.setColor(Color.red);
-            }
-
-            if (h1 != null && h2 != null) {
-                path.curveTo(h1.getX(), h1.getY(), h2.getX(), h2.getY(), curr.getX(), curr.getY());
-                g2D.draw(path);
-            } else {
-                g2D.drawLine((int) curr.getX(), (int) curr.getY(),
-                        (int) prev.getX(), (int) prev.getY());
-            }
-
-            prev = curr;
-        }
-    }
-
     public void drawHandlePointsSegments(Spline spline, Graphics2D g2D) {
         for (ControlPoint point : spline) {
             HandlePoint[] hps = point.getHandlePoints();
@@ -175,5 +138,10 @@ public class SplineDrawer {
                 PointDrawer.draw(hp, g2D);
             }
         }
+    }
+
+    public void drawControlPoints(Spline spline, Graphics2D g2D) {
+        for (ControlPoint point : spline)
+            PointDrawer.draw(point, g2D);
     }
 }

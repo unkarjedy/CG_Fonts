@@ -20,6 +20,7 @@ import java.util.List;
  */
 public class Spline implements Iterable<ControlPoint> {
     private static final short POINT_AVERAGE_CAPACITY = 30;
+    private boolean closed = false;
 
     /**
      * Main array. It contains control points {@link spbstu.cg.fontcommons.point.ControlPoint}.
@@ -39,6 +40,9 @@ public class Spline implements Iterable<ControlPoint> {
     }
 
     public void addControlPoint(ControlPoint point) {
+        if(isClosed())
+            return;
+
         final float COEF = 1 / 5.0f;
         controlPoints.add(point);
 
@@ -52,6 +56,11 @@ public class Spline implements Iterable<ControlPoint> {
                     prev.getY() + (point.getY() - prev.getY()) * COEF), 1);
             point.handlePointMoved(0);
             prev.handlePointMoved(1);
+        }
+
+        // if loop detected then close spline
+        if(controlPoints.size() > 1 && point.equals(controlPoints.get(0))){
+            closed = true;
         }
     }
 
@@ -73,6 +82,10 @@ public class Spline implements Iterable<ControlPoint> {
 
         controlPoints.set(index, newPoint);
 
+        if(index == 0 && closed) {
+            controlPoints.set(controlPoints.size() - 1, newPoint);
+        }
+
         return newPoint;
     }
 
@@ -84,4 +97,7 @@ public class Spline implements Iterable<ControlPoint> {
     public List<ControlPoint> getControlPoints() {
         return controlPoints;
     }
+
+    public boolean isClosed(){ return closed; }
+
 }

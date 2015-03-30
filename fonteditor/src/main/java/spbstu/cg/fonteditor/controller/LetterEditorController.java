@@ -126,5 +126,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
         Point newPoint;
         newPoint = letterEditorModel.changeActivePointType(newType);
         letterEditorView.setActivePoint(newPoint);
+        letterEditorView.repaint();
     }
 }

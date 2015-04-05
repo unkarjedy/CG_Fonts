@@ -33,5 +33,6 @@ CG lab1
 
 # Current state:
 ![alt tag](http://i.imgur.com/SAeb614.gif)
+![alt tag](http://i.imgur.com/wgbk9tI.gif)
 
 

@@ -9,6 +9,7 @@
 	<modules>
 		<module>../fontcommons</module>
 		<module>../fonteditor</module>
+        <module>../texteditor</module>
 	</modules>
 
 	<build>

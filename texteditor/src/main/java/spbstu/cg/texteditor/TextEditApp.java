@@ -1,5 +1,7 @@
 package spbstu.cg.texteditor;
 
+import spbstu.cg.texteditor.controller.TextEditorController;
+import spbstu.cg.texteditor.model.TextEditorModel;
 import spbstu.cg.texteditor.view.MainTextEditorView;
 
 import java.awt.*;
@@ -12,9 +14,14 @@ public class TextEditApp {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                MainTextEditorView textEditorView = new MainTextEditorView();
+                TextEditorModel textEditorModel = new TextEditorModel();
 
-                textEditorView.setVisible(true);
+                MainTextEditorView editor = new MainTextEditorView(textEditorModel);
+
+                TextEditorController textEditorController = new TextEditorController(editor, textEditorModel);
+                textEditorController.control();
+
+                editor.setVisible(true);
             }
         });
     }

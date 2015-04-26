@@ -1,5 +1,7 @@
 package spbstu.cg.texteditor.view;
 
+import spbstu.cg.texteditor.model.TextEditorModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
@@ -15,9 +17,10 @@ public class TextEditorView extends JComponent {
 
     private Rectangle bounds;
     private Graphics2D g2D;
+    private TextEditorModel model;
 
-
-    public TextEditorView() {
+    public TextEditorView(TextEditorModel textEditorModel) {
+        this.model = textEditorModel;
         bounds = null;
         g2D = null;
     }
@@ -31,11 +34,31 @@ public class TextEditorView extends JComponent {
         g2D.setColor(Color.white);
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
+        g2D.setColor(Color.black);
+        System.out.println(bounds.height);
 
+        int height = 10 * (int)model.getSize();
+        int widht = 10 * (int)model.getSize();
+
+        //PAINT FONT
+        int y = 0;
+        int x = 0;
+        for (int i = 0; i < model.getText().size(); i++) {
+            if (x + 10 + widht > bounds.width) {
+                if (y + 2 * (height + 10) > bounds.height) {
+                    break;
+                }
+                y += height + 10;
+                x = 0;
+            }
+            g2D.drawRect(x + 10, y + 10, widht, height);
+            x +=  10 + widht;
+        }
     }
 
     private void setupGraphics(Graphics2D g2) {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
     }
+
 }

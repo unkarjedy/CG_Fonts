@@ -57,9 +57,6 @@ public class LetterEditorView extends JComponent {
 
     public void drawSplines() {
         for (Spline spline : splines) {
-            ControlPoint prev = null;
-            Point l = null, r = null;
-
             splineDrawer.drawHandlePointsSegments(spline, g2D);
             splineDrawer.drawSpline(spline, g2D, true, pointUnderCursor);
         }

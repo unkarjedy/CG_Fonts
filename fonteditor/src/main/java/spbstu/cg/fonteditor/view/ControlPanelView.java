@@ -15,7 +15,6 @@ import java.util.Map;
 public class ControlPanelView extends JPanel implements ChangeListener {
     private JPanel verticalBoxPanel; // main vertical container
     private JPanel pointTypeBox;
-    private ButtonGroup pointTypeBtnGroup;
     private Map<PointType, JRadioButton> pointTypeButtonMap;
 
     public ControlPanelView() {
@@ -51,7 +50,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     private void createPointTypeBox() {
         pointTypeButtonMap = new LinkedHashMap<PointType, JRadioButton>(5);
 
-        pointTypeBtnGroup = new ButtonGroup();
+        ButtonGroup pointTypeBtnGroup = new ButtonGroup();
 
         pointTypeBox = new JPanel(new GridLayout(0, 1));
         pointTypeBox.setBorder(BorderFactory.createTitledBorder("Point type"));
@@ -89,7 +88,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     }
 
     public void setPointType(PointType type) {
-        ((JRadioButton) pointTypeButtonMap.get(type)).doClick();
+        pointTypeButtonMap.get(type).doClick();
 
     }
 

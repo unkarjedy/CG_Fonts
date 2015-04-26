@@ -7,7 +7,6 @@ import spbstu.cg.fonteditor.view.ControlPanelView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 
-import javax.sound.sampled.Control;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -51,7 +50,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                         }
                     } else {
                         // creating new control point
-                        ControlPoint point = new ControlPoint(e.getX(), e.getY(), PointType.SYMMETRIC);
+                        ControlPoint point = new ControlPoint(e.getX(), e.getY());
                         //ControlPoint point = new SmoothControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
 
@@ -67,8 +66,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                         } else {
                             mainView.setStatusBarMessage("Can't end current spline in that point!");
                         }
-                    } else {
-
                     }
                 }
 

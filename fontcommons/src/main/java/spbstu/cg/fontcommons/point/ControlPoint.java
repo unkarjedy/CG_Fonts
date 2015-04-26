@@ -10,10 +10,13 @@ public class ControlPoint extends Point {
 
     protected HandlePoint[] handlePoints;
 
-    public ControlPoint(float x, float y, PointType type) {
+    /**
+     * Creates SYMMETRIC control point
+     */
+    public ControlPoint(float x, float y) {
         super(x, y);
         handlePoints = new HandlePoint[MAX_HANDLE_POINT_NUMBER];
-        this.type = type;
+        this.type = PointType.SYMMETRIC;
     }
 
     public void addHandlePoint(Point point, int index) {
@@ -39,7 +42,7 @@ public class ControlPoint extends Point {
     /**
      * Method is invoked if one of handle points, connected to this control one, is moved, so
      * we can decide how we need to change other one.
-     * @param index
+     * @param index 0 or 1 -- index of handle point
      */
     public void handlePointMoved(int index) {
         switch (type) {
@@ -48,7 +51,7 @@ public class ControlPoint extends Point {
                 HandlePoint hp1 = handlePoints[index]; // changed point
                 HandlePoint hp2 = handlePoints[1 - index];
 
-                // this can happen only if controll point is side point of spline
+                // this can happen only if control point is side point of spline
                 if (hp1 == null || hp2 == null)
                     return;
 
@@ -62,7 +65,7 @@ public class ControlPoint extends Point {
                 HandlePoint hp1 = handlePoints[index]; // changed point
                 HandlePoint hp2 = handlePoints[1 - index];
 
-                //  this can happen only if controll point is side point of spline
+                //  this can happen only if control point is side point of spline
                 if (hp1 == null || hp2 == null)
                     return;
 

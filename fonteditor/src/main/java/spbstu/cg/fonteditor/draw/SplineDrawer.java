@@ -55,7 +55,6 @@ public class SplineDrawer {
             prev = curr;
         }
 
-
         // drawing control points to be above segments...
         if(drawControlPoints)
             for (ControlPoint point : spline)

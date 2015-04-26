@@ -7,7 +7,7 @@ import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.point.PointUtils;
-import spbstu.cg.fonteditor.Consts;
+import spbstu.cg.fonteditor.Constants;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class LetterEditorModel {
 
     /**
      *  Spline of active point. It can be any spline including
-     *  allready created
+     *  already created
      */
     private Spline activeSpline;
 
@@ -150,7 +150,7 @@ public class LetterEditorModel {
     }
 
     /**
-     * Returns neares point (for now only Control Point) to given one
+     * Returns nearest point (for now only Control Point) to given one
      */
     private Point findNearestPoint(float x, float y) {
         for (Spline spline : currentLetter.getSplines()) {
@@ -158,14 +158,14 @@ public class LetterEditorModel {
             int i = 0;
             for (ControlPoint point : spline) {
                 touchedControlPointIndex = i++;
-                if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Consts.DISTANCE_EPS) {
+                if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Constants.DISTANCE_EPS) {
                     return point;
                 }
                 if (point.getHandlePoints() != null) {
                     for (HandlePoint hp : point.getHandlePoints()) {
                         if (hp == null)
                             continue;
-                        if (PointUtils.getSquaredDist(hp.getX(), hp.getY(), x, y) < Consts.DISTANCE_EPS) {
+                        if (PointUtils.getSquaredDist(hp.getX(), hp.getY(), x, y) < Constants.DISTANCE_EPS) {
                             return hp;
                         }
                     }

@@ -14,7 +14,6 @@ public class MainFontEditorView extends JFrame {
     private LetterEditorView letterEditor;
     private ControlPanelView controlPanel;
 
-    private JPanel statusBar;
     private JLabel statusBarText;
 
     public MainFontEditorView() {
@@ -43,7 +42,7 @@ public class MainFontEditorView extends JFrame {
     }
 
     private void createStatusBar() {
-        statusBar = new JPanel();
+        JPanel statusBar = new JPanel();
         statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
         this.add(statusBar, BorderLayout.SOUTH);
         statusBar.setPreferredSize(new Dimension(this.getWidth(), 16));
@@ -181,7 +180,7 @@ public class MainFontEditorView extends JFrame {
     /*
      * Get methods for each panel
      */
-    public ProjectPanelView getProejctPanel() { return projectsPanel; }
+    public ProjectPanelView getProjectsPanel() { return projectsPanel; }
 
     public LetterEditorView getLetterEditor() {
         return letterEditor;

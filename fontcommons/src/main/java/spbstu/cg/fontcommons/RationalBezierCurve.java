@@ -6,6 +6,4 @@ package spbstu.cg.fontcommons;
 /* TODO: implement class */
 public class RationalBezierCurve {
 
-
-
 }

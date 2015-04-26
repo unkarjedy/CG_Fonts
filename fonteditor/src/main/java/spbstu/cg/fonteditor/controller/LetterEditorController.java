@@ -51,7 +51,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                         }
                     } else {
                         // creating new control point
-                        ControlPoint point = new SymmetricControlPoint(e.getX(), e.getY());
+                        ControlPoint point = new ControlPoint(e.getX(), e.getY(), PointType.SYMMETRIC);
                         //ControlPoint point = new SmoothControlPoint(e.getX(), e.getY());
                         letterEditorModel.addControlPoint(point);
 
@@ -123,8 +123,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     @Override
     public void pointTypeChanged(PointType newType) {
-        Point newPoint;
-        newPoint = letterEditorModel.changeActivePointType(newType);
-        letterEditorView.setActivePoint(newPoint);
+        letterEditorModel.changeActivePointType(newType); // point is still active
     }
 }

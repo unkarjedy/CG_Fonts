@@ -14,29 +14,6 @@ public class PointUtils {
     }
 
     public static float getSquaredDist(float x1, float y1, float x2, float y2) {
-        return (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
-    }
-
-    public static ControlPoint convertToType(ControlPoint point, PointType newPointType) {
-        if(point.getType() == newPointType)
-            return point;
-
-        ControlPoint newPoint = point;
-        if(point.getType() ==  PointType.SYMMETRIC) {
-            if(newPointType == PointType.SMOOTH){
-                newPoint = new SmoothControlPoint(point.getX(), point.getY());
-            }
-            if(newPointType == PointType.CUSP){
-                newPoint = new CuspControlPoint(point.getX(), point.getY());
-            }
-
-            // copy handle points
-            HandlePoint[] handlePoints = point.getHandlePoints();
-            for(int i = 0; i < handlePoints.length; i++) {
-                newPoint.addHandlePoint(handlePoints[i], i);
-            }
-        }
-
-        return newPoint;
+        return (float) Math.hypot(x1 - x2, y1 - y2);
     }
 }

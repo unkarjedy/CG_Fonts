@@ -57,20 +57,16 @@ public class Spline implements Iterable<ControlPoint> {
      *
      * @param newPointType new type - the Class which must extend {@link spbstu.cg.fontcommons.point.ControlPoint}.
      */
-    public ControlPoint changePointType(int index, PointType newPointType) {
+    public void changePointType(int index, PointType newPointType) {
         if (index < 0 || index >= controlPoints.size()){
             throw new IllegalArgumentException();
         }
 
         ControlPoint point = controlPoints.get(index);
         if(point.getType() == newPointType)
-            return point;
+            return;
 
-        ControlPoint newPoint = PointUtils.convertToType(point, newPointType);
-
-        controlPoints.set(index, newPoint);
-
-        return newPoint;
+        point.convertToType(newPointType);
     }
 
     @Override

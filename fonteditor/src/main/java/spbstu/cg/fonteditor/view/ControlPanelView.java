@@ -90,6 +90,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
 
     public void setPointType(PointType type) {
         ((JRadioButton) pointTypeButtonMap.get(type)).doClick();
+
     }
 
     // Why?? (by Dima)

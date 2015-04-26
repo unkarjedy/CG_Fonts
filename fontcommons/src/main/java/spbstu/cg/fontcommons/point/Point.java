@@ -37,4 +37,8 @@ public class Point {
     public PointType getType() {
         return type;
     }
+
+    public void setType(PointType newType) {
+        type = newType;
+    }
 }

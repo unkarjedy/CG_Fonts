@@ -164,7 +164,7 @@ public class MainFontEditorView extends JFrame {
         add(toolbar, BorderLayout.NORTH);
     }
 
-    private class MenuItemAction extends AbstractAction {
+    private static class MenuItemAction extends AbstractAction {
         public MenuItemAction(String text, ImageIcon icon, Integer mnemonic) {
             super(text);
 

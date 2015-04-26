@@ -25,6 +25,8 @@ public class LetterEditorView extends JComponent {
     private Point pointUnderCursor;
     private List<Spline> splines;
     private Point activePoint;
+    private boolean drawSplineMetaData = true;
+    private boolean fillSpline = true;
 
     public LetterEditorView(){
         bounds = null;
@@ -44,6 +46,7 @@ public class LetterEditorView extends JComponent {
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
 
+
         if (activePoint != null) {
             PointDrawer.drawActivePointCircle(activePoint, g2D);
         }
@@ -57,8 +60,12 @@ public class LetterEditorView extends JComponent {
 
     public void drawSplines() {
         for (Spline spline : splines) {
-            splineDrawer.drawHandlePointsSegments(spline, g2D);
-            splineDrawer.drawSpline(spline, g2D, true, pointUnderCursor);
+            splineDrawer.drawSpline(spline, g2D);
+
+            if(drawSplineMetaData){
+                splineDrawer.drawHandlePointsSegments(spline, g2D);
+                splineDrawer.drawControlPoints(spline, g2D);
+            }
         }
     }
 

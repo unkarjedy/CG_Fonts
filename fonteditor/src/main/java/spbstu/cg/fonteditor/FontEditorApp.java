@@ -2,8 +2,8 @@ package spbstu.cg.fonteditor;
 
 import spbstu.cg.fonteditor.controller.ControlPanelController;
 import spbstu.cg.fonteditor.controller.LetterEditorController;
-import spbstu.cg.fonteditor.model.ControlPanelModel;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
+import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 
 import java.awt.*;
@@ -22,12 +22,13 @@ public class FontEditorApp {
                 // ProjectView, LetterEditorView, ControlPanelView
                 MainFontEditorView editor = new MainFontEditorView();
 
+                ActionStack actionStack = new ActionStack();
+
                 // Create model, view, controller for each of 3 component
                 LetterEditorModel letterEditorModel = new LetterEditorModel();
-                LetterEditorController letterController = new LetterEditorController(editor, letterEditorModel);
+                LetterEditorController letterController = new LetterEditorController(editor, letterEditorModel, actionStack);
 
-                ControlPanelModel controlPanelModel = new ControlPanelModel();
-                ControlPanelController controlPanelController = new ControlPanelController(editor, controlPanelModel);
+                ControlPanelController controlPanelController = new ControlPanelController(editor, actionStack);
                 controlPanelController.setControlPanelListener(letterController);
 
                 letterController.control();

@@ -34,13 +34,11 @@ public class PointDrawer {
         COLOR_MAP = new HashMap<PointType, Color>(10);
 
         RADIUS_MAP.put(PointType.CUSP, CONTROL_POINT_RADIUS);
-        RADIUS_MAP.put(PointType.CORNER, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SMOOTH, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SYMMETRIC, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.HANDLER, HANDLE_POINT_RADIUS);
 
         COLOR_MAP.put(PointType.CUSP, CONTROL_POINT_COLOR);
-        COLOR_MAP.put(PointType.CORNER, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.SMOOTH, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.SYMMETRIC, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.HANDLER, HANDLE_POINT_COLOR);

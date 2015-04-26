@@ -69,10 +69,8 @@ public class ControlPanelView extends JPanel implements ChangeListener {
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
             btn.addChangeListener(this);
-            // btn.setEnabled(false);
         }
 
-        pointTypeButtonMap.get(PointType.CORNER).doClick();
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
         setPointTypeBoxVisibility(true);
         enablePointTypesBox(false);

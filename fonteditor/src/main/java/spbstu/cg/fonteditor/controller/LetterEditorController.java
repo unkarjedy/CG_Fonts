@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.*;
+import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.ControlPanelView;
@@ -8,9 +9,7 @@ import spbstu.cg.fonteditor.view.MainFontEditorView;
 import spbstu.cg.fonteditor.view.LetterEditorView;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 /**
  * Created by Egor on 20.03.2015.
@@ -19,20 +18,28 @@ import java.awt.event.MouseMotionListener;
  * <p/>
  * Main app controller.
  */
-public class LetterEditorController extends Controller implements ControlPanelListener {
+public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener {
     private MainFontEditorView mainView;
     private LetterEditorModel letterEditorModel;
     private LetterEditorView letterEditorView;
 
     private ControlPanelView controlPanelView;
 
+    private final ActionStack actionStack;
+
     public int pressedButton;
 
-    public LetterEditorController(MainFontEditorView view, LetterEditorModel model) {
+
+    public LetterEditorController(MainFontEditorView view, LetterEditorModel model, ActionStack actionStack) {
         this.mainView = view;
         letterEditorModel = model;
+        this.actionStack = actionStack;
         letterEditorView = mainView.getLetterEditor();
         controlPanelView = mainView.getControlPanel();
+
+        letterEditorModel.setListener(this);
+
+        letterEditorModel.setActionStack(actionStack);
     }
 
     public void control() {
@@ -46,19 +53,22 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                     if (touchedPoint != null) {
                         if (touchedPoint.getType().isControlPointType()) {
                             letterEditorModel.activateUnderCursorPoint();
+
                             letterEditorView.setActivePoint(touchedPoint);
                             controlPanelView.enablePointTypesBox(true);
                             controlPanelView.getPointWeightSlider().setEnabled(true);
                             controlPanelView.setPointType(touchedPoint.getType());
                             controlPanelView.setSliderWeight(touchedPoint.getWeight());
                         }
-                    } else {
-                        // creating new control point
-                        ControlPoint point = new ControlPoint(e.getX(), e.getY());
-                        //ControlPoint point = new SmoothControlPoint(e.getX(), e.getY());
-                        letterEditorModel.addControlPoint(point);
 
-                        letterEditorView.setPointUnderCursor(point);
+                        if (letterEditorModel.isUnderCursorPointMoving()) {
+                            letterEditorModel.endMovingUnderCursorPoint();
+                        }
+
+                    } else {
+
+
+                        letterEditorModel.addControlPointAt(e.getX(), e.getY());
                         letterEditorView.setSplines(letterEditorModel.getSplines());
                     }
                 }
@@ -104,8 +114,13 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (pressedButton == MouseEvent.BUTTON1) {
-                    if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY()))
+
+                    if (letterEditorModel.getUnderCursorPoint() != null)
+                        letterEditorModel.startMovingUnderCursorPoint();
+
+                    if (letterEditorModel.moveUnderCursorPointTo(e.getX(), e.getY())) {
                         letterEditorView.repaint();
+                    }
                 } else {
                     mouseMoved(e);
                 }
@@ -121,6 +136,36 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                 }
             }
         });
+
+
+        AbstractAction undoAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                letterEditorModel.undo();
+                letterEditorView.repaint();
+                controlPanelView.repaint();
+            }
+        };
+
+        AbstractAction redoAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                letterEditorModel.redo();
+                letterEditorView.repaint();
+                controlPanelView.repaint();
+            }
+        };
+
+        letterEditorView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK),
+                "undoAction");
+        letterEditorView.getActionMap().put("undoAction",
+                undoAction);
+
+        letterEditorView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
+                        InputEvent.CTRL_DOWN_MASK),
+                "redoAction");
+        letterEditorView.getActionMap().put("redoAction",
+                redoAction);
     }
 
     @Override
@@ -129,7 +174,22 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     @Override
+
     public void pointWeightChanged(float weight) {
         letterEditorModel.changeActivePointWeight(weight);
+    }
+
+    public void activePointChanged(Point activePoint) {
+        letterEditorView.setActivePoint(activePoint);
+    }
+
+    @Override
+    public void controlPointTypeChanged(ControlPoint controlPoint) {
+        if (controlPoint == null) {
+            controlPanelView.enablePointTypesBox(false);
+        } else {
+            controlPanelView.enablePointTypesBox(true);
+            controlPanelView.setPointType(controlPoint.getType());
+        }
     }
 }

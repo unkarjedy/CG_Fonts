@@ -8,7 +8,6 @@ import java.util.Map;
  */
 public enum PointType {
     UNSUPPORTED_TYPE,
-    CORNER,
     CUSP,
     SMOOTH,
     SYMMETRIC,
@@ -19,8 +18,6 @@ public enum PointType {
                 this != HANDLER;
     }
 
-    PointType get() { return CORNER; }
-
     public String getName(){
         return pointTypeNamesMap.get(this);
     }
@@ -30,7 +27,6 @@ public enum PointType {
     static {
         pointTypeNamesMap = new LinkedHashMap<>(5);
         pointTypeNamesMap.put(PointType.CUSP,  "Cusp");
-        pointTypeNamesMap.put(PointType.CORNER, "Corner");
         pointTypeNamesMap.put(PointType.SMOOTH, "Smooth");
         pointTypeNamesMap.put(PointType.SYMMETRIC, "Symmetrical");
     }

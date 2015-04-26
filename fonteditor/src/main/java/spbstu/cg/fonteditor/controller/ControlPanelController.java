@@ -1,7 +1,7 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.PointType;
-import spbstu.cg.fonteditor.model.ControlPanelModel;
+import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.ControlPanelView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
@@ -10,23 +10,22 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 /**
  * Created by Dima Naumenko on 29.03.2015.
  */
 public class ControlPanelController extends Controller {
     private MainFontEditorView mainView;
-    private ControlPanelModel controlPanelModel;
     private ControlPanelView controlPanelView;
     private ControlPanelListener controlPanelListener;
 
+    private final ActionStack actionStack;
 
-    public ControlPanelController(MainFontEditorView view, ControlPanelModel model) {
+
+    public ControlPanelController(MainFontEditorView view, ActionStack actionStack) {
+
         this.mainView = view;
-        controlPanelModel = model;
+        this.actionStack = actionStack;
     }
 
     public void control() {

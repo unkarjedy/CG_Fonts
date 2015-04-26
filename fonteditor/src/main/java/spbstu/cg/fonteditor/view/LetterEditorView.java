@@ -1,15 +1,13 @@
 package spbstu.cg.fonteditor.view;
 
-import spbstu.cg.fontcommons.Spline;
+import spbstu.cg.fontcommons.spline.Spline;
 import spbstu.cg.fontcommons.point.ControlPoint;
-import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.draw.PointDrawer;
 import spbstu.cg.fonteditor.draw.SplineDrawer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.util.List;
 
 

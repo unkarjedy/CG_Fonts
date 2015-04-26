@@ -1,11 +1,12 @@
 package spbstu.cg.fonteditor.model;
 
-import spbstu.cg.font.Letter;
-import spbstu.cg.fontcommons.*;
+import spbstu.cg.fontcommons.font.*;
+import spbstu.cg.fontcommons.spline.*;
 import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.point.PointType;
+import spbstu.cg.fontcommons.point.PointUtils;
 import spbstu.cg.fonteditor.Consts;
 
 import java.util.List;

@@ -1,9 +1,6 @@
-package spbstu.cg.fontcommons;
+package spbstu.cg.fontcommons.spline;
 
-import spbstu.cg.fontcommons.point.ControlPoint;
-import spbstu.cg.fontcommons.point.HandlePoint;
-import spbstu.cg.fontcommons.point.Point;
-import spbstu.cg.fontcommons.point.PointType;
+import spbstu.cg.fontcommons.point.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,7 +32,7 @@ public class Spline implements Iterable<ControlPoint> {
 
 
     public Spline() {
-        controlPoints = new ArrayList<ControlPoint>(POINT_AVERAGE_CAPACITY);
+        controlPoints = new ArrayList<>(POINT_AVERAGE_CAPACITY);
     }
 
     public void addControlPoint(ControlPoint point) {

@@ -1,4 +1,4 @@
-package spbstu.cg.fontcommons;
+package spbstu.cg.fontcommons.point;
 
 import spbstu.cg.fontcommons.point.*;
 
@@ -36,7 +36,6 @@ public class PointUtils {
                 newPoint.addHandlePoint(handlePoints[i], i);
             }
         }
-
 
         return newPoint;
     }

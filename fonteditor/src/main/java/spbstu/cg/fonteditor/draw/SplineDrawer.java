@@ -1,6 +1,6 @@
 package spbstu.cg.fonteditor.draw;
 
-import spbstu.cg.fontcommons.Spline;
+import spbstu.cg.fontcommons.spline.Spline;
 import spbstu.cg.fontcommons.point.*;
 import spbstu.cg.fontcommons.point.Point;
 

@@ -14,7 +14,6 @@ public enum PointType {
     SYMMETRIC,
     HANDLER;
 
-
     public boolean isControlPointType(){
         return this != UNSUPPORTED_TYPE &&
                 this != HANDLER;
@@ -27,6 +26,7 @@ public enum PointType {
     }
 
     private final static Map<PointType, String > pointTypeNamesMap;
+
     static {
         pointTypeNamesMap = new LinkedHashMap<PointType, String>(5);
         pointTypeNamesMap.put(PointType.CUSP,  "Cusp");

@@ -1,7 +1,5 @@
 package spbstu.cg.fontcommons.point;
 
-import spbstu.cg.fontcommons.PointUtils;
-
 /**
  * Created by Egor Gorbunov on 05.03.2015.
  * Email: egor_mailbox@ya.ru

@@ -42,4 +42,8 @@ public class HandlePoint extends Point {
     public void moveSafe(float dx, float dy) {
         super.move(dx, dy);
     }
+
+    public ControlPoint getControlPoint() {
+        return controlPoint;
+    }
 }

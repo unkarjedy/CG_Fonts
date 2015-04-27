@@ -91,5 +91,28 @@ public class ControlPoint extends Point {
         handlePointMoved(0);
         handlePointMoved(1); // hope it's always ok...
     }
+
+    /**
+     * Checks is control point moved at given coord (x, y) all handle point and control point will be
+     * inside [0..w]x[0..h]
+     */
+    public boolean isInBounds(float x, float y, float w, float h) {
+        if (x < 0 || y < 0 || x > w || y > h)
+            return false;
+        float dx = x - this.x;
+        float dy = y - this.y;
+        for (HandlePoint hp : handlePoints) {
+            if (hp == null)
+                continue;
+            float hx = hp.getX() + dx;
+            float hy = hp.getY() + dy;
+
+            if (hx < 0 || hy < 0 || hx > w || hy > h)
+                return false;
+        }
+
+        return true;
+
+    }
 }
 

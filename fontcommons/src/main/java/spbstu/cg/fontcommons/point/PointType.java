@@ -7,14 +7,14 @@ import java.util.Map;
  * Created by Dima Naumenko on 28.03.2015.
  */
 public enum PointType {
-    UNSUPPORTED_TYPE,
+    NO_TYPE,
     CUSP,
     SMOOTH,
     SYMMETRIC,
     HANDLER;
 
     public boolean isControlPointType(){
-        return this != UNSUPPORTED_TYPE &&
+        return this != NO_TYPE &&
                 this != HANDLER;
     }
 

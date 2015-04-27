@@ -90,4 +90,23 @@ public class Spline implements Iterable<ControlPoint> {
         controlPoints.remove(controlPoints.size() - 1);
 >>>>>>> Action system (undo / redo) added.
     }
+
+    public void scale(float sx, float sy) {
+        if (!controlPoints.isEmpty()) {
+
+            int delta = controlPoints.get(0) == controlPoints.get(controlPoints.size() - 1) ? 1 : 0;
+            if (controlPoints.size() == 1)
+                delta = 0;
+
+            for (int i = 0; i < controlPoints.size() - delta; ++i) {
+                ControlPoint cp = controlPoints.get(i);
+                cp.set(cp.getX() * sx, cp.getY() * sy);
+                for (HandlePoint hp : cp.getHandlePoints()) {
+                    if (hp != null) {
+                        hp.set(hp.getX() * sx, hp.getY() * sy);
+                    }
+                }
+            }
+        }
+    }
 }

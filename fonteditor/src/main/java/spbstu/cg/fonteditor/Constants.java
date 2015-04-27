@@ -7,4 +7,6 @@ package spbstu.cg.fonteditor;
  */
 public class Constants {
     public final static float DISTANCE_EPS = 10.0f;
+    public final static float BOUNDING_BOX_PNTS_EPS = 20.0f;
+
 }

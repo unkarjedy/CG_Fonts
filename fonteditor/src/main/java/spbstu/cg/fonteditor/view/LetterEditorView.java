@@ -5,6 +5,7 @@ import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fonteditor.draw.PointDrawer;
 import spbstu.cg.fonteditor.draw.SplineDrawer;
+import spbstu.cg.fonteditor.model.BoundingBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,12 +22,13 @@ public class LetterEditorView extends JComponent {
     private Graphics2D g2D;
     private final SplineDrawer splineDrawer = new SplineDrawer();
 
-    // state
+    // === state ===
     private Point pointUnderCursor;
     private List<Spline> splines;
     private Point activePoint;
     private boolean drawSplineMetaData = true;
     private boolean fillSpline = true;
+    private BoundingBox boundingBox;
 
     public LetterEditorView(){
         bounds = null;
@@ -56,6 +58,10 @@ public class LetterEditorView extends JComponent {
         if (splines != null) {
             drawSplines();
         }
+
+        if (boundingBox != null) {
+            boundingBox.draw(g2D);
+        }
     }
 
     public void drawSplines() {
@@ -79,6 +85,10 @@ public class LetterEditorView extends JComponent {
 
     public void setActivePoint(Point activePoint) {
         this.activePoint = activePoint;
+    }
+
+    public void setBoundingBox(BoundingBox box) {
+        boundingBox = box;
     }
 
     private void setupGraphics(Graphics2D g2) {

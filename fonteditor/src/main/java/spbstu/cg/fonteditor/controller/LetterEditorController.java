@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.*;
+import spbstu.cg.fonteditor.model.BoundingBox;
 import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
@@ -18,7 +19,7 @@ import java.awt.event.*;
  * <p/>
  * Main app controller.
  */
-public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener {
+public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener, ComponentListener {
     private MainFontEditorView mainView;
     private LetterEditorModel letterEditorModel;
     private LetterEditorView letterEditorView;
@@ -37,18 +38,26 @@ public class LetterEditorController extends Controller implements ControlPanelLi
         letterEditorView = mainView.getLetterEditor();
         controlPanelView = mainView.getControlPanel();
 
+        letterEditorView.setBoundingBox(letterEditorModel.getBoundingBox());
         letterEditorModel.setListener(this);
-
         letterEditorModel.setActionStack(actionStack);
+
+        letterEditorView.addComponentListener(this);
+
     }
 
     public void control() {
         letterEditorView.addMouseListener(new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {
+                if (letterEditorModel.isUnderCursorPointMoving()) {
+                    letterEditorModel.endMovingUnderCursorPoint();
+                    return;
+                }
+
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
 
-                // left release
+                
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (touchedPoint != null) {
                         if (touchedPoint.getType().isControlPointType()) {
@@ -61,13 +70,8 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                             controlPanelView.setSliderWeight(touchedPoint.getWeight());
                         }
 
-                        if (letterEditorModel.isUnderCursorPointMoving()) {
-                            letterEditorModel.endMovingUnderCursorPoint();
-                        }
 
                     } else {
-
-
                         letterEditorModel.addControlPointAt(e.getX(), e.getY());
                         letterEditorView.setSplines(letterEditorModel.getSplines());
                     }
@@ -192,4 +196,19 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             controlPanelView.setPointType(controlPoint.getType());
         }
     }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        letterEditorModel.setViewSize(e.getComponent().getWidth(),
+                e.getComponent().getHeight());
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {}
+
+    @Override
+    public void componentShown(ComponentEvent e) {}
+
+    @Override
+    public void componentHidden(ComponentEvent e) {}
 }

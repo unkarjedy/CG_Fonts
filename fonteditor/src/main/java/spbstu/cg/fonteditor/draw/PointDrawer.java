@@ -14,6 +14,9 @@ import java.util.Map;
  */
 public class PointDrawer {
     private static final Color MY_PURPLE = new Color(0.64f, 0.0f, 0.25f);
+    private static final Color NO_TYPE_COLOR = new Color(1.0f, 0.32941177f, 0.05490196f);
+
+    private static final int NO_TYPE_RAD = 8;
 
     private static final Map<PointType, Integer> RADIUS_MAP;
     private static final Map<PointType, Color> COLOR_MAP;
@@ -30,14 +33,16 @@ public class PointDrawer {
     private static final Color HANDLE_POINT_COLOR = MY_PURPLE;
 
     static {
-        RADIUS_MAP = new HashMap<PointType, Integer>(10);
-        COLOR_MAP = new HashMap<PointType, Color>(10);
+        RADIUS_MAP = new HashMap<>(10);
+        COLOR_MAP = new HashMap<>(10);
 
+        RADIUS_MAP.put(PointType.NO_TYPE, NO_TYPE_RAD);
         RADIUS_MAP.put(PointType.CUSP, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SMOOTH, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SYMMETRIC, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.HANDLER, HANDLE_POINT_RADIUS);
 
+        COLOR_MAP.put(PointType.NO_TYPE, NO_TYPE_COLOR);
         COLOR_MAP.put(PointType.CUSP, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.SMOOTH, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.SYMMETRIC, CONTROL_POINT_COLOR);

@@ -25,6 +25,7 @@ import java.util.List;
  * TODO: add constructor
  */
 public class LetterEditorModel {
+    BoundingBox boundingBox;
 
     /**
      * Active letter for editing
@@ -47,13 +48,13 @@ public class LetterEditorModel {
      * Currently active point and it's index in current spline
      */
     private Point activePoint = null;
-    private int activePointIndex = -1;
 
     /**
      * Point under cursor
      */
     private Point underCursorPoint = null;
-    private int touchedControlPointIndex = -1; // TODO: I don't like this
+
+    private Point currentlyMovingPoint = null;
 
     /**
      * Last move vector
@@ -66,7 +67,7 @@ public class LetterEditorModel {
 
     private LetterEditorModelListener modelListener;
 
-
+    private float viewWidth, viewHeight;
 
     private void activateAndAddNewSpline() {
         currentSpline = new Spline();
@@ -78,10 +79,8 @@ public class LetterEditorModel {
      */
     private Point findNearestPoint(float x, float y) {
         for (Spline spline : currentLetter.getSplines()) {
-            touchedControlPointIndex = -1;
             int i = 0;
             for (ControlPoint point : spline) {
-                touchedControlPointIndex = i++;
                 if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Constants.DISTANCE_EPS) {
                     return point;
                 }
@@ -126,14 +125,12 @@ public class LetterEditorModel {
 
     private void setUnderCursorPoint(Point underCursorPoint) {
         this.underCursorPoint = underCursorPoint;
-        if (underCursorPoint == null)
-            touchedControlPointIndex = -1;
     }
-
 
     public LetterEditorModel() {
         currentLetter = new Letter("Letter", 100, 100); // TODO: delete hardcode
         activateAndAddNewSpline();
+        boundingBox = new BoundingBox(1, 1);
     }
 
     /**
@@ -157,11 +154,52 @@ public class LetterEditorModel {
     public boolean moveUnderCursorPointTo(float x, float y) {
         if (underCursorPoint == null)
             return false;
+
+        // processing cases, when point moved from view box and bounding box
+        if (underCursorPoint instanceof ControlPoint) {
+            if (!boundingBox.isIn(x, y))
+                return true;
+
+            ControlPoint p = (ControlPoint) underCursorPoint;
+
+            if (!p.isInBounds(x, y, viewWidth, viewHeight))
+                return true;
+        }
+
+        if (underCursorPoint instanceof HandlePoint) {
+            HandlePoint hp = (HandlePoint) underCursorPoint;
+            float oldX = hp.getX();
+            float oldY = hp.getY();
+            hp.move(x - hp.getX(), y - hp.getY());
+
+            for (HandlePoint h : hp.getControlPoint().getHandlePoints()) {
+                if (h != null) {
+                    if (h.getX() < 0 || h.getX() > viewWidth || h.getY() < 0 || h.getY() > viewHeight) {
+                        hp.move(oldX - hp.getX(), oldY - hp.getY());
+                        return true;
+                    }
+                }
+            }
+            return true;
+        }
+
+        if (underCursorPoint instanceof BoundingBox.HorizontallyMovingPoint ||
+                underCursorPoint instanceof BoundingBox.VerticallyMovingPoint) {
+            if (!wasBoundMovedPrev) {
+                updateLetterRect();
+                boundingBox.setLetterBounds(letterRect.l, letterRect.r, letterRect.b, letterRect.t);
+                wasBoundMovedPrev = true;
+            }
+        } else {
+            wasBoundMovedPrev = false;
+        }
+
         underCursorPoint.move(x - underCursorPoint.getX(), y - underCursorPoint.getY());
+
         return true;
     }
 
-
+    boolean wasBoundMovedPrev = false;
 
     /**
      * Finds nearest point to cursor, returns true if it exists and
@@ -169,6 +207,18 @@ public class LetterEditorModel {
      */
     public Point setCurrentCursorPos(float x, float y) {
         Point p = findNearestPoint(x, y);
+
+        if (p == null) {
+            // check bounding box
+            for (Point point : boundingBox) {
+                if (PointUtils.getSquaredDist(x, y,
+                        point.getX(), point.getY()) < Constants.BOUNDING_BOX_PNTS_EPS) {
+                    p = point;
+                    break;
+                }
+            }
+        }
+
         setUnderCursorPoint(p);
         return p;
     }
@@ -191,7 +241,6 @@ public class LetterEditorModel {
         if (spline != null) {
             activeSpline = spline;
             activePoint = point;
-            activePointIndex = getPointIndex(point, spline);
         }
 
         modelListener.activePointChanged(point);
@@ -204,7 +253,6 @@ public class LetterEditorModel {
     public void activateUnderCursorPoint() {
         this.activePoint = underCursorPoint;
         activeSpline = getPointSpline(activePoint);
-        activePointIndex = touchedControlPointIndex;
 
         modelListener.activePointChanged(underCursorPoint);
 
@@ -216,6 +264,7 @@ public class LetterEditorModel {
 
     public void startMovingUnderCursorPoint() {
         if (!isUnderCursorPointMoving) {
+            currentlyMovingPoint = underCursorPoint;
             isUnderCursorPointMoving = true;
             lastDx = underCursorPoint.getX();
             lastDy = underCursorPoint.getY();
@@ -258,10 +307,13 @@ public class LetterEditorModel {
     public void endMovingUnderCursorPoint() {
         if (isUnderCursorPointMoving) {
             isUnderCursorPointMoving = false;
-            lastDx = underCursorPoint.getX() - lastDx;
-            lastDy = underCursorPoint.getY() - lastDy;
+            lastDx = currentlyMovingPoint.getX() - lastDx;
+            lastDy = currentlyMovingPoint.getY() - lastDy;
 
+            currentlyMovingPoint = null;
             actionStack.addAction(new PointMoveAction(underCursorPoint, lastDx, lastDy));
+
+            wasBoundMovedPrev = false;
         }
     }
 
@@ -269,6 +321,9 @@ public class LetterEditorModel {
     public void changeActivePointType(PointType newPointType) {
         if (activePoint == null || activeSpline == null)
             throw new NullPointerException();
+
+        Spline pointSpline = getPointSpline(activePoint);
+        int activePointIndex = getPointIndex(activePoint, pointSpline);
 
         if (!activePoint.getType().equals(newPointType)) {
             actionStack.addAction(new ChangeTypeAction(modelListener, activeSpline,
@@ -282,6 +337,9 @@ public class LetterEditorModel {
 
     @RedoUndo
     public void addControlPointAt(int x, int y) {
+        if (!boundingBox.isIn(x, y))
+            return;
+
         ControlPoint point = new ControlPoint(x, y);
         addControlPoint(point);
 
@@ -309,5 +367,60 @@ public class LetterEditorModel {
 
     public void setActionStack(ActionStack actionStack) {
         this.actionStack = actionStack;
+    }
+
+    /**
+     * Renewing coordinates
+     * @param width new view width
+     * @param height new view height
+     */
+    public void setViewSize(float width, float height) {
+        float sx = width / viewWidth;
+        float sy = height / viewHeight;
+
+        viewHeight = height;
+        viewWidth = width;
+        boundingBox.resize(width, height);
+
+        for (Spline s : currentLetter.getSplines()) {
+            s.scale(sx, sy);
+        }
+    }
+
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
+    }
+
+    private static class MyRect {
+        float l, r, t, b;
+    }
+
+    MyRect letterRect = new MyRect();
+
+    /**
+     * O(n)...
+     */
+    private void updateLetterRect() {
+        boolean isSignificant = false;
+        letterRect.r = letterRect.b = -1;
+        letterRect.l = letterRect.t = 1000000000f;
+
+        for (Spline s : currentLetter.getSplines()) {
+            for (ControlPoint p : s) {
+                isSignificant= true;
+                if (p.getX() < letterRect.l)
+                    letterRect.l = p.getX();
+                if (p.getX() > letterRect.r)
+                    letterRect.r = p.getX();
+                if (p.getY() < letterRect.t)
+                    letterRect.t = p.getY();
+                if (p.getY() > letterRect.b)
+                    letterRect.b = p.getY();
+            }
+        }
+
+        if (!isSignificant) {
+            letterRect.l = letterRect.r = letterRect.b = letterRect.t = -1;
+        }
     }
 }

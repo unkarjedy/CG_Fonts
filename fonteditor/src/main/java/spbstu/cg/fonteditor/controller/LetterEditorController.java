@@ -40,13 +40,17 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             @Override
             public void mouseReleased(MouseEvent e) {
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
+
+                // left release
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (touchedPoint != null) {
                         if (touchedPoint.getType().isControlPointType()) {
                             letterEditorModel.activateUnderCursorPoint();
                             letterEditorView.setActivePoint(touchedPoint);
                             controlPanelView.enablePointTypesBox(true);
+                            controlPanelView.getPointWeightSlider().setEnabled(true);
                             controlPanelView.setPointType(touchedPoint.getType());
+                            controlPanelView.setSliderWeight(touchedPoint.getWeight());
                         }
                     } else {
                         // creating new control point
@@ -59,6 +63,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                     }
                 }
 
+                // right release
                 if (SwingUtilities.isRightMouseButton(e)) {
                     if (touchedPoint != null) {
                         if (letterEditorModel.endCurrentSpline()) {
@@ -121,5 +126,10 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     @Override
     public void pointTypeChanged(PointType newType) {
         letterEditorModel.changeActivePointType(newType); // point is still active
+    }
+
+    @Override
+    public void pointWeightChanged(float weight) {
+        letterEditorModel.changeActivePointWeight(weight);
     }
 }

@@ -175,4 +175,10 @@ public class LetterEditorModel {
         return null;
     }
 
+    public void changeActivePointWeight(float weight) {
+        if (activePoint == null || activeSpline == null)
+            throw new NullPointerException();
+
+        activeSpline.changePointWeight(activePointIndex, weight);
+    }
 }

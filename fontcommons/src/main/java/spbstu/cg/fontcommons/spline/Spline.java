@@ -77,4 +77,12 @@ public class Spline implements Iterable<ControlPoint> {
     public List<ControlPoint> getControlPoints() {
         return controlPoints;
     }
+
+    public void changePointWeight(int index, float weight) {
+        if (index < 0 || index >= controlPoints.size()){
+            throw new IllegalArgumentException();
+        }
+
+        controlPoints.get(index).setWeight(weight);
+    }
 }

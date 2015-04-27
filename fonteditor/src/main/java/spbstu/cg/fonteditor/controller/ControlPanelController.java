@@ -7,6 +7,8 @@ import spbstu.cg.fonteditor.view.ControlPanelView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -40,42 +42,18 @@ public class ControlPanelController extends Controller {
             });
         }
 
-        controlPanelView.addMouseListener(new MouseListener() {
+        controlPanelView.getPointWeightSlider().addChangeListener(new ChangeListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void stateChanged(ChangeEvent e) {
+                JSlider source = (JSlider)e.getSource();
 
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-
-        controlPanelView.addMouseMotionListener(new MouseMotionListener() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
+                if (!source.getValueIsAdjusting()) {
+                    //float weight = (float)source.getValue();
+                    float weight = controlPanelView.getSliderWeight();
+                    System.out.println(weight);
+                    controlPanelListener.pointWeightChanged(weight);
+                    mainView.repaint();
+                }
             }
         });
     }

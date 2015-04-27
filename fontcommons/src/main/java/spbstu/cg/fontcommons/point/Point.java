@@ -6,9 +6,23 @@ package spbstu.cg.fontcommons.point;
  * Github username: egorbunov
  */
 public class Point {
+    public static final int WEIGHT_MIN = 0;
+    public static final int WEIGHT_MAX = 10;
+    public static final int WEIGHT_STANDART = 1;
+    public static float WEIGHT_MIN_PRACTICE = 0.1f;
     protected float x;
     protected float y;
     protected PointType type;
+
+    public float getWeight() {
+        return w;
+    }
+
+    public void setWeight(float w) {
+        this.w = w;
+    }
+
+    protected float w = 1; // weight
 
     public Point(float x, float y) {
         this.x = x;

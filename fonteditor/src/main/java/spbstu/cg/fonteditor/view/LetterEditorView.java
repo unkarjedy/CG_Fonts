@@ -1,10 +1,9 @@
 package spbstu.cg.fonteditor.view;
 
 import spbstu.cg.fontcommons.spline.Spline;
-import spbstu.cg.fontcommons.point.ControlPoint;
 import spbstu.cg.fontcommons.point.Point;
-import spbstu.cg.fonteditor.draw.PointDrawer;
-import spbstu.cg.fonteditor.draw.SplineDrawer;
+import spbstu.cg.fontcommons.draw.PointDrawer;
+import spbstu.cg.fontcommons.draw.SplineDrawer;
 import spbstu.cg.fonteditor.model.BoundingBox;
 
 import javax.swing.*;
@@ -20,7 +19,6 @@ public class LetterEditorView extends JComponent {
 
     private Rectangle bounds;
     private Graphics2D g2D;
-    private final SplineDrawer splineDrawer = new SplineDrawer();
 
     // === state ===
     private Point pointUnderCursor;
@@ -29,6 +27,7 @@ public class LetterEditorView extends JComponent {
     private boolean drawSplineMetaData = true;
     private boolean fillSpline = true;
     private BoundingBox boundingBox;
+    private boolean drawLetter = false;
 
     public LetterEditorView(){
         bounds = null;
@@ -48,29 +47,29 @@ public class LetterEditorView extends JComponent {
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
 
+        if(!drawLetter){
+            if (activePoint != null)
+                PointDrawer.drawActivePointCircle(activePoint, g2D);
+            if (pointUnderCursor != null)
+                PointDrawer.drawUnderCursorCircle(pointUnderCursor, g2D);
+            if (splines != null)
+                drawSplines();
+        } else {
+            SplineDrawer.drawFilledSplines(splines, g2D);
+//            SplineDrawer.drawLetterSplines(splines, g2D, 0, 0, 0.5); // JUST FOR TESTS!
+        }
 
-        if (activePoint != null) {
-            PointDrawer.drawActivePointCircle(activePoint, g2D);
-        }
-        if (pointUnderCursor != null) {
-            PointDrawer.drawUnderCursorCircle(pointUnderCursor, g2D);
-        }
-        if (splines != null) {
-            drawSplines();
-        }
-
-        if (boundingBox != null) {
+        if (boundingBox != null)
             boundingBox.draw(g2D);
-        }
     }
 
     public void drawSplines() {
         for (Spline spline : splines) {
-            splineDrawer.drawSpline(spline, g2D);
+            SplineDrawer.drawSpline(spline, g2D);
 
             if(drawSplineMetaData){
-                splineDrawer.drawHandlePointsSegments(spline, g2D);
-                splineDrawer.drawControlPoints(spline, g2D);
+                SplineDrawer.drawHandlePointsSegments(spline, g2D);
+                SplineDrawer.drawControlPoints(spline, g2D);
             }
         }
     }
@@ -97,4 +96,7 @@ public class LetterEditorView extends JComponent {
     }
 
 
+    public void setDrawLetter(boolean drawLetter) {
+        this.drawLetter = drawLetter;
+    }
 }

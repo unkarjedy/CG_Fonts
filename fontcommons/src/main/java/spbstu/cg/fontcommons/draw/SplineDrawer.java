@@ -1,4 +1,4 @@
-package spbstu.cg.fonteditor.draw;
+package spbstu.cg.fontcommons.draw;
 
 import javafx.geometry.Point3D;
 import spbstu.cg.fontcommons.spline.Spline;
@@ -6,6 +6,7 @@ import spbstu.cg.fontcommons.point.*;
 import spbstu.cg.fontcommons.point.Point;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class SplineDrawer {
     private static final double ANGLE_THRESHOLD = 1E-7;
 
 
-    public void drawSpline(Spline spline, Graphics2D g2D) {
-        GeneralPath splinePath = getSplinePath2(spline);
+    public static void drawSpline(Spline spline, Graphics2D g2D) {
+        GeneralPath splinePath = getRationaleSplinePath(spline);
 
         if(splinePath != null) {
             g2D.setStroke(SIMPLE_SOLID_STROKE);
@@ -36,21 +37,74 @@ public class SplineDrawer {
         }
     }
 
-    public void fillSpline(Spline spline, Graphics2D g2D, Color color) {
-        GeneralPath splinePath = getSplinePath(spline);
+    public static void drawFilledSplines(List<Spline> splines, Graphics2D g2D) {
+        if(splines == null)
+            return;
+        if(splines.size() == 0)
+            return;
 
-        if(splinePath != null) {
-            g2D.setStroke(SIMPLE_SOLID_STROKE);
-            g2D.setColor(color);
-            g2D.fill(splinePath);
+        // first fraw external splines
+        for(Spline spline : splines){
+            if(spline.isExternal()){
+                fillSpline(spline, g2D, Color.black);
+            }
+        }
+
+        // then draw internal splines
+        for(Spline spline : splines){
+            if(!spline.isExternal()){
+                fillSpline(spline, g2D, Color.white);
+            }
         }
     }
 
-    public void fillSpline(Spline spline, Graphics2D g2D) {
-        fillSpline(spline, g2D, Color.black);
+    public static void fillSpline(Spline spline, Graphics2D g2D, Color color) {
+        GeneralPath splinePath = getRationaleSplinePath(spline);
+
+        fillPath(splinePath, g2D, color);
     }
 
-    private GeneralPath getSplinePath(Spline spline) {
+    public static void fillPath(GeneralPath path, Graphics2D g2D, Color color) {
+        if(path != null) {
+            g2D.setStroke(SIMPLE_SOLID_STROKE);
+            g2D.setColor(color);
+            g2D.fill(path);
+        }
+    }
+
+    public static void drawLetterSplines(List<Spline> splines, Graphics2D g2D, int x, int y, double fontsize) {
+        if(splines == null)
+            return;
+        if(splines.size() == 0)
+            return;
+
+        GeneralPath path;
+        AffineTransform t = new AffineTransform();
+        t.scale(fontsize, fontsize);
+        t.translate(x, y);
+
+        // first fraw external splines
+        for(Spline spline : splines){
+            if(spline.isExternal()){
+                path = SplineDrawer.getRationaleSplinePath(spline);
+                if(path == null) continue;
+                path.transform(t);
+                SplineDrawer.fillPath(path, g2D, Color.black);
+            }
+        }
+
+        // then draw internal splines
+        for(Spline spline : splines){
+            if(!spline.isExternal()){
+                path = SplineDrawer.getRationaleSplinePath(spline);
+                if(path == null) continue;
+                path.transform(t);
+                SplineDrawer.fillPath(path, g2D, Color.white);
+            }
+        }
+    }
+
+    private static GeneralPath getSplinePath(Spline spline) {
         if(spline.getControlPoints().size() < 2)
             return null;
 
@@ -82,12 +136,12 @@ public class SplineDrawer {
         return splinePath;
     }
 
-    private void recursiveBezier(GeneralPath path, Point p1, Point p2, Point p3, Point p4) {
+    private static void recursiveBezier(GeneralPath path, Point p1, Point p2, Point p3, Point p4) {
         recursiveBezier(path, p1.getX(), p1.getY(), p2.getX(), p2.getY(),
                 p3.getX(), p3.getY(), p4.getX(), p4.getY());
     }
 
-    void recursiveBezier(GeneralPath path, double x1, double y1, double x2, double y2,
+    static void  recursiveBezier(GeneralPath path, double x1, double y1, double x2, double y2,
                          double x3, double y3, double x4, double y4) {
 
         if (curveIsFlat(x1, y1, x2, y2, x3, y3, x4, y4)) {
@@ -116,7 +170,7 @@ public class SplineDrawer {
         }
     }
 
-    private boolean curveIsFlat(double x1, double y1, double x2, double y2,
+    private static boolean curveIsFlat(double x1, double y1, double x2, double y2,
                                 double x3, double y3, double x4, double y4) {
         double dx1 = x2 - x1;
         double dx2 = x3 - x2;
@@ -134,15 +188,15 @@ public class SplineDrawer {
                 (dot(dx2, dy2, -dx3, -dy3) < -(1.0 - ANGLE_THRESHOLD) * seg2Len * seg3Len);
     }
 
-    double dot(double x1,double y1,double x2,double y2) {
+    static double dot(double x1,double y1,double x2,double y2) {
         return x1 * x2 + y1 * y2;
     }
 
-    double dot(double x1,double y1,double z1,double x2,double y2,double z2) {
+    static double dot(double x1,double y1,double z1,double x2,double y2,double z2) {
         return x1 * x2 + y1 * y2 + z1 * z2;
     }
 
-    public void drawHandlePointsSegments(Spline spline, Graphics2D g2D) {
+    public static void drawHandlePointsSegments(Spline spline, Graphics2D g2D) {
         for (ControlPoint point : spline) {
             HandlePoint[] hps = point.getHandlePoints();
             if (hps == null) {
@@ -162,12 +216,12 @@ public class SplineDrawer {
         }
     }
 
-    public void drawControlPoints(Spline spline, Graphics2D g2D) {
+    public static void drawControlPoints(Spline spline, Graphics2D g2D) {
         for (ControlPoint point : spline)
             PointDrawer.draw(point, g2D);
     }
 
-    private GeneralPath getSplinePath2(Spline spline) {
+    public static  GeneralPath getRationaleSplinePath(Spline spline) {
         if(spline.getControlPoints().size() < 2)
             return null;
 
@@ -199,7 +253,7 @@ public class SplineDrawer {
         return splinePath;
     }
 
-    private void rationalBezier(GeneralPath path, Point p1, Point p2, Point p3, Point p4) {
+    private static void rationalBezier(GeneralPath path, Point p1, Point p2, Point p3, Point p4) {
 
         // Core CHANGES FROM SIMPLE BEZIER CURVE
         List<Point3D> points3d = new ArrayList<>();
@@ -224,7 +278,7 @@ public class SplineDrawer {
         }
     }
 
-    void recursiveBezier3D(List<Point3D> path,
+    static void recursiveBezier3D(List<Point3D> path,
                          double x1, double y1, double z1,
                          double x2, double y2, double z2,
                          double x3, double y3, double z3,
@@ -264,14 +318,14 @@ public class SplineDrawer {
         }
     }
 
-    private double len(double x1, double y1, double z1, double x4, double y4, double z4) {
+    private static double len(double x1, double y1, double z1, double x4, double y4, double z4) {
         double dx = x4 - x1;
         double dy = y4 - y1;
         double dz = z4 - z1;
         return Math.sqrt(dx*dx + dy*dy + dz*dz);
     }
 
-    private boolean curveIsFlat3D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4) {
+    private static boolean curveIsFlat3D(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4) {
         double dx1 = x2 - x1;
         double dx2 = x3 - x2;
         double dx3 = x4 - x3;
@@ -291,4 +345,5 @@ public class SplineDrawer {
         return (dot(dx1, dy1, dz1, -dx2, -dy2, -dz2) < -(1.0 - ANGLE_THRESHOLD) * seg1Len * seg2Len) &&
                 (dot(dx2, dy2, dz2, -dx3, -dy3, -dz3) < -(1.0 - ANGLE_THRESHOLD) * seg2Len * seg3Len);
     }
+
 }

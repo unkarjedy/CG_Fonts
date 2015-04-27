@@ -55,6 +55,24 @@ public class ControlPanelController extends Controller {
                 }
             }
         });
+
+        controlPanelView.getSplineTypeCheckbox().addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JCheckBox source = (JCheckBox)e.getSource();
+                controlPanelListener.splineTypeChanged(source.isSelected());
+                mainView.repaint();
+            }
+        });
+
+        controlPanelView.getDrawLetterCheckbox().addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                JCheckBox source = (JCheckBox)e.getSource();
+                controlPanelListener.drawLetterChanged(source.isSelected());
+                mainView.repaint();
+            }
+        });
     }
 
     public void setControlPanelListener(ControlPanelListener controlPanelListener) {

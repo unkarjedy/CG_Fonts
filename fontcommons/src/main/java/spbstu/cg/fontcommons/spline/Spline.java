@@ -30,6 +30,15 @@ public class Spline implements Iterable<ControlPoint> {
      */
     private ArrayList<ControlPoint> controlPoints;
 
+    public boolean isExternal() {
+        return isExternal;
+    }
+
+    public void setIsExternal(boolean isExternal) {
+        this.isExternal = isExternal;
+    }
+
+    boolean isExternal = true;
 
     public Spline() {
         controlPoints = new ArrayList<>(POINT_AVERAGE_CAPACITY);
@@ -77,7 +86,6 @@ public class Spline implements Iterable<ControlPoint> {
     public List<ControlPoint> getControlPoints() {
         return controlPoints;
     }
-
 
     public void changePointWeight(int index, float weight) {
         if (index < 0 || index >= controlPoints.size()) {

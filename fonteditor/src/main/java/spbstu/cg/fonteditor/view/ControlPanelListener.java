@@ -11,4 +11,8 @@ import spbstu.cg.fontcommons.point.PointType;
 public interface ControlPanelListener {
     void pointTypeChanged(PointType newType);
     void pointWeightChanged(float weight);
+
+    void splineTypeChanged(boolean selected);
+
+    void drawLetterChanged(boolean selected);
 }

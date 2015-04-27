@@ -20,12 +20,19 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     private JPanel pointTypeBox;
     private Map<PointType, JRadioButton> pointTypeButtonMap;
     private JLabel pointWeightLabel;
+    private JSlider pointWeightSlider;
+    private JCheckBox drawLetterCheckbox;
+    private JCheckBox splineTypeCheckbox;
+
+    public JCheckBox getSplineTypeCheckbox() {
+        return splineTypeCheckbox;
+    }
 
     public JSlider getPointWeightSlider() {
         return pointWeightSlider;
     }
 
-    private JSlider pointWeightSlider;
+
 
     public ControlPanelView() {
         super(new BorderLayout());
@@ -33,8 +40,26 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         createVerticalBoxPanel();
         createPointTypeBox();
         createPointWeightSlider();
+        createSplineTypeCheckbox();
+        createDrawLetterCheckbox();
 
         setPreferredSize(new Dimension(220, 200));
+    }
+
+    public JCheckBox getDrawLetterCheckbox() {
+        return drawLetterCheckbox;
+    }
+
+    private void createDrawLetterCheckbox() {
+        drawLetterCheckbox = new JCheckBox("Draw letter");
+        drawLetterCheckbox.setSelected(false);
+        verticalBoxPanel.add(drawLetterCheckbox);
+    }
+
+    private void createSplineTypeCheckbox() {
+        splineTypeCheckbox = new JCheckBox("Spline is external");
+        splineTypeCheckbox.setEnabled(false);
+        verticalBoxPanel.add(splineTypeCheckbox);
     }
 
     private void createVerticalBoxPanel() {

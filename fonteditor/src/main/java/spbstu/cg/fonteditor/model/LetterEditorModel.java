@@ -28,15 +28,23 @@ public class LetterEditorModel {
     BoundingBox boundingBox;
 
     /**
-     * Active letter for editing
+     * Active letter for
      */
     private Letter currentLetter;
+
+    public Letter getCurrentLetter() {
+        return currentLetter;
+    }
 
     /**
      * Not yet completed spline, but it already added to currentLetter! (it just the last one
      * in the list of splines of the currentLetter)
      */
     private Spline currentSpline;
+
+    public Spline getActiveSpline() {
+        return activeSpline;
+    }
 
     /**
      *  Spline of active point. It can be any spline including
@@ -391,6 +399,10 @@ public class LetterEditorModel {
 
     public BoundingBox getBoundingBox() {
         return boundingBox;
+    }
+
+    public void setActiveSplineType(boolean isExternal) {
+        activeSpline.setIsExternal(isExternal);
     }
 
     private static class MyRect {

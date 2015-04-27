@@ -1,7 +1,6 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.*;
-import spbstu.cg.fonteditor.model.BoundingBox;
 import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
@@ -68,6 +67,10 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                             controlPanelView.getPointWeightSlider().setEnabled(true);
                             controlPanelView.setPointType(touchedPoint.getType());
                             controlPanelView.setSliderWeight(touchedPoint.getWeight());
+
+                            controlPanelView.getSplineTypeCheckbox()
+                                    .setSelected(letterEditorModel.getActiveSpline().isExternal());
+                            controlPanelView.getSplineTypeCheckbox().setEnabled(true);
                         }
 
 
@@ -181,6 +184,16 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     public void pointWeightChanged(float weight) {
         letterEditorModel.changeActivePointWeight(weight);
+    }
+
+    @Override
+    public void splineTypeChanged(boolean selected) {
+        letterEditorModel.setActiveSplineType(selected);
+    }
+
+    @Override
+    public void drawLetterChanged(boolean drawLetter) {
+        letterEditorView.setDrawLetter(drawLetter);
     }
 
     public void activePointChanged(Point activePoint) {

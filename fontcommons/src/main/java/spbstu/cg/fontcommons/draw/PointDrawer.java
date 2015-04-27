@@ -1,4 +1,4 @@
-package spbstu.cg.fonteditor.draw;
+package spbstu.cg.fontcommons.draw;
 
 import spbstu.cg.fontcommons.point.*;
 import spbstu.cg.fontcommons.point.Point;

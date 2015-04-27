@@ -78,17 +78,17 @@ public class Spline implements Iterable<ControlPoint> {
         return controlPoints;
     }
 
-<<<<<<< HEAD
+
     public void changePointWeight(int index, float weight) {
-        if (index < 0 || index >= controlPoints.size()){
+        if (index < 0 || index >= controlPoints.size()) {
             throw new IllegalArgumentException();
         }
 
         controlPoints.get(index).setWeight(weight);
-=======
+    }
+
     public void deleteLastControlPoint() {
         controlPoints.remove(controlPoints.size() - 1);
->>>>>>> Action system (undo / redo) added.
     }
 
     public void scale(float sx, float sy) {

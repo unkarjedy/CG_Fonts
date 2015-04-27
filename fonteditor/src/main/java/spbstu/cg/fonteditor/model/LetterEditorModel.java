@@ -362,6 +362,8 @@ public class LetterEditorModel {
         if (activePoint == null || activeSpline == null)
             throw new NullPointerException();
 
+        Spline pointSpline = getPointSpline(activePoint);
+        int activePointIndex = getPointIndex(activePoint, pointSpline);
         activeSpline.changePointWeight(activePointIndex, weight);
     }
 

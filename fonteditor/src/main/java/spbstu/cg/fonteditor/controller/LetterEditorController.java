@@ -57,7 +57,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
 
-                
+
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (touchedPoint != null) {
                         if (touchedPoint.getType().isControlPointType()) {

@@ -15,12 +15,12 @@ import java.util.List;
  * TODO: add conversion to polygon, colouring, and a lot of other stuff...
  */
 public class Letter {
-    private String alias;
+    private Character alias;
     private float width, height;
 
     private ArrayList<Spline> splines;
 
-    public Letter(String alias, float width, float height) {
+    public Letter(Character alias, float width, float height) {
         this.alias = alias;
         this.width = width;
         this.height = height;
@@ -37,7 +37,7 @@ public class Letter {
         splines.add(spline);
     }
 
-    public String getAlias() {
+    public Character getAlias() {
         return alias;
     }
 

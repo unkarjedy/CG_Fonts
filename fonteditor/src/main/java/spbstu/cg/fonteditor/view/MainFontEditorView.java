@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 
 
 public class MainFontEditorView extends JFrame {
-    private ProjectPanelView projectsPanel;
+    private ProjectPanelView projectPanel;
     private LetterEditorView letterEditor;
     private ControlPanelView controlPanel;
 
@@ -58,13 +58,13 @@ public class MainFontEditorView extends JFrame {
 
     private Component buildFontProjectPanel() {
         //ImageIcon icon = new ImageIcon(getClass().getResource("simulator.png"));
-        projectsPanel = new ProjectPanelView();
+        projectPanel = new ProjectPanelView();
 
         JPanel wrapper = new JPanel(new BorderLayout());
         JSeparator sep = new JSeparator(JSeparator.VERTICAL);
         sep.setForeground(Color.gray);
         wrapper.add(sep, BorderLayout.EAST);
-        wrapper.add(projectsPanel);
+        wrapper.add(projectPanel);
 
         return wrapper;
     }
@@ -134,29 +134,35 @@ public class MainFontEditorView extends JFrame {
         setJMenuBar(menuBar);
     }
 
+    JButton newLetterButton;
+    JButton newFontButton;
+
+    public JButton getNewLetterButton() {
+        return newLetterButton;
+    }
+
+    public JButton getNewFontButton() {
+        return newFontButton;
+    }
+
     private void createToolBars() {
 
         JToolBar toolbar = new JToolBar();
 
-        ImageIcon iconNew = new ImageIcon(this.getClass().getResource("/newFile.png").getFile());
+        ImageIcon iconNewFont = new ImageIcon(this.getClass().getResource("/new_font.png").getFile());
+        ImageIcon iconNewLetter = new ImageIcon(this.getClass().getResource("/new_letter.png").getFile());
         ImageIcon iconOpen = new ImageIcon(this.getClass().getResource("/openFile.png").getFile());
         ImageIcon iconSave = new ImageIcon(this.getClass().getResource("/saveFile.png").getFile());
 
-        JButton buttonNew = new JButton(iconNew);
+        newFontButton = new JButton(iconNewFont);
+        newLetterButton = new JButton(iconNewLetter);
         JButton buttonOpen = new JButton(iconOpen);
         JButton buttonSave = new JButton(iconSave);
 
-        toolbar.add(buttonNew);
+        toolbar.add(newFontButton);
+        toolbar.add(newLetterButton);
         toolbar.add(buttonOpen);
         toolbar.add(buttonSave);
-
-
-//        exitb.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent event) {
-//                System.exit(0);
-//            }
-//        });
 
         toolbar.setBorderPainted(false);
         toolbar.setFloatable(false);
@@ -180,7 +186,7 @@ public class MainFontEditorView extends JFrame {
     /*
      * Get methods for each panel
      */
-    public ProjectPanelView getProjectsPanel() { return projectsPanel; }
+    public ProjectPanelView getProjectPanel() { return projectPanel; }
 
     public LetterEditorView getLetterEditor() {
         return letterEditor;

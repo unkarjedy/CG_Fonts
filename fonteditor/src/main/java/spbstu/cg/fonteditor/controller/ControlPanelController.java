@@ -19,13 +19,9 @@ public class ControlPanelController extends Controller {
     private ControlPanelView controlPanelView;
     private ControlPanelListener controlPanelListener;
 
-    private final ActionStack actionStack;
 
-
-    public ControlPanelController(MainFontEditorView view, ActionStack actionStack) {
-
+    public ControlPanelController(MainFontEditorView view) {
         this.mainView = view;
-        this.actionStack = actionStack;
     }
 
     public void control() {
@@ -47,7 +43,6 @@ public class ControlPanelController extends Controller {
                 JSlider source = (JSlider)e.getSource();
 
                 if (!source.getValueIsAdjusting()) {
-                    //float weight = (float)source.getValue();
                     float weight = controlPanelView.getSliderWeight();
                     System.out.println(weight);
                     controlPanelListener.pointWeightChanged(weight);

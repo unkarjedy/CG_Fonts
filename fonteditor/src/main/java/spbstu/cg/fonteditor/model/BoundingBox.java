@@ -43,11 +43,11 @@ public class BoundingBox implements Iterable<Point> {
 
         @Override
         public void move(float dx, float dy) {
-            if (BoundingBox.this.checkHorizontalMove(this, dx)) {
+            /*if (BoundingBox.this.checkHorizontalMove(this, dx)) {
                 super.move(dx, 0);
                 if (pairPoint != null)
                     pairPoint.set(pairPoint.getX() + dx, pairPoint.getY());
-            }
+            }*/
         }
     }
 

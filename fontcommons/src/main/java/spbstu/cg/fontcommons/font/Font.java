@@ -11,7 +11,8 @@ public class Font {
 
     private Map<Character, Letter> letters;
 
-    Font(String fontName) {
+    public Font(String fontName) {
+        name = fontName;
         letters = new TreeMap<>();
         // TODO: implement
     }

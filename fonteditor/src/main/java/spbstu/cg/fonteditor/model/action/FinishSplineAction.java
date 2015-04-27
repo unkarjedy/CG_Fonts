@@ -21,10 +21,11 @@ public class FinishSplineAction extends ModelAction {
         model.getCurrentSpline().getControlPoints().remove(
                 model.getCurrentSpline().getControlPoints().size() - 1
         );
+
     }
 
     @Override
     public void redo() {
-        model.endCurrentSpline();
+        model.endCurrentSplineAct();
     }
 }

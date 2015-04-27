@@ -177,4 +177,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         return pointTypeButtonMap;
     }
 
+    public void enableWeightSlider(boolean b) {
+        pointWeightSlider.setEnabled(false);
+    }
 }

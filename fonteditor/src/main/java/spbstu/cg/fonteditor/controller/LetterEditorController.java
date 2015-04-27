@@ -19,34 +19,30 @@ import java.awt.event.*;
  * Main app controller.
  */
 public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener, ComponentListener {
+    private AbstractAction undoAction;
+    private AbstractAction redoAction;
     private MainFontEditorView mainView;
     private LetterEditorModel letterEditorModel;
     private LetterEditorView letterEditorView;
 
     private ControlPanelView controlPanelView;
 
-    private final ActionStack actionStack;
-
     public int pressedButton;
 
+    int w, h;
 
-    public LetterEditorController(MainFontEditorView view, LetterEditorModel model, ActionStack actionStack) {
+    private final MouseListener mouseListener;
+    private final MouseMotionListener mouseMotionListener;
+
+    public LetterEditorController(MainFontEditorView view) {
         this.mainView = view;
-        letterEditorModel = model;
-        this.actionStack = actionStack;
         letterEditorView = mainView.getLetterEditor();
         controlPanelView = mainView.getControlPanel();
-
-        letterEditorView.setBoundingBox(letterEditorModel.getBoundingBox());
-        letterEditorModel.setListener(this);
-        letterEditorModel.setActionStack(actionStack);
-
         letterEditorView.addComponentListener(this);
+        letterEditorView.setEnabled(false);
 
-    }
 
-    public void control() {
-        letterEditorView.addMouseListener(new MouseListener() {
+        mouseListener = new MouseListener() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (letterEditorModel.isUnderCursorPointMoving()) {
@@ -55,7 +51,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                 }
 
                 Point touchedPoint = letterEditorModel.setCurrentCursorPos(e.getX(), e.getY());
-
 
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     if (touchedPoint != null) {
@@ -114,9 +109,8 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             public void mouseExited(MouseEvent e) {
 
             }
-        });
-
-        letterEditorView.addMouseMotionListener(new MouseMotionListener() {
+        };
+        mouseMotionListener = new MouseMotionListener() {
 
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -142,10 +136,9 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                     letterEditorView.repaint();
                 }
             }
-        });
+        };
 
-
-        AbstractAction undoAction = new AbstractAction() {
+        undoAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 letterEditorModel.undo();
@@ -154,7 +147,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             }
         };
 
-        AbstractAction redoAction = new AbstractAction() {
+        redoAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 letterEditorModel.redo();
@@ -163,16 +156,45 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             }
         };
 
-        letterEditorView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK),
-                "undoAction");
-        letterEditorView.getActionMap().put("undoAction",
-                undoAction);
 
-        letterEditorView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
-                        InputEvent.CTRL_DOWN_MASK),
-                "redoAction");
-        letterEditorView.getActionMap().put("redoAction",
-                redoAction);
+    }
+
+    public void setModel(LetterEditorModel model) {
+        letterEditorModel = model;
+        letterEditorModel.setViewSize(w, h);
+        letterEditorModel.setListener(this);
+        letterEditorView.setBoundingBox(letterEditorModel.getBoundingBox());
+
+
+        controlPanelView.enablePointTypesBox(false);
+        controlPanelView.enableWeightSlider(false);
+
+        letterEditorView.setSplines(letterEditorModel.getSplines());
+        letterEditorView.setBoundingBox(letterEditorModel.getBoundingBox());
+        letterEditorView.setActivePoint(null);
+        letterEditorView.setPointUnderCursor(null);
+
+        letterEditorView.repaint();
+    }
+
+    public void control() {
+        letterEditorView.addMouseListener(mouseListener);
+        letterEditorView.addMouseMotionListener(mouseMotionListener);
+
+
+        // TODO: It must not be mainView.getProjectPanel(), but list eats all focus
+        mainView.getProjectPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Z,
+                        InputEvent.CTRL_DOWN_MASK), "undoAction");
+        mainView.getProjectPanel().getActionMap().put("undoAction", undoAction);
+
+        mainView.getProjectPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_Y,
+                        InputEvent.CTRL_DOWN_MASK), "redoAction");
+        mainView.getProjectPanel().getActionMap().put("redoAction", redoAction);
+    }
+
+    public void stopControl() {
+        letterEditorView.removeMouseListener(mouseListener);
+        letterEditorView.removeMouseMotionListener(mouseMotionListener);
     }
 
     @Override
@@ -181,7 +203,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     @Override
-
     public void pointWeightChanged(float weight) {
         letterEditorModel.changeActivePointWeight(weight);
     }
@@ -198,6 +219,10 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     public void activePointChanged(Point activePoint) {
         letterEditorView.setActivePoint(activePoint);
+        if (activePoint == null) {
+            controlPanelView.enablePointTypesBox(false);
+            controlPanelView.enableWeightSlider(false);
+        }
     }
 
     @Override
@@ -212,8 +237,12 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
     @Override
     public void componentResized(ComponentEvent e) {
-        letterEditorModel.setViewSize(e.getComponent().getWidth(),
-                e.getComponent().getHeight());
+        w = e.getComponent().getWidth();
+        h = e.getComponent().getHeight();
+        if (letterEditorModel != null) {
+            letterEditorModel.setViewSize(w,
+                    h);
+        }
     }
 
     @Override

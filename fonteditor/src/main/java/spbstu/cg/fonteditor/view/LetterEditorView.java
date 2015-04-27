@@ -24,9 +24,10 @@ public class LetterEditorView extends JComponent {
     private Point pointUnderCursor;
     private List<Spline> splines;
     private Point activePoint;
-    private boolean drawSplineMetaData = true;
-    private boolean fillSpline = true;
     private BoundingBox boundingBox;
+    // === end state ===
+
+    private boolean drawSplineMetaData = true;
     private boolean drawLetter = false;
 
     public LetterEditorView(){

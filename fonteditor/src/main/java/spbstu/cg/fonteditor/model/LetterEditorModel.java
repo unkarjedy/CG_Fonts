@@ -8,11 +8,9 @@ import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.point.PointUtils;
 import spbstu.cg.fonteditor.Constants;
-import spbstu.cg.fonteditor.controller.LetterEditorController;
 import spbstu.cg.fonteditor.controller.LetterEditorModelListener;
 import spbstu.cg.fonteditor.model.action.*;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -30,15 +28,15 @@ public class LetterEditorModel {
     /**
      * Active letter for
      */
-    private Letter currentLetter;
+    private Letter letter;
 
     public Letter getCurrentLetter() {
         return currentLetter;
     }
 
     /**
-     * Not yet completed spline, but it already added to currentLetter! (it just the last one
-     * in the list of splines of the currentLetter)
+     * Not yet completed spline, but it already added to letter! (it just the last one
+     * in the list of splines of the letter)
      */
     private Spline currentSpline;
 
@@ -79,14 +77,14 @@ public class LetterEditorModel {
 
     private void activateAndAddNewSpline() {
         currentSpline = new Spline();
-        currentLetter.addSpline(currentSpline);
+        letter.addSpline(currentSpline);
     }
 
     /**
      * Returns nearest point (for now only Control Point) to given one
      */
     private Point findNearestPoint(float x, float y) {
-        for (Spline spline : currentLetter.getSplines()) {
+        for (Spline spline : letter.getSplines()) {
             int i = 0;
             for (ControlPoint point : spline) {
                 if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Constants.DISTANCE_EPS) {
@@ -112,7 +110,7 @@ public class LetterEditorModel {
     }
 
     private Spline getPointSpline(Point point) {
-        for(Spline spline : currentLetter.getSplines()){
+        for(Spline spline : letter.getSplines()){
             for(ControlPoint cp : spline.getControlPoints()) {
                 if(cp.equals(point))
                     return spline;
@@ -135,18 +133,19 @@ public class LetterEditorModel {
         this.underCursorPoint = underCursorPoint;
     }
 
-    public LetterEditorModel() {
-        currentLetter = new Letter("Letter", 100, 100); // TODO: delete hardcode
+    public LetterEditorModel(Letter letter) {
+        this.letter = letter;
         activateAndAddNewSpline();
         boundingBox = new BoundingBox(1, 1);
+        actionStack = new ActionStack();
     }
 
     /**
      * That is the helping method for undo/redo. {@link FinishSplineAction};
      */
     public void deleteLastSplineAndActivatePrev() {
-        currentLetter.getSplines().remove(currentLetter.getSplines().size() - 1);
-        currentSpline = currentLetter.getSplines().get(currentLetter.getSplines().size() - 1);
+        letter.getSplines().remove(letter.getSplines().size() - 1);
+        currentSpline = letter.getSplines().get(letter.getSplines().size() - 1);
     }
 
     public Spline getCurrentSpline() {
@@ -236,7 +235,7 @@ public class LetterEditorModel {
     }
 
     public List<Spline> getSplines() {
-        return currentLetter.getSplines();
+        return letter.getSplines();
     }
 
     public void activatePoint(Point point) {
@@ -283,6 +282,13 @@ public class LetterEditorModel {
         return isUnderCursorPointMoving;
     }
 
+
+    public void endCurrentSplineAct() {
+        currentSpline.addControlPoint(currentSpline.getControlPoints().get(0));
+        currentSpline = null;
+        activateAndAddNewSpline();
+    }
+
     /**
      * Tries to end currently edited spline. It's okay if
      * under cursor point is the first point of the spline.
@@ -297,12 +303,8 @@ public class LetterEditorModel {
             return false;
         }
 
-        if (underCursorPoint == currentSpline.getControlPoints().get(0)) {
-            currentSpline.addControlPoint(currentSpline.getControlPoints().get(0));
-            currentSpline = null;
-
-
-            activateAndAddNewSpline();
+        if (underCursorPoint == null || underCursorPoint == currentSpline.getControlPoints().get(0)) {
+            endCurrentSplineAct();
 
             actionStack.addAction(new FinishSplineAction(this));
 
@@ -318,8 +320,9 @@ public class LetterEditorModel {
             lastDx = currentlyMovingPoint.getX() - lastDx;
             lastDy = currentlyMovingPoint.getY() - lastDy;
 
+            actionStack.addAction(new PointMoveAction(currentlyMovingPoint, lastDx, lastDy));
+
             currentlyMovingPoint = null;
-            actionStack.addAction(new PointMoveAction(underCursorPoint, lastDx, lastDy));
 
             wasBoundMovedPrev = false;
         }
@@ -351,7 +354,7 @@ public class LetterEditorModel {
         ControlPoint point = new ControlPoint(x, y);
         addControlPoint(point);
 
-        actionStack.addAction(new AddLastAction(this, currentSpline, point));
+        actionStack.addAction(new AddLastAction(this, point));
     }
 
     public void undo() {
@@ -375,10 +378,6 @@ public class LetterEditorModel {
         activeSpline.changePointWeight(activePointIndex, weight);
     }
 
-    public void setActionStack(ActionStack actionStack) {
-        this.actionStack = actionStack;
-    }
-
     /**
      * Renewing coordinates
      * @param width new view width
@@ -392,7 +391,7 @@ public class LetterEditorModel {
         viewWidth = width;
         boundingBox.resize(width, height);
 
-        for (Spline s : currentLetter.getSplines()) {
+        for (Spline s : letter.getSplines()) {
             s.scale(sx, sy);
         }
     }
@@ -419,7 +418,7 @@ public class LetterEditorModel {
         letterRect.r = letterRect.b = -1;
         letterRect.l = letterRect.t = 1000000000f;
 
-        for (Spline s : currentLetter.getSplines()) {
+        for (Spline s : letter.getSplines()) {
             for (ControlPoint p : s) {
                 isSignificant= true;
                 if (p.getX() < letterRect.l)
@@ -436,5 +435,9 @@ public class LetterEditorModel {
         if (!isSignificant) {
             letterRect.l = letterRect.r = letterRect.b = letterRect.t = -1;
         }
+    }
+
+    public Letter getLetter() {
+        return letter;
     }
 }

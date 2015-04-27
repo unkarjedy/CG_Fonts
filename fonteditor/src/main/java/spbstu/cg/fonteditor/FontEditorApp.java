@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor;
 
 import spbstu.cg.fonteditor.controller.ControlPanelController;
+import spbstu.cg.fonteditor.controller.FontProjectController;
 import spbstu.cg.fonteditor.controller.LetterEditorController;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.model.action.ActionStack;
@@ -25,14 +26,14 @@ public class FontEditorApp {
                 ActionStack actionStack = new ActionStack();
 
                 // Create model, view, controller for each of 3 component
-                LetterEditorModel letterEditorModel = new LetterEditorModel();
-                LetterEditorController letterController = new LetterEditorController(editor, letterEditorModel, actionStack);
+                LetterEditorController letterController = new LetterEditorController(editor);
 
-                ControlPanelController controlPanelController = new ControlPanelController(editor, actionStack);
+                ControlPanelController controlPanelController = new ControlPanelController(editor);
                 controlPanelController.setControlPanelListener(letterController);
 
-                letterController.control();
+                FontProjectController projectController = new FontProjectController(editor, letterController);
                 controlPanelController.control();
+                projectController.control();
 
                 editor.setVisible(true);
             }

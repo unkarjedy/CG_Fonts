@@ -40,11 +40,11 @@ public class TextEditorView extends JComponent {
         int height = 10 * (int)model.getSize();
         int widht = 10 * (int)model.getSize();
 
-        //PAINT FONT
+        //TODO PAINT FONT
         int y = 0;
         int x = 0;
         for (int i = 0; i < model.getText().size(); i++) {
-            if (x + 10 + widht > bounds.width) {
+            if (x + 10 + widht> bounds.width) {
                 if (y + 2 * (height + 10) > bounds.height) {
                     break;
                 }

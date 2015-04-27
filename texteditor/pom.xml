@@ -10,7 +10,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>spbstu.cg</groupId>
-			<artifactId>texteditor</artifactId>
+			<artifactId>fontcommons</artifactId>
 			<version>0.5</version>
       	</dependency>
     </dependencies>

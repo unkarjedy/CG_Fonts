@@ -8,6 +8,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by JDima on 26/04/15.
@@ -25,13 +32,69 @@ public class TextEditorController extends Controller {
 
     }
 
+    private List<String> openTextDialog() {
+        final JFileChooser fc = new JFileChooser();
+
+        int returnVal = fc.showOpenDialog(mainView);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File f = fc.getSelectedFile();
+            String line;
+            try (
+                    InputStream fis = new FileInputStream(f.getPath());
+                    InputStreamReader isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+                    BufferedReader br = new BufferedReader(isr);
+            ) {
+                List<String> text = new LinkedList<>();
+                while ((line = br.readLine()) != null) {
+                    text.add(line);
+                }
+                return text;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private String saveTextDialog() {
+        final JFileChooser fc = new JFileChooser();
+
+        int returnVal = fc.showSaveDialog(mainView);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File f = fc.getSelectedFile();
+            if (f.exists()) {
+                try {
+                    Files.delete(Paths.get(f.getPath()));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return f.getPath();
+        }
+        return null;
+    }
+
+    private void openFontDialog() {
+        final JFileChooser fc = new JFileChooser();
+
+        int returnVal = fc.showOpenDialog(mainView);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //TODO
+
+        }
+
+    }
+
     private void initViewListeners() {
         mainView.getSizeComboBox().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 float size = Float.valueOf((String) mainView.getSizeComboBox().getSelectedItem());
                 textEditorModel.setSize(size);
-                textView.repaint();;
+                textView.repaint();
                 setStatus("New letter size is " + size);
             }
         });
@@ -40,29 +103,38 @@ public class TextEditorController extends Controller {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String font = (String)mainView.getFontComboBox().getSelectedItem();
-                mainView.getAvalaibleLettersLabel().setText(MainTextEditorView.AVAILABLE_LETTERS + "A B C D ...");
+                mainView.getAvalaibleLettersLabel().setText(MainTextEditorView.AVAILABLE_LETTERS
+                        +  textEditorModel.getAlphabet());
                 textEditorModel.setFont(font);
                 textView.repaint();
 
-                setStatus("New font is " + font);
+                setStatus("Current font is " + font);
             }
         });
 
         mainView.getMenuLoad().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textEditorModel.addNewFont();
+                openFontDialog();
 
-                setStatus("Load font");
+                String font = textEditorModel.addNewFont();
+                if (font != null) {
+                    mainView.getFontComboBox().addItem(font);
+                }
+
+                setStatus("Load new font ");
             }
         });
 
         mainView.getMenuLoadText().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textEditorModel.loadText();
-
-                setStatus("Load text");
+                List<String> text = openTextDialog();
+                if (text != null) {
+                    textEditorModel.loadText(text);
+                }
+                textView.repaint();
+                setStatus("Load text ");
             }
         });
 
@@ -72,16 +144,16 @@ public class TextEditorController extends Controller {
                 textEditorModel.clearLetters();
                 textView.repaint();
 
-                setStatus("new page");
+                setStatus("New page ");
             }
         });
 
         mainView.getMenuSave().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textEditorModel.saveText();
+                textEditorModel.saveText(saveTextDialog());
 
-                setStatus("Save text");
+                setStatus("Save text ");
             }
         });
 

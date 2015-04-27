@@ -31,7 +31,7 @@ public class LetterEditorModel {
     private Letter letter;
 
     public Letter getCurrentLetter() {
-        return currentLetter;
+        return letter;
     }
 
     /**

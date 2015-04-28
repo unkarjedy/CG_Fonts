@@ -79,16 +79,16 @@ public class SplineDrawer {
             return;
 
         GeneralPath path;
-        AffineTransform t = new AffineTransform();
-        t.scale(fontsize, fontsize);
-        t.translate(x, y);
+//        AffineTransform t = new AffineTransform();
+//        t.scale(fontsize, fontsize);
+//        t.translate(x, y);
 
         // first fraw external splines
         for(Spline spline : splines){
             if(spline.isExternal()){
                 path = SplineDrawer.getRationaleSplinePath(spline);
                 if(path == null) continue;
-                path.transform(t);
+//                path.transform(t);
                 SplineDrawer.fillPath(path, g2D, Color.black);
             }
         }
@@ -98,7 +98,7 @@ public class SplineDrawer {
             if(!spline.isExternal()){
                 path = SplineDrawer.getRationaleSplinePath(spline);
                 if(path == null) continue;
-                path.transform(t);
+//                path.transform(t);
                 SplineDrawer.fillPath(path, g2D, Color.white);
             }
         }
@@ -245,6 +245,45 @@ public class SplineDrawer {
                 rationalBezier(splinePath, prev, h1, h2, curr);
             } else {
                 splinePath.lineTo(curr.getX(), curr.getY());
+            }
+
+            prev = curr;
+        }
+
+        return splinePath;
+    }
+
+    public static  GeneralPath getRationaleSplinePath(Spline spline, int x, int y, int scale) {
+        if(spline.getControlPoints().size() < 2)
+            return null;
+
+        ControlPoint prev = null;
+        HandlePoint h1;
+        HandlePoint h2;
+
+        GeneralPath splinePath = new GeneralPath();
+        Point first = spline.getControlPoints().get(0).newTransform(x, y, scale);
+        splinePath.moveTo(first.getX(), first.getY());
+
+        for (ControlPoint curr : spline) {
+            if (prev == null) {
+                prev = curr;
+                continue;
+            }
+
+            h1 = prev.getHandlePoints()[1];
+            h2 = curr.getHandlePoints()[0];
+
+            if (h1 != null && h2 != null) {
+                rationalBezier(splinePath,
+                        prev.newTransform(x, y, scale),
+                        h1.newTransform(x, y, scale),
+                        h2.newTransform(x, y, scale),
+                        curr.newTransform(x, y, scale));
+            } else {
+                splinePath.lineTo(
+                        curr.newTransform(x, y, scale).getX(),
+                        curr.newTransform(x, y, scale).getY());
             }
 
             prev = curr;

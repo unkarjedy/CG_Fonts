@@ -57,4 +57,10 @@ public class Point implements Serializable{
     public void setType(PointType newType) {
         type = newType;
     }
+
+    public Point newTransform(int dx, int dy, int scale) {
+        float x = this.x * scale + dx;
+        float y = this.y * scale + dy;
+        return new Point(x, y);
+    }
 }

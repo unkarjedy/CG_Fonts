@@ -11,7 +11,11 @@ public class FontManager {
     public static Font loadFontFromFile(String filename) {
         try(ObjectInputStream in =
                     new ObjectInputStream(new FileInputStream(filename))) {
-            return (Font)in.readObject();
+            Font font = (Font) in.readObject();
+            for(Letter letter : font.getLetters().values()) {
+                letter.normalize();
+            }
+            return font;
         } catch (Exception e) {
             e.printStackTrace();
         }

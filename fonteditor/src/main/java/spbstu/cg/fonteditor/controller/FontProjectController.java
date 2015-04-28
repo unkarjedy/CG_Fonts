@@ -1,5 +1,6 @@
 package spbstu.cg.fonteditor.controller;
 
+import spbstu.cg.fontcommons.font.Font;
 import spbstu.cg.fontcommons.font.FontManager;
 import spbstu.cg.fonteditor.model.FontProjectModel;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
@@ -46,12 +47,21 @@ public class FontProjectController extends Controller {
         newFontButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = new JFrame("Enter font name dialog");
-                String fontName = JOptionPane.showInputDialog(frame, "Input new font name");
+                String fontName = JOptionPane.showInputDialog(null, "Input new font name");
                 if (fontName != null) {
                     if (fontName.length() == 0) {
-                        JOptionPane.showMessageDialog(frame, "Empty font name!", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Empty font name!", "Error", JOptionPane.ERROR_MESSAGE);
                     } else {
+                        if (fontProjectModel != null) {
+                            int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to close current font project?",
+                                    "alert", JOptionPane.OK_CANCEL_OPTION);
+                            if (result == JOptionPane.OK_OPTION) {
+                                fontProjectModel = null;
+                                projectView.getListModel().removeAllElements();
+                            } else {
+                                return;
+                            }
+                        }
                         mainView.setStatusBarMessage("Last action: new font created...");
                         fontProjectModel = new FontProjectModel(fontName);
                         projectView.setProjectName(fontName);
@@ -73,7 +83,7 @@ public class FontProjectController extends Controller {
                         } else {
                             mainView.setStatusBarMessage("Last action: new letter created...");
                             fontProjectModel.addNewLetter(letter.charAt(0));
-                            projectView.getListModel().addElement(letter.charAt(0));
+                            projectView.getListModel().addElement("'" + letter + "'");
                         }
                     }
                 } else {
@@ -97,25 +107,89 @@ public class FontProjectController extends Controller {
         ActionListener saveAction = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                final JFileChooser fc = new JFileChooser();
+                if (fontProjectModel != null) {
 
-                int returnVal = fc.showSaveDialog(mainView);
+                    final JFileChooser fc = new JFileChooser();
 
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    File f = fc.getSelectedFile();
-                    if (f.exists()) {
-                        try {
-                            Files.delete(Paths.get(f.getPath()));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    int returnVal = fc.showSaveDialog(mainView);
+
+                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                        File f = fc.getSelectedFile();
+                        if (f.exists()) {
+                            try {
+                                Files.delete(Paths.get(f.getPath()));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        FontManager.saveFontToFile(fontProjectModel.getFont(), f.getPath());
                     }
-                    FontManager.saveFontToFile(fontProjectModel.getFont(), f.getPath());
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), "Create font project first!",
+                            "Info", JOptionPane.INFORMATION_MESSAGE);
                 }
+
             }
         };
 
         saveMI.addActionListener(saveAction);
         saveButton.addActionListener(saveAction);
+
+        JButton loadFontButton = mainView.getButtonLoad();
+
+        loadFontButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Font font = openFontLoadDialog();
+                if (font != null) {
+                    if (fontProjectModel != null) {
+                        int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to close current font project?",
+                                "alert", JOptionPane.OK_CANCEL_OPTION);
+                        if (result == JOptionPane.OK_OPTION) {
+                            fontProjectModel = null;
+                            projectView.getListModel().removeAllElements();
+                        } else {
+                            return;
+                        }
+                    }
+                    fontProjectModel = new FontProjectModel(font);
+                    projectView.setProjectName(fontProjectModel.getFontName());
+                    projectView.getList().setEnabled(true);
+                    fillListModel(fontProjectModel);
+                    setStatus("Font loaded.");
+
+                } else {
+                    setStatus("Cannot load font.");
+                }
+            }
+        });
     }
+
+    private Font openFontLoadDialog() {
+        final JFileChooser fc = new JFileChooser();
+
+        int returnVal = fc.showOpenDialog(mainView);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File f = fc.getSelectedFile();
+            return FontManager.loadFontFromFile(f.getPath());
+        }
+        return null;
+    }
+
+    private void setStatus(String status) {
+        mainView.setStatusBarMessage(status);
+    }
+
+    private void fillListModel(FontProjectModel model) {
+        DefaultListModel<String> listModel = projectView.getListModel();
+        listModel.removeAllElements();
+        int size = model.getLetterNumber();
+
+        for (int i = 0; i < size; ++i) {
+            String alias = "'" + model.getLetterEditorModel(i).getLetterAlias() + "'";
+            listModel.addElement(alias);
+        }
+    }
+
 }

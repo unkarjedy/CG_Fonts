@@ -15,9 +15,11 @@ public class ChangeTypeAction extends ModelAction {
     int index;
     PointType newType;
     PointType oldType;
+    private LetterEditorModel model;
     private LetterEditorModelListener listener;
 
-    public ChangeTypeAction(LetterEditorModelListener listener, Spline activeSpline, int index, PointType oldType, PointType newType) {
+    public ChangeTypeAction(LetterEditorModel model, LetterEditorModelListener listener, Spline activeSpline, int index, PointType oldType, PointType newType) {
+        this.model = model;
         this.listener = listener;
 
         this.spline = activeSpline;
@@ -28,12 +30,14 @@ public class ChangeTypeAction extends ModelAction {
 
     @Override
     public void undo() {
+        model.activatePoint(spline.getControlPoints().get(index));
         spline.changePointType(index, oldType);
         listener.controlPointTypeChanged(spline.getControlPoints().get(index));
     }
 
     @Override
     public void redo() {
+        model.activatePoint(spline.getControlPoints().get(index));
         spline.changePointType(index, newType);
         listener.controlPointTypeChanged(spline.getControlPoints().get(index));
     }

@@ -131,7 +131,7 @@ public class LetterEditorModel {
 
     public LetterEditorModel(Letter letter) {
         this.letter = letter;
-        activateAndAddNewSpline();
+        currentSpline = null;
         boundingBox = new BoundingBox(1, 1);
         actionStack = new ActionStack();
     }
@@ -283,7 +283,6 @@ public class LetterEditorModel {
     public void endCurrentSplineAct() {
         currentSpline.addControlPoint(currentSpline.getControlPoints().get(0));
         currentSpline = null;
-        activateAndAddNewSpline();
     }
 
     /**
@@ -334,7 +333,7 @@ public class LetterEditorModel {
         int activePointIndex = getPointIndex(activePoint, pointSpline);
 
         if (!activePoint.getType().equals(newPointType)) {
-            actionStack.addAction(new ChangeTypeAction(modelListener, activeSpline,
+            actionStack.addAction(new ChangeTypeAction(this, modelListener, activeSpline,
                     activePointIndex, activePoint.getType(), newPointType));
 
             activeSpline.changePointType(activePointIndex, newPointType);
@@ -347,6 +346,10 @@ public class LetterEditorModel {
     public void addControlPointAt(int x, int y) {
         if (!boundingBox.isIn(x, y))
             return;
+
+        if (currentSpline == null) {
+            activateAndAddNewSpline();
+        }
 
         ControlPoint point = new ControlPoint(x, y);
         addControlPoint(point);
@@ -370,9 +373,16 @@ public class LetterEditorModel {
         if (activePoint == null || activeSpline == null)
             throw new NullPointerException();
 
+        if (activePoint.getWeight() == weight) {
+            return;
+        }
+
+        actionStack.addAction(new WeightChangeAction(this, modelListener, activePoint, activePoint.getWeight(), weight));
+
         Spline pointSpline = getPointSpline(activePoint);
         int activePointIndex = getPointIndex(activePoint, pointSpline);
         activeSpline.changePointWeight(activePointIndex, weight);
+
     }
 
     /**
@@ -437,6 +447,13 @@ public class LetterEditorModel {
 
     public Letter getLetter() {
         return letter;
+    }
+
+    public Character getLetterAlias() {
+        if (letter != null) {
+            return letter.getAlias();
+        }
+        return null;
     }
 
     public void updateLetterBoundingBox() {

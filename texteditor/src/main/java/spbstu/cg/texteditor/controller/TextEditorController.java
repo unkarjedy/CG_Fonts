@@ -194,9 +194,13 @@ public class TextEditorController extends Controller {
         }
         textView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),
                 "backspace");
+        textView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0),
+                "keyAction");
+
         textView.getActionMap().put("backspace",
                 backspace);
         textView.getActionMap().put("keyAction",
                 keyAction);
+
     }
 }

@@ -68,9 +68,13 @@ public class MainTextEditorView extends JFrame {
     private void createLetterPropertiesPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         fontComboBox = createComboBox(new String[]{});
+        fontComboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0,false), "none");
         panel.add(fontComboBox);
 
         sizeComboBox = createComboBox(SIZES);
+        sizeComboBox.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE,0,false), "none");
         panel.add(new JSeparator(JSeparator.VERTICAL));
         panel.add(sizeComboBox);
 

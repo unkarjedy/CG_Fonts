@@ -18,7 +18,7 @@ public class TextEditorModel {
     private float size;
     private Font font;
     private HashMap<String, Font> fonts;
-    private LinkedList<Character> text;
+    private LinkedList<Character>   text;
 
     public TextEditorModel() {
         fonts = new HashMap<>();
@@ -59,7 +59,7 @@ public class TextEditorModel {
 
     public void deleteLastLetter() {
         if (!text.isEmpty()) {
-            text.pop();
+            text.removeLast();
         }
     }
 

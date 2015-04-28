@@ -72,7 +72,7 @@ public class SplineDrawer {
         }
     }
 
-    public static void drawLetterSplines(List<Spline> splines, Graphics2D g2D, int x, int y, double fontsize) {
+    public static void drawLetterSplines(List<Spline> splines, Graphics2D g2D, int x, int y, int fontsize) {
         if(splines == null)
             return;
         if(splines.size() == 0)
@@ -86,7 +86,7 @@ public class SplineDrawer {
         // first fraw external splines
         for(Spline spline : splines){
             if(spline.isExternal()){
-                path = SplineDrawer.getRationaleSplinePath(spline);
+                path = SplineDrawer.getRationaleSplinePath(spline, x, y, fontsize);
                 if(path == null) continue;
 //                path.transform(t);
                 SplineDrawer.fillPath(path, g2D, Color.black);
@@ -96,7 +96,7 @@ public class SplineDrawer {
         // then draw internal splines
         for(Spline spline : splines){
             if(!spline.isExternal()){
-                path = SplineDrawer.getRationaleSplinePath(spline);
+                path = SplineDrawer.getRationaleSplinePath(spline, x, y, fontsize);
                 if(path == null) continue;
 //                path.transform(t);
                 SplineDrawer.fillPath(path, g2D, Color.white);

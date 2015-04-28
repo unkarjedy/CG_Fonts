@@ -40,7 +40,7 @@ public class TextEditorView extends JComponent {
         g2D.setColor(Color.black);
         System.out.println(bounds.height);
 
-        int fontsize = (int)model.getSize();
+        int fontsize = 10 * (int)model.getSize();
         int height = 10 * (int)model.getSize();
         int widht = 10 * (int)model.getSize();
 
@@ -59,7 +59,7 @@ public class TextEditorView extends JComponent {
             Letter letter = model.getLetter(text.get(i));
             if (letter != null) {
                 LetterDrawer.draw(letter, g2D, x + 10, y + 10, fontsize);
-                //g2D.drawRect(x + 10, y + 10, widht, height);
+                g2D.drawRect(x + 10, y + 10, widht, height);
                 x += 10 + widht;
             }
         }

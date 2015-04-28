@@ -64,11 +64,11 @@ public class Letter implements Serializable{
         for (Spline s : splines) {
             for (ControlPoint p : s) {
 
-                p.set((p.getX() - left) / wid, (p.getY() - top) / wid);
+                p.set((p.getX() - left) / height, (p.getY() - top) / height);
 
                 for (HandlePoint hp : p.getHandlePoints()) {
                     if (hp != null) {
-                        hp.set((hp.getX() - left) / wid, (hp.getY() - top) / wid);
+                        hp.set((hp.getX() - left) / height, (hp.getY() - top) / height);
                     }
                 }
             }

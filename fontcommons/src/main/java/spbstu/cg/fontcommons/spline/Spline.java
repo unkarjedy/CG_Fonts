@@ -102,6 +102,26 @@ public class Spline implements Iterable<ControlPoint>, Serializable {
         controlPoints.remove(controlPoints.size() - 1);
     }
 
+    public void translateAndScale(float dx, float dy, float sx, float sy) {
+        if (!controlPoints.isEmpty()) {
+
+            int delta = controlPoints.get(0) == controlPoints.get(controlPoints.size() - 1) ? 1 : 0;
+            if (controlPoints.size() == 1)
+                delta = 0;
+
+            for (int i = 0; i < controlPoints.size() - delta; ++i) {
+                ControlPoint cp = controlPoints.get(i);
+
+                cp.set((cp.getX() + dx) * sx, (cp.getY() + dy) * sy);
+                for (HandlePoint hp : cp.getHandlePoints()) {
+                    if (hp != null) {
+                        hp.set((hp.getX() + dx) * sx, (hp.getY() + dy) * sy);
+                    }
+                }
+            }
+        }
+    }
+
     public void scale(float sx, float sy) {
         if (!controlPoints.isEmpty()) {
 

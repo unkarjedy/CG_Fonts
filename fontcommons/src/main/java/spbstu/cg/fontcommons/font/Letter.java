@@ -62,16 +62,20 @@ public class Letter implements Serializable{
         float height = bottom - top;
 
         for (Spline s : splines) {
-            for (ControlPoint p : s) {
-
-                p.set((p.getX() - left) / height, (p.getY() - top) / height);
-
-                for (HandlePoint hp : p.getHandlePoints()) {
-                    if (hp != null) {
-                        hp.set((hp.getX() - left) / height, (hp.getY() - top) / height);
-                    }
-                }
-            }
+            s.translateAndScale(-left, -top, 1 / height, 1 / height);
         }
+
+        left = 0;
+        top = 0;
+        bottom = (bottom - top) / height;
+        right = (right - left) / height;
+    }
+
+    public float getHeight() {
+        return (bottom - top);
+    }
+
+    public float getWidth() {
+        return (right - left);
     }
 }

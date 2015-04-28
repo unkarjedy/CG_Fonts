@@ -15,7 +15,6 @@ public class Font implements Serializable{
     public Font(String fontName) {
         name = fontName;
         letters = new TreeMap<>();
-        // TODO: implement
     }
 
     public void addLetter(Character character, Letter letter){
@@ -37,5 +36,11 @@ public class Font implements Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void normalize() {
+        for (Letter l : letters.values()) {
+            l.normalize();
+        }
     }
 }

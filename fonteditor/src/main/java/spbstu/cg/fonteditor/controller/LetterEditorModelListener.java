@@ -11,4 +11,5 @@ import spbstu.cg.fontcommons.point.Point;
 public interface LetterEditorModelListener {
     void activePointChanged(Point activePoint);
     void controlPointTypeChanged(ControlPoint controlPoint);
+    void pointWeightChanged(Point point);
 }

@@ -240,6 +240,16 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     @Override
+    public void pointWeightChanged(Point point) {
+        if (point == null) {
+            controlPanelView.enableWeightSlider(false);
+        } else {
+            controlPanelView.enableWeightSlider(true);
+            controlPanelView.setSliderWeight(point.getWeight());
+        }
+    }
+
+    @Override
     public void componentResized(ComponentEvent e) {
         w = e.getComponent().getWidth();
         h = e.getComponent().getHeight();

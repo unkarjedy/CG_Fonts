@@ -184,5 +184,4 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     public void enableCurrentSplineType(boolean b) {
         splineTypeCheckbox.setEnabled(b);
     }
-
 }

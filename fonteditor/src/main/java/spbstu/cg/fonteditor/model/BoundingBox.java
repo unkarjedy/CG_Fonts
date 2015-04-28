@@ -17,10 +17,10 @@ import java.util.Iterator;
  */
 public class BoundingBox implements Iterable<Point> {
 
-    float l;
-    float r;
-    float b;
-    float t; // constratings
+    private float l;
+    private float r;
+    private float b;
+    private float t; // constratings
 
     public void setLetterBounds(float l, float r, float b, float t) {
         this.l = l;
@@ -241,6 +241,22 @@ public class BoundingBox implements Iterable<Point> {
         g2D.fillRect((int) leftTop.getX(), (int) leftTop.getY(), (int) topLeft.getX(), rH);
         g2D.fillRect((int) bottomRight.getX(), (int) leftTop.getY(), (int) (w - topRight.getX()), rH);
 
+    }
+
+    public float getLeft() {
+        return topLeft.getX();
+    }
+
+    public float getRight() {
+        return topRight.getX();
+    }
+
+    public float getTop() {
+        return leftTop.getY();
+    }
+
+    public float getBottom() {
+        return leftBottom.getY();
     }
 
 }

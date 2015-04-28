@@ -119,6 +119,8 @@ public class TextEditorController extends Controller {
             public void actionPerformed(ActionEvent e) {
                 Font font = openFontDialog();
                 if (font != null) {
+                    font.normalize();
+
                     textEditorModel.addNewFont(font);
                     mainView.getFontComboBox().addItem(font.getName());
                 }

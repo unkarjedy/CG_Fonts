@@ -230,6 +230,7 @@ public class LetterEditorModel {
         return underCursorPoint;
     }
 
+    int cnt = 0;
     public List<Spline> getSplines() {
         return letter.getSplines();
     }
@@ -439,6 +440,7 @@ public class LetterEditorModel {
     }
 
     public void updateLetterBoundingBox() {
-        letter.setBoundingBox(boundingBox.l, boundingBox.r, boundingBox.t, boundingBox.b);
+        letter.setBoundingBox(boundingBox.getLeft(), boundingBox.getRight(),
+                boundingBox.getTop(), boundingBox.getBottom());
     }
 }

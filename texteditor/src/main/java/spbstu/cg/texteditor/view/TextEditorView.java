@@ -1,10 +1,13 @@
 package spbstu.cg.texteditor.view;
 
+import spbstu.cg.fontcommons.draw.LetterDrawer;
+import spbstu.cg.fontcommons.font.Letter;
 import spbstu.cg.texteditor.model.TextEditorModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by JDima on 26/04/15.
@@ -37,12 +40,14 @@ public class TextEditorView extends JComponent {
         g2D.setColor(Color.black);
         System.out.println(bounds.height);
 
+        int fontsize = (int)model.getSize();
         int height = 10 * (int)model.getSize();
         int widht = 10 * (int)model.getSize();
 
         //TODO PAINT FONT
         int y = 0;
         int x = 0;
+        List<Character> text = model.getText();
         for (int i = 0; i < model.getText().size(); i++) {
             if (x + 10 + widht> bounds.width) {
                 if (y + 2 * (height + 10) > bounds.height) {
@@ -51,8 +56,12 @@ public class TextEditorView extends JComponent {
                 y += height + 10;
                 x = 0;
             }
-            g2D.drawRect(x + 10, y + 10, widht, height);
-            x +=  10 + widht;
+            Letter letter = model.getLetter(text.get(i));
+            if (letter != null) {
+                LetterDrawer.draw(letter, g2D, x + 10, y + 10, fontsize);
+                //g2D.drawRect(x + 10, y + 10, widht, height);
+                x += 10 + widht;
+            }
         }
     }
 

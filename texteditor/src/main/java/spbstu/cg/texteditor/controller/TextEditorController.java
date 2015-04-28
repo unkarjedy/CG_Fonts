@@ -78,17 +78,16 @@ public class TextEditorController extends Controller {
         return null;
     }
 
-    private void openFontDialog() {
+    private Font openFontDialog() {
         final JFileChooser fc = new JFileChooser();
 
         int returnVal = fc.showOpenDialog(mainView);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File f = fc.getSelectedFile();
-            Font font = FontManager.loadFontFromFile(f.getPath());
-            return;
+            return FontManager.loadFontFromFile(f.getPath());
         }
-
+        return null;
     }
 
     private void initViewListeners() {
@@ -118,11 +117,10 @@ public class TextEditorController extends Controller {
         mainView.getMenuLoad().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openFontDialog();
-
-                String font = textEditorModel.addNewFont();
+                Font font = openFontDialog();
                 if (font != null) {
-                    mainView.getFontComboBox().addItem(font);
+                    textEditorModel.addNewFont(font);
+                    mainView.getFontComboBox().addItem(font.getName());
                 }
 
                 setStatus("Load new font ");
@@ -188,6 +186,8 @@ public class TextEditorController extends Controller {
 
         for (int i = 0x41; i <= 0x5A; i++) {
             textView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(i, 0),
+                    "keyAction");
+            textView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(i, ActionEvent.SHIFT_MASK),
                     "keyAction");
         }
         textView.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0),

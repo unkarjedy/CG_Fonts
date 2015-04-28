@@ -29,6 +29,8 @@ public class Font implements Serializable{
         return letters.get(character);
     }
 
+    public Map<Character, Letter> getLetters() {return letters;}
+
     public String getName() {
         return name;
     }

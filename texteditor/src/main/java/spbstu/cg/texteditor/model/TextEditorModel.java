@@ -1,5 +1,6 @@
 package spbstu.cg.texteditor.model;
 
+import spbstu.cg.fontcommons.font.Font;
 import spbstu.cg.fontcommons.font.Letter;
 import spbstu.cg.texteditor.Consts;
 
@@ -15,14 +16,12 @@ import java.util.List;
  */
 public class TextEditorModel {
     private float size;
-    private String font;
-    private HashMap<String, HashMap<Character, Letter> > fonts;
-    private HashMap<Character, Letter> alphabet;
+    private Font font;
+    private HashMap<String, Font> fonts;
     private LinkedList<Character> text;
 
     public TextEditorModel() {
         fonts = new HashMap<>();
-        alphabet = new HashMap<>();
         text = new LinkedList<>();
     }
 
@@ -35,26 +34,27 @@ public class TextEditorModel {
         return size;
     }
 
+    public Letter getLetter(Character c) {
+        if (font != null){
+            return font.getLetter(c);
+        }
+        return null;
+    }
+
+    public void setFont(String font) {
+        this.font = fonts.get(font);
+    }
+
     public void setSize(float size) {
         this.size = size;
     }
 
-    //TODO add ALPHABET
     public String getAlphabet() {
-        /*StringBuilder sb = new StringBuilder();
-        for (Character c : alphabet.keySet()) {
+        StringBuilder sb = new StringBuilder();
+        for (Character c : font.getLetters().keySet()) {
             sb.append(c + " ");
         }
-        return sb;*/
-        return "A B C D ...";
-    }
-
-    public void setAlphabet(HashMap<Character, Letter> alphabet) {
-        this.alphabet = alphabet;
-    }
-
-    public void setFont(String font) {
-        this.font = font;
+        return sb.toString();
     }
 
     public void deleteLastLetter() {
@@ -78,8 +78,7 @@ public class TextEditorModel {
             FileWriter fileWriter = new FileWriter(filename);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            //TODO font
-            bufferedWriter.write("own");
+            bufferedWriter.write(font.getName());
             bufferedWriter.write("\n");
 
             for (int i = 0; i < text.size(); i++) {
@@ -95,9 +94,9 @@ public class TextEditorModel {
         }
     }
 
-    public String addNewFont() {
-        return null;
-        //TODO NEW FONT
+    public void addNewFont(Font font) {
+        this.font = font;
+        fonts.put(font.getName(), font);
     }
 
     public void loadText(List<String> newText) {
@@ -107,16 +106,14 @@ public class TextEditorModel {
             return;
         }
         String fontName = newText.get(0);
-        //TODO conditon
-        //if (fonts.keySet().contains(fontName))
-        if (false) {
+        if (fonts.keySet().contains(fontName)) {
             JOptionPane.showMessageDialog(new JFrame(), Consts.INCORRECT_FONT, "Dialog",
                     JOptionPane.ERROR_MESSAGE);
             return;
 
         } else {
             text.clear();
-            alphabet = fonts.get(fontName);
+            font = fonts.get(fontName);
             for (int i = 1; i < newText.size(); i++) {
                 System.out.print(newText.get(i) + "\n");
                 char[] line = newText.get(i).toCharArray();

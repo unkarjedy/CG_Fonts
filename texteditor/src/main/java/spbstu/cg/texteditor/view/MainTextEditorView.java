@@ -67,7 +67,7 @@ public class MainTextEditorView extends JFrame {
 
     private void createLetterPropertiesPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        fontComboBox = createComboBox(new String[]{"Times New Roman", "Our"});
+        fontComboBox = createComboBox(new String[]{});
         panel.add(fontComboBox);
 
         sizeComboBox = createComboBox(SIZES);

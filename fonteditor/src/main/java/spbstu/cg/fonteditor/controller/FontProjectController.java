@@ -1,5 +1,6 @@
 package spbstu.cg.fonteditor.controller;
 
+import spbstu.cg.fontcommons.font.FontManager;
 import spbstu.cg.fonteditor.model.FontProjectModel;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
@@ -8,6 +9,10 @@ import spbstu.cg.fonteditor.view.ProjectPanelView;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -33,6 +38,9 @@ public class FontProjectController extends Controller{
     public void control() {
         JButton newLetterButton = mainView.getNewLetterButton();
         JButton newFontButton = mainView.getNewFontButton();
+        JButton saveButton = mainView.getSaveButton();
+        JMenuItem saveMI = mainView.getSaveMi();
+
         projectView = mainView.getProjectPanel();
 
         newFontButton.addActionListener(new ActionListener() {
@@ -81,5 +89,29 @@ public class FontProjectController extends Controller{
                 letterEditorController.control();
             }
         });
+
+        ActionListener saveAction = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                final JFileChooser fc = new JFileChooser();
+
+                int returnVal = fc.showSaveDialog(mainView);
+
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File f = fc.getSelectedFile();
+                    if (f.exists()) {
+                        try {
+                            Files.delete(Paths.get(f.getPath()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    FontManager.saveFontToFile(fontProjectModel.getFont(), f.getPath());
+                }
+            }
+        };
+
+        saveMI.addActionListener(saveAction);
+        saveButton.addActionListener(saveAction);
     }
 }

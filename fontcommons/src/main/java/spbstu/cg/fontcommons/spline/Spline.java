@@ -1,7 +1,10 @@
 package spbstu.cg.fontcommons.spline;
 
 import spbstu.cg.fontcommons.point.*;
+import spbstu.cg.fontcommons.point.Point;
 
+import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
  * for now in that class definition so it uses ControlPoint class, which purpose is
  * to describe a point on the Bézier Curve.
  */
-public class Spline implements Iterable<ControlPoint> {
+public class Spline implements Iterable<ControlPoint>, Serializable {
     private static final short POINT_AVERAGE_CAPACITY = 30;
 
     /**

@@ -1,5 +1,7 @@
 package spbstu.cg.texteditor.controller;
 
+import spbstu.cg.fontcommons.font.Font;
+import spbstu.cg.fontcommons.font.FontManager;
 import spbstu.cg.texteditor.model.TextEditorModel;
 import spbstu.cg.texteditor.view.MainTextEditorView;
 import spbstu.cg.texteditor.view.TextEditorView;
@@ -82,8 +84,9 @@ public class TextEditorController extends Controller {
         int returnVal = fc.showOpenDialog(mainView);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            //TODO
-
+            File f = fc.getSelectedFile();
+            Font font = FontManager.loadFontFromFile(f.getPath());
+            return;
         }
 
     }

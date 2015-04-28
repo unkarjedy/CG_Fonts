@@ -2,6 +2,7 @@ package spbstu.cg.fontcommons.font;
 
 import spbstu.cg.fontcommons.spline.Spline;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * TODO: add conversion to polygon, colouring, and a lot of other stuff...
  */
-public class Letter {
+public class Letter implements Serializable{
     private Character alias;
     private float width, height;
 

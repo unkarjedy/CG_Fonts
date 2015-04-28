@@ -1,11 +1,13 @@
 package spbstu.cg.fontcommons.point;
 
+import java.io.Serializable;
+
 /**
  * Created by Egor Gorbunov on 05.03.2015.
  * Email: egor_mailbox@ya.ru
  * Github username: egorbunov
  */
-public class Point {
+public class Point implements Serializable{
     public static final int WEIGHT_MIN = 0;
     public static final int WEIGHT_MAX = 10;
     public static final int WEIGHT_STANDART = 1;

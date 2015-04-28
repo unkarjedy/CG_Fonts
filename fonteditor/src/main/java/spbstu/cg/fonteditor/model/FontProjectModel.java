@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * Github username: egorbunov
  */
 public class FontProjectModel {
-    Font font;
+    private Font font;
     private ArrayList<LetterEditorModel> editedLetters;
 
     public FontProjectModel(String fontName) {
@@ -40,4 +40,7 @@ public class FontProjectModel {
         return null;
     }
 
+    public Font getFont() {
+        return font;
+    }
 }

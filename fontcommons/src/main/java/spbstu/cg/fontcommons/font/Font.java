@@ -1,12 +1,13 @@
 package spbstu.cg.fontcommons.font;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Created by user on 28.02.2015.
  */
 /* TODO: implement class */
-public class Font {
+public class Font implements Serializable{
     private String name;
 
     private Map<Character, Letter> letters;

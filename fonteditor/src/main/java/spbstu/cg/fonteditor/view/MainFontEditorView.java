@@ -13,6 +13,8 @@ public class MainFontEditorView extends JFrame {
     private ProjectPanelView projectPanel;
     private LetterEditorView letterEditor;
     private ControlPanelView controlPanel;
+    private JMenuItem saveMi;
+    private JButton buttonSave;
 
     private JLabel statusBarText;
 
@@ -108,7 +110,7 @@ public class MainFontEditorView extends JFrame {
         JMenuItem openMi = new JMenuItem(new MenuItemAction("Open Font", iconOpen,
                 KeyEvent.VK_O));
 
-        JMenuItem saveMi = new JMenuItem(new MenuItemAction("Save Font", iconSave,
+        saveMi = new JMenuItem(new MenuItemAction("Save Font", iconSave,
                 KeyEvent.VK_S));
 
         JMenuItem exitMi = new JMenuItem("Exit", iconExit);
@@ -157,7 +159,7 @@ public class MainFontEditorView extends JFrame {
         newFontButton = new JButton(iconNewFont);
         newLetterButton = new JButton(iconNewLetter);
         JButton buttonOpen = new JButton(iconOpen);
-        JButton buttonSave = new JButton(iconSave);
+        buttonSave = new JButton(iconSave);
 
         toolbar.add(newFontButton);
         toolbar.add(newLetterButton);
@@ -194,5 +196,13 @@ public class MainFontEditorView extends JFrame {
 
     public ControlPanelView getControlPanel() {
         return controlPanel;
+    }
+
+    public JMenuItem getSaveMi() {
+        return saveMi;
+    }
+
+    public JButton getSaveButton() {
+        return buttonSave;
     }
 }

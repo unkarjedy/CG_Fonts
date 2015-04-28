@@ -1,11 +1,13 @@
 package spbstu.cg.fontcommons.point;
 
+import java.io.Serializable;
+
 /**
  * Created by Egor Gorbunov on 05.03.2015.
  * Email: egor_mailbox@ya.ru
  * Github username: egorbunov
  */
-public class ControlPoint extends Point {
+public class ControlPoint extends Point implements Serializable  {
     private static final int MAX_HANDLE_POINT_NUMBER = 2;
 
     protected HandlePoint[] handlePoints;

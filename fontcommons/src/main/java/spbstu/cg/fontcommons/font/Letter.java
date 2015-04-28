@@ -65,10 +65,10 @@ public class Letter implements Serializable{
             s.translateAndScale(-left, -top, 1 / height, 1 / height);
         }
 
-        left = 0;
-        top = 0;
         bottom = (bottom - top) / height;
         right = (right - left) / height;
+        left = 0;
+        top = 0;
     }
 
     public float getHeight() {

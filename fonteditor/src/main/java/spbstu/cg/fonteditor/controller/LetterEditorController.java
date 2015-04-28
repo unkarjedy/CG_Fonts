@@ -225,7 +225,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
             controlPanelView.enablePointTypesBox(false);
             controlPanelView.enableWeightSlider(false);
             controlPanelView.enableCurrentSplineType(false);
-
         }
     }
 

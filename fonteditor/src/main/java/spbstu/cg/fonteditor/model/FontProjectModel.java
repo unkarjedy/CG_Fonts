@@ -19,6 +19,15 @@ public class FontProjectModel {
         editedLetters = new ArrayList<>(5);
     }
 
+    public FontProjectModel(Font font) {
+        this.font = font;
+        editedLetters = new ArrayList<>(font.getLetters().size());
+
+        for (Letter l : font.getLetters().values()) {
+            editedLetters.add(new LetterEditorModel(l));
+        }
+    }
+
     public LetterEditorModel addNewLetter(Character character) {
         if (font.getLetter(character) != null) {
             return null;
@@ -45,6 +54,18 @@ public class FontProjectModel {
             model.updateLetterBoundingBox();
         }
         return font;
+    }
+
+    public String getFontName() {
+        if (font != null)
+            return font.getName();
+        else {
+            return "";
+        }
+    }
+
+    public int getLetterNumber() {
+        return editedLetters.size();
     }
 
 }

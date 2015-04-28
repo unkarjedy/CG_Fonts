@@ -18,6 +18,12 @@ public class MainFontEditorView extends JFrame {
 
     private JLabel statusBarText;
 
+    public JButton getButtonLoad() {
+        return buttonLoad;
+    }
+
+    private JButton buttonLoad;
+
     public MainFontEditorView() {
         initUI();
     }
@@ -153,17 +159,17 @@ public class MainFontEditorView extends JFrame {
 
         ImageIcon iconNewFont = new ImageIcon(this.getClass().getResource("/new_font.png").getFile());
         ImageIcon iconNewLetter = new ImageIcon(this.getClass().getResource("/new_letter.png").getFile());
-        ImageIcon iconOpen = new ImageIcon(this.getClass().getResource("/openFile.png").getFile());
-        ImageIcon iconSave = new ImageIcon(this.getClass().getResource("/saveFile.png").getFile());
+        ImageIcon iconOpen = new ImageIcon(this.getClass().getResource("/font_load.png").getFile());
+        ImageIcon iconSave = new ImageIcon(this.getClass().getResource("/font_save.png").getFile());
 
         newFontButton = new JButton(iconNewFont);
         newLetterButton = new JButton(iconNewLetter);
-        JButton buttonOpen = new JButton(iconOpen);
+        buttonLoad = new JButton(iconOpen);
         buttonSave = new JButton(iconSave);
 
         toolbar.add(newFontButton);
         toolbar.add(newLetterButton);
-        toolbar.add(buttonOpen);
+        toolbar.add(buttonLoad);
         toolbar.add(buttonSave);
 
         toolbar.setBorderPainted(false);

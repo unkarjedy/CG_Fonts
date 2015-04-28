@@ -10,7 +10,7 @@ public class ProjectPanelView extends JPanel {
     private String projectName = "";
     private JLabel projectNameLabel;
     private JList list;
-    private DefaultListModel<Character> listModel;
+    private DefaultListModel<String> listModel;
 
 
     public ProjectPanelView(){
@@ -53,7 +53,7 @@ public class ProjectPanelView extends JPanel {
         projectNameLabel.setText(projectName);
     }
 
-    public DefaultListModel<Character> getListModel() {
+    public DefaultListModel<String> getListModel() {
         return listModel;
     }
 

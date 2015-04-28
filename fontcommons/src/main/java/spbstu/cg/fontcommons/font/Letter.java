@@ -1,5 +1,7 @@
 package spbstu.cg.fontcommons.font;
 
+import spbstu.cg.fontcommons.point.ControlPoint;
+import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.spline.Spline;
 
 import java.io.Serializable;
@@ -17,21 +19,30 @@ import java.util.List;
  */
 public class Letter implements Serializable{
     private Character alias;
-    private float width, height;
+
+    // letter bounding box
+    private float left;
+    private float right;
+    private float top;
+    private float bottom;
 
     private ArrayList<Spline> splines;
 
-    public Letter(Character alias, float width, float height) {
+    public Letter(Character alias) {
         this.alias = alias;
-        this.width = width;
-        this.height = height;
         splines = new ArrayList<>();
+        left = right = top = bottom = 0;
+    }
+
+    public void setBoundingBox(float left, float right, float top, float bottom) {
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
     }
 
     /**
      * Adds new contour of the letter.
-     * TODO: Maybe if we want to keep some order on splines we need to think about how ...
-     *
      * @param spline new part of the letter represented as spline
      */
     public void addSpline(Spline spline) {
@@ -42,23 +53,25 @@ public class Letter implements Serializable{
         return alias;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public void setHeigth(float height) {
-        this.height = height;
-    }
-
     public List<Spline> getSplines() {
         return splines;
+    }
+
+    public void normalize() {
+        float wid = right - left;
+        float height = bottom - top;
+
+        for (Spline s : splines) {
+            for (ControlPoint p : s) {
+
+                p.set((p.getX() - left) / wid, (p.getY() - top) / wid);
+
+                for (HandlePoint hp : p.getHandlePoints()) {
+                    if (hp != null) {
+                        hp.set((hp.getX() - left) / wid, (hp.getY() - top) / wid);
+                    }
+                }
+            }
+        }
     }
 }

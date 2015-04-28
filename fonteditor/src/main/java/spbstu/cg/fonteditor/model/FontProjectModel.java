@@ -24,7 +24,7 @@ public class FontProjectModel {
             return null;
         }
 
-        Letter letter = new Letter(character, 1.0f, 1.0f);
+        Letter letter = new Letter(character);
 
         font.addLetter(character, letter);
 
@@ -41,6 +41,10 @@ public class FontProjectModel {
     }
 
     public Font getFont() {
+        for (LetterEditorModel model : editedLetters) {
+            model.updateLetterBoundingBox();
+        }
         return font;
     }
+
 }

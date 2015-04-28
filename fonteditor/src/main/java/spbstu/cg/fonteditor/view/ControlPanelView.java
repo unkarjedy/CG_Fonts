@@ -178,6 +178,11 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     }
 
     public void enableWeightSlider(boolean b) {
-        pointWeightSlider.setEnabled(false);
+        pointWeightSlider.setEnabled(b);
     }
+
+    public void enableCurrentSplineType(boolean b) {
+        splineTypeCheckbox.setEnabled(b);
+    }
+
 }

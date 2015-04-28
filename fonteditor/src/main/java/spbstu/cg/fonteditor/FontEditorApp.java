@@ -3,7 +3,6 @@ package spbstu.cg.fonteditor;
 import spbstu.cg.fonteditor.controller.ControlPanelController;
 import spbstu.cg.fonteditor.controller.FontProjectController;
 import spbstu.cg.fonteditor.controller.LetterEditorController;
-import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
 

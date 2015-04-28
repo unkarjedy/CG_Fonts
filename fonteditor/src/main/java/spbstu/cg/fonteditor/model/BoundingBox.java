@@ -43,11 +43,11 @@ public class BoundingBox implements Iterable<Point> {
 
         @Override
         public void move(float dx, float dy) {
-            /*if (BoundingBox.this.checkHorizontalMove(this, dx)) {
+            if (BoundingBox.this.checkHorizontalMove(this, dx)) {
                 super.move(dx, 0);
                 if (pairPoint != null)
                     pairPoint.set(pairPoint.getX() + dx, pairPoint.getY());
-            }*/
+            }
         }
     }
 
@@ -67,11 +67,11 @@ public class BoundingBox implements Iterable<Point> {
 
         @Override
         public void move(float dx, float dy) {
-            if (BoundingBox.this.checkVerticalMove(this, dy)) {
+            /*if (BoundingBox.this.checkVerticalMove(this, dy)) {
                 super.move(0, dy);
                 if (pairPoint != null)
                     pairPoint.set(pairPoint.getX(), pairPoint.getY() + dy);
-            }
+            }*/
         }
     }
 
@@ -98,15 +98,18 @@ public class BoundingBox implements Iterable<Point> {
 
         final float ratio = 0.1f;
 
-        topLeft = new HorizontallyMovingPoint(w * ratio, 0);
-        topRight = new HorizontallyMovingPoint((1 - ratio) * w, 0);
-        bottomLeft = new HorizontallyMovingPoint(w * ratio, h);
-        bottomRight = new HorizontallyMovingPoint( (1 - ratio) * w, h);
-
         leftTop = new VerticallyMovingPoint(0, h * ratio);
         leftBottom = new VerticallyMovingPoint(0, (1 - ratio) * h);
         rightTop = new VerticallyMovingPoint(w, h * ratio);
         rightBottom = new VerticallyMovingPoint(w, (1 - ratio) * h);
+
+        float r = ((w - leftBottom.getY() + leftTop.getY()) / 2f) / h;
+        topLeft = new HorizontallyMovingPoint(w * r, 0);
+        topRight = new HorizontallyMovingPoint((1 - r) * w, 0);
+        bottomLeft = new HorizontallyMovingPoint(w * r, h);
+        bottomRight = new HorizontallyMovingPoint( (1 - r) * w, h);
+
+
 
         allPoints = new Point[] {topLeft, topRight, bottomLeft, bottomRight,
                 leftTop, leftBottom, rightTop, rightBottom};
@@ -129,11 +132,22 @@ public class BoundingBox implements Iterable<Point> {
         float lower = (r == -1) ? bottomLeft.getX() :  Math.max(bottomLeft.getX(), r);
         float upper  = (l == -1) ? bottomRight.getX() :  Math.min(bottomRight.getX(), l);
 
+
         if (p.equals(bottomLeft) || p.equals(topLeft)) {
-            if (p.getX() + dx < upper)
+            float newWidth = bottomRight.getX() - p.getX() - dx;
+
+            if (newWidth > leftBottom.getY() - leftTop.getY())
+                return false;
+
+            if (p.getX() + dx < upper && p.getX() + dx > 0)
                 return true;
         } else if (p.equals(bottomRight) || p.equals(topRight)) {
-            if (p.getX() + dx > lower)
+            float newWidth = p.getX() + dx - bottomLeft.getX();
+
+            if (newWidth > leftBottom.getY() - leftTop.getY())
+                return false;
+
+            if (p.getX() + dx > lower && p.getX() + dx < w)
                 return true;
         }
         return false;

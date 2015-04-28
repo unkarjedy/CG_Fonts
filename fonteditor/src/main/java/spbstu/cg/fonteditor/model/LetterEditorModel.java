@@ -30,10 +30,6 @@ public class LetterEditorModel {
      */
     private Letter letter;
 
-    public Letter getCurrentLetter() {
-        return letter;
-    }
-
     /**
      * Not yet completed spline, but it already added to letter! (it just the last one
      * in the list of splines of the letter)
@@ -401,7 +397,8 @@ public class LetterEditorModel {
     }
 
     public void setActiveSplineType(boolean isExternal) {
-        activeSpline.setIsExternal(isExternal);
+        if (activeSpline != null)
+            activeSpline.setIsExternal(isExternal);
     }
 
     private static class MyRect {
@@ -439,5 +436,9 @@ public class LetterEditorModel {
 
     public Letter getLetter() {
         return letter;
+    }
+
+    public void updateLetterBoundingBox() {
+        letter.setBoundingBox(boundingBox.l, boundingBox.r, boundingBox.t, boundingBox.b);
     }
 }

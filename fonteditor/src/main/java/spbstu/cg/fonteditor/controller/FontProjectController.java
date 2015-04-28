@@ -23,7 +23,7 @@ import javax.swing.event.ListSelectionListener;
  * Email: egor-mailbox@ya.ru
  * Github username: egorbunov
  */
-public class FontProjectController extends Controller{
+public class FontProjectController extends Controller {
     private MainFontEditorView mainView;
     private LetterEditorController letterEditorController;
     private FontProjectModel fontProjectModel;
@@ -48,13 +48,15 @@ public class FontProjectController extends Controller{
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Enter font name dialog");
                 String fontName = JOptionPane.showInputDialog(frame, "Input new font name");
-                if (fontName.length() == 0) {
-                    JOptionPane.showMessageDialog(frame, "Empty font name!", "Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    mainView.setStatusBarMessage("Last action: new font created...");
-                    fontProjectModel = new FontProjectModel(fontName);
-                    projectView.setProjectName(fontName);
-                    projectView.getList().setEnabled(true);
+                if (fontName != null) {
+                    if (fontName.length() == 0) {
+                        JOptionPane.showMessageDialog(frame, "Empty font name!", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        mainView.setStatusBarMessage("Last action: new font created...");
+                        fontProjectModel = new FontProjectModel(fontName);
+                        projectView.setProjectName(fontName);
+                        projectView.getList().setEnabled(true);
+                    }
                 }
             }
         });
@@ -65,12 +67,14 @@ public class FontProjectController extends Controller{
                 if (fontProjectModel != null) {
                     JFrame frame = new JFrame("Enter letter dialog");
                     String letter = JOptionPane.showInputDialog(frame, "Input new letter character");
-                    if (letter.length() != 1) {
-                        JOptionPane.showMessageDialog(frame, "That is not a letter!", "Error", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        mainView.setStatusBarMessage("Last action: new letter created...");
-                        fontProjectModel.addNewLetter(letter.charAt(0));
-                        projectView.getListModel().addElement(letter.charAt(0));
+                    if (letter != null) {
+                        if (letter.length() != 1) {
+                            JOptionPane.showMessageDialog(frame, "That is not a letter!", "Error", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            mainView.setStatusBarMessage("Last action: new letter created...");
+                            fontProjectModel.addNewLetter(letter.charAt(0));
+                            projectView.getListModel().addElement(letter.charAt(0));
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(new JFrame(), "Create new font project first!",

@@ -168,6 +168,8 @@ public class LetterEditorController extends Controller implements ControlPanelLi
 
         controlPanelView.enablePointTypesBox(false);
         controlPanelView.enableWeightSlider(false);
+        controlPanelView.enableCurrentSplineType(false);
+
 
         letterEditorView.setSplines(letterEditorModel.getSplines());
         letterEditorView.setBoundingBox(letterEditorModel.getBoundingBox());
@@ -222,6 +224,8 @@ public class LetterEditorController extends Controller implements ControlPanelLi
         if (activePoint == null) {
             controlPanelView.enablePointTypesBox(false);
             controlPanelView.enableWeightSlider(false);
+            controlPanelView.enableCurrentSplineType(false);
+
         }
     }
 

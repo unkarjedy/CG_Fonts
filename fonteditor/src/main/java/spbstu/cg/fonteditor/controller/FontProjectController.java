@@ -44,7 +44,7 @@ public class FontProjectController extends Controller {
 
         projectView = mainView.getProjectPanel();
 
-        newFontButton.addActionListener(new ActionListener() {
+        ActionListener newFontActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String fontName = JOptionPane.showInputDialog(null, "Input new font name");
@@ -69,9 +69,12 @@ public class FontProjectController extends Controller {
                     }
                 }
             }
-        });
+        };
 
-        newLetterButton.addActionListener(new ActionListener() {
+        newFontButton.addActionListener(newFontActionListener);
+        mainView.getNewFontMi().addActionListener(newFontActionListener);
+
+        ActionListener newLetterActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fontProjectModel != null) {
@@ -91,7 +94,9 @@ public class FontProjectController extends Controller {
                             "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        });
+        };
+        newLetterButton.addActionListener(newLetterActionListener);
+        mainView.getNewLetterMi().addActionListener(newLetterActionListener);
 
         projectView.getList().addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -137,7 +142,7 @@ public class FontProjectController extends Controller {
 
         JButton loadFontButton = mainView.getButtonLoad();
 
-        loadFontButton.addActionListener(new ActionListener() {
+        ActionListener loadFontActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Font font = openFontLoadDialog();
@@ -162,7 +167,9 @@ public class FontProjectController extends Controller {
                     setStatus("Cannot load font.");
                 }
             }
-        });
+        };
+        loadFontButton.addActionListener(loadFontActionListener);
+        mainView.getOpenMi().addActionListener(loadFontActionListener);
     }
 
     private Font openFontLoadDialog() {

@@ -12,9 +12,6 @@ public class FontManager {
         try(ObjectInputStream in =
                     new ObjectInputStream(new FileInputStream(filename))) {
             Font font = (Font) in.readObject();
-            for(Letter letter : font.getLetters().values()) {
-                letter.normalize();
-            }
             return font;
         } catch (Exception e) {
             e.printStackTrace();

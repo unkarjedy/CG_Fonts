@@ -18,6 +18,24 @@ public class MainFontEditorView extends JFrame {
 
     private JLabel statusBarText;
 
+    public JMenuItem getOpenMi() {
+        return openMi;
+    }
+
+    private JMenuItem openMi;
+
+    public JMenuItem getNewFontMi() {
+        return newFontMi;
+    }
+
+    private JMenuItem newFontMi;
+
+    public JMenuItem getNewLetterMi() {
+        return newLetterMi;
+    }
+
+    private JMenuItem newLetterMi;
+
     public JButton getButtonLoad() {
         return buttonLoad;
     }
@@ -108,12 +126,12 @@ public class MainFontEditorView extends JFrame {
         fileMenu.setMnemonic(KeyEvent.VK_F);
 
         JMenu newMenu = new JMenu(new MenuItemAction("New", iconNew, KeyEvent.VK_N));
-        JMenuItem newFontMi = new JMenuItem(new MenuItemAction("New Font Project", iconNew, KeyEvent.VK_P));
-        JMenuItem newLetterMi = new JMenuItem(new MenuItemAction("New Letter", iconNew, KeyEvent.VK_L));
+        newFontMi = new JMenuItem(new MenuItemAction("New Font Project", iconNew, KeyEvent.VK_P));
+        newLetterMi = new JMenuItem(new MenuItemAction("New Letter", iconNew, KeyEvent.VK_L));
         newMenu.add(newFontMi);
         newMenu.add(newLetterMi);
 
-        JMenuItem openMi = new JMenuItem(new MenuItemAction("Open Font", iconOpen,
+        openMi = new JMenuItem(new MenuItemAction("Open Font", iconOpen,
                 KeyEvent.VK_O));
 
         saveMi = new JMenuItem(new MenuItemAction("Save Font", iconSave,

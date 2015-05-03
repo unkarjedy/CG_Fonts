@@ -230,7 +230,6 @@ public class LetterEditorModel {
         return underCursorPoint;
     }
 
-    int cnt = 0;
     public List<Spline> getSplines() {
         return letter.getSplines();
     }
@@ -391,6 +390,10 @@ public class LetterEditorModel {
      * @param height new view height
      */
     public void setViewSize(float width, float height) {
+        if (viewHeight == 0 || viewHeight == 0) {
+            viewHeight = height;
+            viewWidth = width;
+        }
         float sx = width / viewWidth;
         float sy = height / viewHeight;
 

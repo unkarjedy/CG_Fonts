@@ -32,6 +32,8 @@ CG lab1
 2.	https://ru.wikipedia.org/wiki/TrueType
 
 # Current state:
+![alt tag](http://i.imgur.com/dvFUx1n.gif)
+![alt tag](http://i.imgur.com/lOl6hCi.gif)
 ![alt tag](http://i.imgur.com/wgbk9tI.gif)
 
 

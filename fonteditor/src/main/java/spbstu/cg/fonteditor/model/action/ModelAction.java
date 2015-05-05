@@ -6,6 +6,7 @@ package spbstu.cg.fonteditor.model.action;
  * Github username: egorbunov
  */
 public abstract class ModelAction {
+    public abstract String name();
     public abstract void undo();
     public abstract void redo();
 }

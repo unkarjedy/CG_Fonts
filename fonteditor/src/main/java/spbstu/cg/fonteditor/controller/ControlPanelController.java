@@ -1,6 +1,7 @@
 package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.PointType;
+import spbstu.cg.fontcommons.utils.Logger;
 import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.ControlPanelView;
@@ -20,7 +21,7 @@ public class ControlPanelController extends Controller {
     private ControlPanelListener controlPanelListener;
 
 
-    public ControlPanelController(MainFontEditorView view) {
+    public ControlPanelController(MainFontEditorView view, Logger logger) {
         this.mainView = view;
     }
 
@@ -44,7 +45,6 @@ public class ControlPanelController extends Controller {
 
                 if (!source.getValueIsAdjusting()) {
                     float weight = controlPanelView.getSliderWeight();
-                    System.out.println(weight);
                     controlPanelListener.pointWeightChanged(weight);
                     mainView.repaint();
                 }

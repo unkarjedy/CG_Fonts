@@ -78,4 +78,15 @@ public class Letter implements Serializable{
     public float getWidth() {
         return (right - left);
     }
+
+    public void removeLastSpline() {
+        splines.remove(splines.size() - 1);
+    }
+
+    /**
+     * @return number of splines in letter
+     */
+    public int size() {
+        return splines.size();
+    }
 }

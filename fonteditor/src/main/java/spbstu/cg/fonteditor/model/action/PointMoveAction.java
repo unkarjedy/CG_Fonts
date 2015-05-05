@@ -27,6 +27,11 @@ public class PointMoveAction extends ModelAction {
     }
 
     @Override
+    public String name() {
+        return "Point move action";
+    }
+
+    @Override
     public void undo() {
         point.move(beforeX - point.getX(), beforeY - point.getY());
     }

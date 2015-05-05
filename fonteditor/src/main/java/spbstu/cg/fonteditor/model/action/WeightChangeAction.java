@@ -30,6 +30,11 @@ public class WeightChangeAction extends ModelAction {
     }
 
     @Override
+    public String name() {
+        return "Point weight change action";
+    }
+
+    @Override
     public void undo() {
         model.activatePoint(point);
         point.setWeight(oldWeight);

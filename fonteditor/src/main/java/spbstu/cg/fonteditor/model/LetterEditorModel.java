@@ -7,6 +7,7 @@ import spbstu.cg.fontcommons.point.HandlePoint;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.point.PointUtils;
+import spbstu.cg.fontcommons.utils.Logger;
 import spbstu.cg.fonteditor.Constants;
 import spbstu.cg.fonteditor.controller.LetterEditorModelListener;
 import spbstu.cg.fonteditor.model.action.*;
@@ -23,18 +24,14 @@ import java.util.List;
  * TODO: add constructor
  */
 public class LetterEditorModel {
+    final Logger logger;
+
     BoundingBox boundingBox;
 
     /**
      * Active letter for
      */
     private Letter letter;
-
-    /**
-     * Not yet completed spline, but it already added to letter! (it just the last one
-     * in the list of splines of the letter)
-     */
-    private Spline currentSpline;
 
     public Spline getActiveSpline() {
         return activeSpline;
@@ -56,32 +53,30 @@ public class LetterEditorModel {
      */
     private Point underCursorPoint = null;
 
+    /**
+     * not null if startMovingUnderCursorPoint was invoked, but endMovingUnderCursorPoint was not yet
+     */
     private Point currentlyMovingPoint = null;
-
     /**
      * Last move vector
      */
     private float lastDx, lastDy;
-
     private boolean isUnderCursorPointMoving;
 
     private ActionStack actionStack;
 
+    /**
+     * single listener ({@link spbstu.cg.fonteditor.controller.LetterEditorController} object, actually)
+     */
     private LetterEditorModelListener modelListener;
 
     private float viewWidth, viewHeight;
-
-    private void activateAndAddNewSpline() {
-        currentSpline = new Spline();
-        letter.addSpline(currentSpline);
-    }
 
     /**
      * Returns nearest point (for now only Control Point) to given one
      */
     private Point findNearestPoint(float x, float y) {
         for (Spline spline : letter.getSplines()) {
-            int i = 0;
             for (ControlPoint point : spline) {
                 if (PointUtils.getSquaredDist(point.getX(), point.getY(), x, y) < Constants.DISTANCE_EPS) {
                     return point;
@@ -101,7 +96,7 @@ public class LetterEditorModel {
     }
 
     private void addControlPoint(ControlPoint point) {
-        currentSpline.addControlPoint(point);
+        activeSpline.addControlPoint(point);
         this.setUnderCursorPoint(point);
     }
 
@@ -129,23 +124,11 @@ public class LetterEditorModel {
         this.underCursorPoint = underCursorPoint;
     }
 
-    public LetterEditorModel(Letter letter) {
+    public LetterEditorModel(Letter letter, final Logger logger) {
         this.letter = letter;
-        currentSpline = null;
         boundingBox = new BoundingBox(1, 1);
         actionStack = new ActionStack();
-    }
-
-    /**
-     * That is the helping method for undo/redo. {@link FinishSplineAction};
-     */
-    public void deleteLastSplineAndActivatePrev() {
-        letter.getSplines().remove(letter.getSplines().size() - 1);
-        currentSpline = letter.getSplines().get(letter.getSplines().size() - 1);
-    }
-
-    public Spline getCurrentSpline() {
-        return currentSpline;
+        this.logger = logger;
     }
 
     /**
@@ -278,30 +261,20 @@ public class LetterEditorModel {
         return isUnderCursorPointMoving;
     }
 
-
-    public void endCurrentSplineAct() {
-        currentSpline.addControlPoint(currentSpline.getControlPoints().get(0));
-        currentSpline = null;
-    }
-
     /**
      * Tries to end currently edited spline. It's okay if
      * under cursor point is the first point of the spline.
      * @return true if spline ended
      */
     @RedoUndo
-    public boolean endCurrentSpline() {
-        if (currentSpline.getControlPoints() == null) {
-            return false;
-        }
-        if (currentSpline.getControlPoints().size() == 0) {
+    public boolean endActiveSpline() {
+        if (activeSpline == null) {
             return false;
         }
 
-        if (underCursorPoint == null || underCursorPoint == currentSpline.getControlPoints().get(0)) {
-            endCurrentSplineAct();
-
-            actionStack.addAction(new FinishSplineAction(this));
+        if (underCursorPoint == null || underCursorPoint == activeSpline.getControlPoints().get(0)) {
+            activeSpline.addControlPoint(activeSpline.getControlPoints().get(0));
+            actionStack.addAction(new FinishSplineAction(activeSpline, this));
 
             return true;
         }
@@ -346,22 +319,26 @@ public class LetterEditorModel {
         if (!boundingBox.isIn(x, y))
             return;
 
-        if (currentSpline == null) {
-            activateAndAddNewSpline();
+        if (activeSpline == null || activeSpline.isEnded()) {
+            logger.log("New spline created, number of splines: " + letter.size());
+            activeSpline = new Spline();
+            letter.addSpline(activeSpline);
         }
 
         ControlPoint point = new ControlPoint(x, y);
         addControlPoint(point);
-
-        actionStack.addAction(new AddLastAction(this, point));
+        activatePoint(point);
+        actionStack.addAction(new AddLastAction(this, activeSpline, point));
     }
 
     public void undo() {
-        actionStack.undo();
+        String name = actionStack.undo();
+        logger.log("Undo: " + name);
     }
 
     public void redo() {
-        actionStack.redo();
+        String name = actionStack.redo();
+        logger.log("Redo: " + name);
     }
 
     public void setListener(LetterEditorModelListener listener) {
@@ -411,8 +388,13 @@ public class LetterEditorModel {
     }
 
     public void setActiveSplineType(boolean isExternal) {
-        if (activeSpline != null)
+        if (activeSpline != null) {
             activeSpline.setIsExternal(isExternal);
+        }
+    }
+
+    public void removeLastSpline() {
+        letter.removeLastSpline();
     }
 
     private static class MyRect {

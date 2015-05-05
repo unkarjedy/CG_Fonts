@@ -31,6 +31,7 @@ public class SplineDrawer {
         if(splinePath != null) {
             g2D.setStroke(SIMPLE_SOLID_STROKE);
             g2D.setColor(Color.black);
+            g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             System.setProperty("awt.useSystemAAFontSettings", "on");
             g2D.draw(splinePath);

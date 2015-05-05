@@ -12,22 +12,27 @@ import spbstu.cg.fonteditor.model.LetterEditorModel;
 public class AddLastAction extends ModelAction {
 
     private LetterEditorModel model;
+    private Spline spline;
     final ControlPoint point;
 
-    public AddLastAction(LetterEditorModel model, ControlPoint point) {
+    public AddLastAction(LetterEditorModel model, Spline spline, ControlPoint point) {
         this.model = model;
+        this.spline = spline;
         this.point = point;
     }
 
+    @Override
+    public String name() {
+        return "Add last point action";
+    }
+
     public void undo() {
-        Spline activeSpline = model.getCurrentSpline();
-        activeSpline.deleteLastControlPoint();
+        spline.deleteLastControlPoint();
         model.activatePoint(null);
     }
 
     public void redo() {
-        Spline activeSpline = model.getCurrentSpline();
-        activeSpline.addControlPoint(point);
+        spline.addControlPoint(point);
         model.activatePoint(point);
     }
 }

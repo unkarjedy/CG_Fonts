@@ -1,5 +1,6 @@
 package spbstu.cg.fonteditor;
 
+import spbstu.cg.fontcommons.utils.Logger;
 import spbstu.cg.fonteditor.controller.ControlPanelController;
 import spbstu.cg.fonteditor.controller.FontProjectController;
 import spbstu.cg.fonteditor.controller.LetterEditorController;
@@ -20,17 +21,27 @@ public class FontEditorApp {
             public void run() {
                 // Create main view, containing views of 3 components:
                 // ProjectView, LetterEditorView, ControlPanelView
-                MainFontEditorView editor = new MainFontEditorView();
+                final MainFontEditorView editor = new MainFontEditorView();
 
                 ActionStack actionStack = new ActionStack();
 
-                // Create model, view, controller for each of 3 component
-                LetterEditorController letterController = new LetterEditorController(editor);
+                Logger logger = new Logger() {
+                    @Override
+                    public void log(String s) {
+                        editor.setStatusBarMessage(s);
+                        System.out.println(s);
+                    }
+                };
 
-                ControlPanelController controlPanelController = new ControlPanelController(editor);
+                // Create model, view, controller for each of 3 component
+                LetterEditorController letterController = new LetterEditorController(editor, logger);
+
+                ControlPanelController controlPanelController = new ControlPanelController(editor, logger);
                 controlPanelController.setControlPanelListener(letterController);
 
-                FontProjectController projectController = new FontProjectController(editor, letterController);
+
+
+                FontProjectController projectController = new FontProjectController(editor, letterController, logger);
                 controlPanelController.control();
                 projectController.control();
 

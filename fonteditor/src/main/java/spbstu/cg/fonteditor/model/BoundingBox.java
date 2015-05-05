@@ -215,7 +215,7 @@ public class BoundingBox implements Iterable<Point> {
 
     public void draw(Graphics2D g2D) {
         final Color BOUND_COLOR = new Color(0.6392157f, 0.6156863f, 0.6313726f);
-        final Color RECT_COLOR = new Color(0.4509804f, 0.4509804f, 0.4509804f, 0.5f);
+        final Color RECT_COLOR = new Color(0.7647059f, 0.14901961f, 0.011764706f, 0.3f);
         final Stroke stroke = new BasicStroke(2);
         g2D.setStroke(stroke);
         g2D.setColor(BOUND_COLOR);

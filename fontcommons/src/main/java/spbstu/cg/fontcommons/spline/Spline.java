@@ -140,4 +140,13 @@ public class Spline implements Iterable<ControlPoint>, Serializable {
             }
         }
     }
+
+    public int getSize() {
+        return controlPoints.size();
+    }
+
+    public boolean isEnded() {
+        return controlPoints != null && controlPoints.size() > 1
+                && controlPoints.get(0).equals(controlPoints.get(controlPoints.size() - 1));
+    }
 }

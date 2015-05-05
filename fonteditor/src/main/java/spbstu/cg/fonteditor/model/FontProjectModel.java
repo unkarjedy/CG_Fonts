@@ -2,6 +2,7 @@ package spbstu.cg.fonteditor.model;
 
 import spbstu.cg.fontcommons.font.Font;
 import spbstu.cg.fontcommons.font.Letter;
+import spbstu.cg.fontcommons.utils.Logger;
 
 import java.util.ArrayList;
 
@@ -11,20 +12,23 @@ import java.util.ArrayList;
  * Github username: egorbunov
  */
 public class FontProjectModel {
+    private final Logger logger;
     private Font font;
     private ArrayList<LetterEditorModel> editedLetters;
 
-    public FontProjectModel(String fontName) {
+    public FontProjectModel(String fontName, Logger logger) {
+        this.logger = logger;
         font = new Font(fontName);
         editedLetters = new ArrayList<>(5);
     }
 
-    public FontProjectModel(Font font) {
+    public FontProjectModel(Font font, Logger logger) {
         this.font = font;
+        this.logger = logger;
         editedLetters = new ArrayList<>(font.getLetters().size());
 
         for (Letter l : font.getLetters().values()) {
-            editedLetters.add(new LetterEditorModel(l));
+            editedLetters.add(new LetterEditorModel(l, logger));
         }
     }
 
@@ -37,7 +41,7 @@ public class FontProjectModel {
 
         font.addLetter(character, letter);
 
-        LetterEditorModel newLetterEditorModel = new LetterEditorModel(letter);
+        LetterEditorModel newLetterEditorModel = new LetterEditorModel(letter, logger);
         editedLetters.add(newLetterEditorModel);
 
         return newLetterEditorModel;

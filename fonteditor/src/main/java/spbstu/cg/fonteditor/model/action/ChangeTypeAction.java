@@ -29,6 +29,11 @@ public class ChangeTypeAction extends ModelAction {
     }
 
     @Override
+    public String name() {
+        return "Active point type change action";
+    }
+
+    @Override
     public void undo() {
         model.activatePoint(spline.getControlPoints().get(index));
         spline.changePointType(index, oldType);

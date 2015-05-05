@@ -1,5 +1,6 @@
 package spbstu.cg.fonteditor.model.action;
 
+import spbstu.cg.fontcommons.spline.Spline;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 
 /**
@@ -9,23 +10,28 @@ import spbstu.cg.fonteditor.model.LetterEditorModel;
  */
 public class FinishSplineAction extends ModelAction {
 
+    private Spline spline;
     private LetterEditorModel model;
 
-    public FinishSplineAction(LetterEditorModel model) {
+    public FinishSplineAction(Spline spline, LetterEditorModel model) {
+        this.spline = spline;
         this.model = model;
     }
 
     @Override
-    public void undo() {
-        model.deleteLastSplineAndActivatePrev();
-        model.getCurrentSpline().getControlPoints().remove(
-                model.getCurrentSpline().getControlPoints().size() - 1
-        );
+    public String name() {
+        return "End spline action";
+    }
 
+    @Override
+    public void undo() {
+        spline.getControlPoints().remove(spline.getControlPoints().size() - 1);
+        if (spline.getSize() == 0)
+            model.removeLastSpline();
     }
 
     @Override
     public void redo() {
-        model.endCurrentSplineAct();
+        spline.addControlPoint(spline.getControlPoints().get(0));
     }
 }

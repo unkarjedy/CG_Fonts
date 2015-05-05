@@ -2,6 +2,7 @@ package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.font.Font;
 import spbstu.cg.fontcommons.font.FontManager;
+import spbstu.cg.fontcommons.utils.Logger;
 import spbstu.cg.fonteditor.model.FontProjectModel;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
@@ -25,14 +26,17 @@ import javax.swing.event.ListSelectionListener;
  * Github username: egorbunov
  */
 public class FontProjectController extends Controller {
-    private MainFontEditorView mainView;
+    private final MainFontEditorView mainView;
     private LetterEditorController letterEditorController;
     private FontProjectModel fontProjectModel;
     private ProjectPanelView projectView;
+    private Logger logger;
 
-    public FontProjectController(MainFontEditorView view, LetterEditorController letterEditorController) {
+    public FontProjectController(final MainFontEditorView view, LetterEditorController letterEditorController,
+                                 Logger logger) {
         mainView = view;
         this.letterEditorController = letterEditorController;
+        this.logger = logger;
     }
 
     @Override
@@ -63,7 +67,7 @@ public class FontProjectController extends Controller {
                             }
                         }
                         mainView.setStatusBarMessage("Last action: new font created...");
-                        fontProjectModel = new FontProjectModel(fontName);
+                        fontProjectModel = new FontProjectModel(fontName, logger);
                         projectView.setProjectName(fontName);
                         projectView.getList().setEnabled(true);
                     }
@@ -102,10 +106,12 @@ public class FontProjectController extends Controller {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 int index = projectView.getList().getSelectedIndex();
-                LetterEditorModel model = fontProjectModel.getLetterEditorModel(index);
-                letterEditorController.stopControl();
-                letterEditorController.setModel(model);
-                letterEditorController.control();
+                if (index >= 0) {
+                    LetterEditorModel model = fontProjectModel.getLetterEditorModel(index);
+                    letterEditorController.stopControl();
+                    letterEditorController.setModel(model);
+                    letterEditorController.control();
+                }
             }
         });
 
@@ -157,12 +163,11 @@ public class FontProjectController extends Controller {
                             return;
                         }
                     }
-                    fontProjectModel = new FontProjectModel(font);
+                    fontProjectModel = new FontProjectModel(font, logger);
                     projectView.setProjectName(fontProjectModel.getFontName());
                     projectView.getList().setEnabled(true);
                     fillListModel(fontProjectModel);
                     setStatus("Font loaded.");
-
                 } else {
                     setStatus("Cannot load font.");
                 }

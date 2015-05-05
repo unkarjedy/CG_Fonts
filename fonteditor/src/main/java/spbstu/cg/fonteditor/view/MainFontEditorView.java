@@ -127,7 +127,11 @@ public class MainFontEditorView extends JFrame {
 
         JMenu newMenu = new JMenu(new MenuItemAction("New", iconNew, KeyEvent.VK_N));
         newFontMi = new JMenuItem(new MenuItemAction("New Font Project", iconNew, KeyEvent.VK_P));
+        newFontMi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_MASK));
+
         newLetterMi = new JMenuItem(new MenuItemAction("New Letter", iconNew, KeyEvent.VK_L));
+        newLetterMi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, InputEvent.CTRL_MASK));
+
         newMenu.add(newFontMi);
         newMenu.add(newLetterMi);
 

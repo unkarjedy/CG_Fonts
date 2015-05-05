@@ -4,8 +4,6 @@ import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.point.Point;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -14,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Dima Naumenko on 28.02.2015.
  */
-public class ControlPanelView extends JPanel implements ChangeListener {
+public class ControlPanelView extends JPanel {
     private static final int SLIVER_DIV = Point.WEIGHT_MAX;
     private JPanel verticalBoxPanel; // main vertical container
     private JPanel pointTypeBox;
@@ -31,8 +29,6 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     public JSlider getPointWeightSlider() {
         return pointWeightSlider;
     }
-
-
 
     public ControlPanelView() {
         super(new BorderLayout());
@@ -79,7 +75,7 @@ public class ControlPanelView extends JPanel implements ChangeListener {
     }
 
     private void createPointTypeBox() {
-        pointTypeButtonMap = new LinkedHashMap<PointType, JRadioButton>(5);
+        pointTypeButtonMap = new LinkedHashMap<>(5);
 
         ButtonGroup pointTypeBtnGroup = new ButtonGroup();
 
@@ -93,7 +89,6 @@ public class ControlPanelView extends JPanel implements ChangeListener {
             pointTypeButtonMap.put(type, btn);
             pointTypeBtnGroup.add(btn);
             pointTypeBox.add(btn);
-            btn.addChangeListener(this);
         }
 
         pointTypeBox.setAlignmentX(LEFT_ALIGNMENT);
@@ -119,12 +114,12 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         pointWeightSlider.setMinimum(SLIVER_DIV * Point.WEIGHT_MIN);
         pointWeightSlider.setMaximum(SLIVER_DIV * Point.WEIGHT_MAX);
         // fill with values
-        Hashtable labelTable = new Hashtable();
+        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
 
-        labelTable.put(new Integer(0), new JLabel(new Float(Point.WEIGHT_MIN_PRACTICE).toString()));
+        labelTable.put(0, new JLabel(Float.toString(Point.WEIGHT_MIN_PRACTICE)));
         for(int i = 1; i <= SLIVER_DIV; i++){
             Integer labelValue = i * Point.WEIGHT_MAX / SLIVER_DIV;
-            labelTable.put( new Integer( i * Point.WEIGHT_MAX ), new JLabel(labelValue.toString()));
+            labelTable.put(i * Point.WEIGHT_MAX, new JLabel(labelValue.toString()));
         }
 
         pointWeightSlider.setLabelTable(labelTable);
@@ -132,7 +127,6 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         pointWeightSlider.setPaintLabels(true);
         pointWeightSlider.setMajorTickSpacing(20);
 
-        pointWeightSlider.addChangeListener(this);
         pointWeightSlider.setEnabled(false);
 
         pointWeightSlider.setAlignmentX(LEFT_ALIGNMENT);
@@ -166,13 +160,6 @@ public class ControlPanelView extends JPanel implements ChangeListener {
         pointTypeButtonMap.get(type).doClick();
     }
 
-    // Why?? (by Dima)
-    @Override
-    public void stateChanged(ChangeEvent e) {
-//        System.out.println(e.getSource());
-//        e.getSource();
-    }
-
     public Map<PointType, JRadioButton> getPointTypeButtonMap() {
         return pointTypeButtonMap;
     }
@@ -183,5 +170,9 @@ public class ControlPanelView extends JPanel implements ChangeListener {
 
     public void enableCurrentSplineType(boolean b) {
         splineTypeCheckbox.setEnabled(b);
+    }
+
+    public void setSplineType(boolean splineType) {
+        splineTypeCheckbox.setSelected(splineType);
     }
 }

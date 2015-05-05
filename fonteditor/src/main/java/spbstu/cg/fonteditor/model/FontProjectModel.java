@@ -19,7 +19,7 @@ public class FontProjectModel {
     public FontProjectModel(String fontName, Logger logger) {
         this.logger = logger;
         font = new Font(fontName);
-        editedLetters = new ArrayList<>(5);
+        editedLetters = new ArrayList<>(20);
     }
 
     public FontProjectModel(Font font, Logger logger) {
@@ -70,6 +70,11 @@ public class FontProjectModel {
 
     public int getLetterNumber() {
         return editedLetters.size();
+    }
+
+
+    public boolean contains(char c) {
+        return font.getLetter(c) != null;
     }
 
 }

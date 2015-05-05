@@ -18,7 +18,8 @@ import java.awt.event.*;
  * <p/>
  * Main app controller.
  */
-public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener, ComponentListener {
+public class LetterEditorController extends Controller implements ControlPanelListener, LetterEditorModelListener,
+        ComponentListener {
     private AbstractAction undoAction;
     private AbstractAction redoAction;
     private final MainFontEditorView mainView;
@@ -80,11 +81,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
                 // right release
                 if (SwingUtilities.isRightMouseButton(e)) {
                     if (touchedPoint != null) {
-                        if (letterEditorModel.endActiveSpline()) {
-                            logger.log("Spline ended...");
-                        } else {
-                            logger.log("Can't end current spline in that point!");
-                        }
+                        letterEditorModel.endActiveSpline();
                     }
                 }
 
@@ -162,6 +159,16 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     public void setModel(LetterEditorModel model) {
+        if (model == null) {
+            letterEditorView.setSplines(null);
+            letterEditorView.setBoundingBox(null);
+            letterEditorView.setActivePoint(null);
+            letterEditorView.setPointUnderCursor(null);
+            letterEditorView.repaint();
+
+            return;
+        }
+
         letterEditorModel = model;
         letterEditorModel.setViewSize(w, h);
         letterEditorModel.setListener(this);
@@ -171,7 +178,6 @@ public class LetterEditorController extends Controller implements ControlPanelLi
         controlPanelView.enablePointTypesBox(false);
         controlPanelView.enableWeightSlider(false);
         controlPanelView.enableCurrentSplineType(false);
-
 
 
         letterEditorView.setSplines(letterEditorModel.getSplines());
@@ -200,29 +206,31 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     public void stopControl() {
         letterEditorView.removeMouseListener(mouseListener);
         letterEditorView.removeMouseMotionListener(mouseMotionListener);
+        letterEditorView.setPointUnderCursor(null);
+        letterEditorView.setSplines(null);
     }
 
     @Override
-    public void pointTypeChanged(PointType newType) {
+    public void changePointType(PointType newType) {
         letterEditorModel.changeActivePointType(newType); // point is still active
     }
 
     @Override
-    public void pointWeightChanged(float weight) {
+    public void changePointWeight(float weight) {
         letterEditorModel.changeActivePointWeight(weight);
     }
 
     @Override
-    public void splineTypeChanged(boolean selected) {
+    public void changeSplineType(boolean selected) {
         letterEditorModel.setActiveSplineType(selected);
     }
 
     @Override
-    public void drawLetterChanged(boolean drawLetter) {
+    public void changeDrawLetterMode(boolean drawLetter) {
         letterEditorView.setDrawLetter(drawLetter);
     }
 
-    public void activePointChanged(Point activePoint) {
+    public void activePointChanged(final Point activePoint) {
         letterEditorView.setActivePoint(activePoint);
         if (activePoint == null) {
             controlPanelView.enablePointTypesBox(false);
@@ -236,7 +244,7 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     @Override
-    public void controlPointTypeChanged(ControlPoint controlPoint) {
+    public void controlPointTypeChanged(final ControlPoint controlPoint) {
         if (controlPoint == null) {
             controlPanelView.enablePointTypesBox(false);
         } else {
@@ -246,13 +254,18 @@ public class LetterEditorController extends Controller implements ControlPanelLi
     }
 
     @Override
-    public void pointWeightChanged(Point point) {
+    public void pointWeightChanged(final Point point) {
         if (point == null) {
             controlPanelView.enableWeightSlider(false);
         } else {
             controlPanelView.enableWeightSlider(true);
             controlPanelView.setSliderWeight(point.getWeight());
         }
+    }
+
+    @Override
+    public void splineTypeChanged(boolean isExternal) {
+        controlPanelView.setSplineType(isExternal);
     }
 
     @Override

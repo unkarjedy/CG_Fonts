@@ -20,6 +20,22 @@ import java.util.List;
 public class Letter implements Serializable{
     private Character alias;
 
+    public float getLeft() {
+        return left;
+    }
+
+    public float getRight() {
+        return right;
+    }
+
+    public float getTop() {
+        return top;
+    }
+
+    public float getBottom() {
+        return bottom;
+    }
+
     // letter bounding box
     private float left;
     private float right;
@@ -31,7 +47,7 @@ public class Letter implements Serializable{
     public Letter(Character alias) {
         this.alias = alias;
         splines = new ArrayList<>();
-        left = right = top = bottom = 0;
+        left = right = top = bottom = -1;
     }
 
     public void setBoundingBox(float left, float right, float top, float bottom) {

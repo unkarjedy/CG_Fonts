@@ -2,6 +2,7 @@ package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.font.Font;
 import spbstu.cg.fontcommons.font.FontManager;
+import spbstu.cg.fontcommons.font.Letter;
 import spbstu.cg.fontcommons.utils.Logger;
 import spbstu.cg.fonteditor.model.FontProjectModel;
 import spbstu.cg.fonteditor.model.LetterEditorModel;
@@ -60,8 +61,7 @@ public class FontProjectController extends Controller {
                             int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to close current font project?",
                                     "alert", JOptionPane.OK_CANCEL_OPTION);
                             if (result == JOptionPane.OK_OPTION) {
-                                fontProjectModel = null;
-                                projectView.getListModel().removeAllElements();
+                                clearProject();
                             } else {
                                 return;
                             }
@@ -87,6 +87,8 @@ public class FontProjectController extends Controller {
                     if (letter != null) {
                         if (letter.length() != 1) {
                             JOptionPane.showMessageDialog(frame, "That is not a letter!", "Error", JOptionPane.ERROR_MESSAGE);
+                        } else if (fontProjectModel.contains(letter.charAt(0))) {
+                            JOptionPane.showMessageDialog(frame, "That letter is already in list!", "Error", JOptionPane.ERROR_MESSAGE);
                         } else {
                             mainView.setStatusBarMessage("Last action: new letter created...");
                             fontProjectModel.addNewLetter(letter.charAt(0));
@@ -157,8 +159,7 @@ public class FontProjectController extends Controller {
                         int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to close current font project?",
                                 "alert", JOptionPane.OK_CANCEL_OPTION);
                         if (result == JOptionPane.OK_OPTION) {
-                            fontProjectModel = null;
-                            projectView.getListModel().removeAllElements();
+                            clearProject();
                         } else {
                             return;
                         }
@@ -175,6 +176,13 @@ public class FontProjectController extends Controller {
         };
         loadFontButton.addActionListener(loadFontActionListener);
         mainView.getOpenMi().addActionListener(loadFontActionListener);
+    }
+
+    private void clearProject() {
+        fontProjectModel = null;
+        letterEditorController.stopControl();
+        letterEditorController.setModel(null);
+        projectView.getListModel().removeAllElements();
     }
 
     private Font openFontLoadDialog() {

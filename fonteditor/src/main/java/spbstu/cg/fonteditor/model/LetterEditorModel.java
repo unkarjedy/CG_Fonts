@@ -233,19 +233,13 @@ public class LetterEditorModel {
 
         if (point == null || point instanceof ControlPoint) {
             modelListener.controlPointTypeChanged((ControlPoint) point);
+            if (activeSpline != null)
+                modelListener.splineTypeChanged(activeSpline.isExternal());
         }
     }
 
     public void activateUnderCursorPoint() {
-        this.activePoint = underCursorPoint;
-        activeSpline = getPointSpline(activePoint);
-
-        modelListener.activePointChanged(underCursorPoint);
-
-        if (underCursorPoint == null || underCursorPoint instanceof ControlPoint) {
-            modelListener.controlPointTypeChanged((ControlPoint) underCursorPoint);
-        }
-
+        activatePoint(underCursorPoint);
     }
 
     public void startMovingUnderCursorPoint() {
@@ -269,6 +263,7 @@ public class LetterEditorModel {
     @RedoUndo
     public boolean endActiveSpline() {
         if (activeSpline == null) {
+            logger.log("Activate spline, which you want to finish!");
             return false;
         }
 
@@ -276,8 +271,10 @@ public class LetterEditorModel {
             activeSpline.addControlPoint(activeSpline.getControlPoints().get(0));
             actionStack.addAction(new FinishSplineAction(activeSpline, this));
 
+            logger.log("Spline ended...");
             return true;
         }
+        logger.log("Cannot end spline in that point! Point to the very first spline point, please.");
         return false;
     }
 
@@ -367,16 +364,24 @@ public class LetterEditorModel {
      * @param height new view height
      */
     public void setViewSize(float width, float height) {
-        if (viewHeight == 0 || viewHeight == 0) {
+        if (viewHeight == 0 || viewHeight == 0) { // font was loaded from file
             viewHeight = height;
             viewWidth = width;
         }
+
         float sx = width / viewWidth;
         float sy = height / viewHeight;
 
         viewHeight = height;
         viewWidth = width;
-        boundingBox.resize(width, height);
+
+        if (letter.getLeft() < 0) {
+            boundingBox.resize(width, height);
+            updateLetterBoundingBox();
+        } else {
+            boundingBox.setWH(width, height);
+            boundingBox.setRect(letter.getLeft(), letter.getRight(), letter.getBottom(), letter.getTop());
+        }
 
         for (Spline s : letter.getSplines()) {
             s.scale(sx, sy);

@@ -32,16 +32,20 @@ public class PointDrawer {
     private static final Color CONTROL_POINT_COLOR = Color.black;
     private static final Color HANDLE_POINT_COLOR = MY_PURPLE;
 
+    private static final Color BOUNDING_RECT_POINT_COLOR = new Color(0.1254902f, 0.36078432f, 0.6392157f, 0.7f);
+
     static {
         RADIUS_MAP = new HashMap<>(10);
         COLOR_MAP = new HashMap<>(10);
 
+        RADIUS_MAP.put(PointType.BOUNDING_RECT_POINT, NO_TYPE_RAD);
         RADIUS_MAP.put(PointType.NO_TYPE, NO_TYPE_RAD);
         RADIUS_MAP.put(PointType.CUSP, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SMOOTH, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.SYMMETRIC, CONTROL_POINT_RADIUS);
         RADIUS_MAP.put(PointType.HANDLER, HANDLE_POINT_RADIUS);
 
+        COLOR_MAP.put(PointType.BOUNDING_RECT_POINT, BOUNDING_RECT_POINT_COLOR);
         COLOR_MAP.put(PointType.NO_TYPE, NO_TYPE_COLOR);
         COLOR_MAP.put(PointType.CUSP, CONTROL_POINT_COLOR);
         COLOR_MAP.put(PointType.SMOOTH, CONTROL_POINT_COLOR);
@@ -70,6 +74,9 @@ public class PointDrawer {
             addRadius = ACTIVE_HANDLE_CIRCLE_RADIUS_ADD;
         }
 
+        if (point.getType().equals(PointType.BOUNDING_RECT_POINT)) {
+            g2D.setColor(BOUNDING_RECT_POINT_COLOR);
+        }
 
         int radius = RADIUS_MAP.get(point.getType()) + addRadius;
         g2D.fillOval(((int) point.getX()) - radius,

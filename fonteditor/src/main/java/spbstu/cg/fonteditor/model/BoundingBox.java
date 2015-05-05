@@ -17,6 +17,7 @@ import java.util.Iterator;
  */
 public class BoundingBox implements Iterable<Point> {
 
+    // letter constraints
     private float l;
     private float r;
     private float b;
@@ -29,12 +30,23 @@ public class BoundingBox implements Iterable<Point> {
         this.t = t;
     }
 
+    public void setRect(float l, float r, float b, float t) {
+        leftTop.set(0, t);
+        leftBottom.set(0, b);
+        rightTop.set(w, t);
+        rightBottom.set(w, b);
+        topLeft.set(l, 0);
+        topRight.set(r, 0);
+        bottomLeft.set(l, h);
+        bottomRight.set(r, h);
+    }
+
     public class HorizontallyMovingPoint extends Point {
         HorizontallyMovingPoint pairPoint;
 
         public HorizontallyMovingPoint(float x, float y) {
             super(x, y);
-            type = PointType.NO_TYPE;
+            type = PointType.BOUNDING_RECT_POINT;
         }
 
         public void setPair(HorizontallyMovingPoint pair) {
@@ -56,7 +68,7 @@ public class BoundingBox implements Iterable<Point> {
 
         public VerticallyMovingPoint(float x, float y) {
             super(x, y);
-            type = PointType.NO_TYPE;
+            type = PointType.BOUNDING_RECT_POINT;
 
         }
 
@@ -83,34 +95,10 @@ public class BoundingBox implements Iterable<Point> {
 
     private Point[] allPoints;
 
-    float w, h;
+    float w;
+    float h;
 
-    /**
-     * @param w -- width of the canvas (field to draw into)
-     * @param h -- height of the canvas
-     */
-    public BoundingBox(float w, float h) {
-        l = 0; b = 0;
-        r = w; t = h;
-
-        this.w = w;
-        this.h = h;
-
-        final float ratio = 0.1f;
-
-        leftTop = new VerticallyMovingPoint(0, h * ratio);
-        leftBottom = new VerticallyMovingPoint(0, (1 - ratio) * h);
-        rightTop = new VerticallyMovingPoint(w, h * ratio);
-        rightBottom = new VerticallyMovingPoint(w, (1 - ratio) * h);
-
-        float r = ((w - leftBottom.getY() + leftTop.getY()) / 2f) / h;
-        topLeft = new HorizontallyMovingPoint(w * r, 0);
-        topRight = new HorizontallyMovingPoint((1 - r) * w, 0);
-        bottomLeft = new HorizontallyMovingPoint(w * r, h);
-        bottomRight = new HorizontallyMovingPoint( (1 - r) * w, h);
-
-
-
+    private void pairPoints() {
         allPoints = new Point[] {topLeft, topRight, bottomLeft, bottomRight,
                 leftTop, leftBottom, rightTop, rightBottom};
 
@@ -122,6 +110,36 @@ public class BoundingBox implements Iterable<Point> {
         rightBottom.setPair(leftBottom);
         leftTop.setPair(rightTop);
         rightTop.setPair(leftTop);
+    }
+
+    /**
+     * @param w -- width of the canvas (field to draw into)
+     * @param h -- height of the canvas
+     */
+    public BoundingBox(float w, float h) {
+        this.w = w;
+        this.h = h;
+
+        final float ratio = 0.1f;
+
+        t = h * ratio;
+        b = h * (1 - ratio);
+
+        leftTop = new VerticallyMovingPoint(0, t);
+        leftBottom = new VerticallyMovingPoint(0, b);
+        rightTop = new VerticallyMovingPoint(w, t);
+        rightBottom = new VerticallyMovingPoint(w, b);
+
+        float r = ((w - leftBottom.getY() + leftTop.getY()) / 2f) / h;
+        l = w * r;
+        r = w * (1 - r);
+
+        topLeft = new HorizontallyMovingPoint(l, 0);
+        topRight = new HorizontallyMovingPoint(r, 0);
+        bottomLeft = new HorizontallyMovingPoint(l, h);
+        bottomRight = new HorizontallyMovingPoint(r, h);
+
+        pairPoints();
     }
 
     /**
@@ -187,18 +205,22 @@ public class BoundingBox implements Iterable<Point> {
         };
     }
 
+    public void setWH(float w, float h) {
+        this.w = w;
+        this.h = h;
+    }
+
     public void resize(float w, float h) {
-        l = 0; b = 0;
-        r = w; t = h;
+        float sx = w / this.w;
+        float sy = h / this.h;
+        l *= sx; b *= sy;
+        r *= sx; t *= sy;
 
         if (w <= 0 || h <= 0)
             return;
 
         for (Point p : allPoints) {
-            float x = p.getX();
-            float y = p.getY();
-
-            p.set((x / this.w) * w, (y / this.h) * h);
+            p.set(p.getX() * sx,  p.getY() * sy);
         }
 
         this.w = w;

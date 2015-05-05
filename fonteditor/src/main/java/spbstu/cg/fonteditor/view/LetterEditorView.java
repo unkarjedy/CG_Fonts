@@ -1,5 +1,6 @@
 package spbstu.cg.fonteditor.view;
 
+import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.spline.Spline;
 import spbstu.cg.fontcommons.point.Point;
 import spbstu.cg.fontcommons.draw.PointDrawer;
@@ -48,6 +49,7 @@ public class LetterEditorView extends JComponent {
         bounds = g2D.getClipBounds();
         g2D.fill(bounds);
 
+
         if(!drawLetter){
             if (activePoint != null)
                 PointDrawer.drawActivePointCircle(activePoint, g2D);
@@ -56,8 +58,11 @@ public class LetterEditorView extends JComponent {
             if (splines != null)
                 drawSplines();
         } else {
+            if (pointUnderCursor != null) {
+                if (pointUnderCursor.getType().equals(PointType.BOUNDING_RECT_POINT))
+                    PointDrawer.drawUnderCursorCircle(pointUnderCursor, g2D);
+            }
             SplineDrawer.drawFilledSplines(splines, g2D);
-//            SplineDrawer.drawLetterSplines(splines, g2D, 0, 0, 0.5); // JUST FOR TESTS!
         }
 
         if (boundingBox != null)
@@ -95,7 +100,6 @@ public class LetterEditorView extends JComponent {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
     }
-
 
     public void setDrawLetter(boolean drawLetter) {
         this.drawLetter = drawLetter;

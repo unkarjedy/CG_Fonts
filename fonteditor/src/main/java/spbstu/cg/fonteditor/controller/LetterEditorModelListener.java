@@ -9,7 +9,8 @@ import spbstu.cg.fontcommons.point.Point;
  * Github username: egorbunov
  */
 public interface LetterEditorModelListener {
-    void activePointChanged(Point activePoint);
-    void controlPointTypeChanged(ControlPoint controlPoint);
-    void pointWeightChanged(Point point);
+    void activePointChanged(final Point activePoint);
+    void controlPointTypeChanged(final ControlPoint controlPoint);
+    void pointWeightChanged(final Point point);
+    void splineTypeChanged(boolean external);
 }

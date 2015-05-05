@@ -2,7 +2,6 @@ package spbstu.cg.fonteditor.controller;
 
 import spbstu.cg.fontcommons.point.PointType;
 import spbstu.cg.fontcommons.utils.Logger;
-import spbstu.cg.fonteditor.model.action.ActionStack;
 import spbstu.cg.fonteditor.view.ControlPanelListener;
 import spbstu.cg.fonteditor.view.ControlPanelView;
 import spbstu.cg.fonteditor.view.MainFontEditorView;
@@ -11,6 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Dima Naumenko on 29.03.2015.
@@ -32,7 +32,7 @@ public class ControlPanelController extends Controller {
             button.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    controlPanelListener.pointTypeChanged(PointType.toType(e.getActionCommand()));
+                    controlPanelListener.changePointType(PointType.toType(e.getActionCommand()));
                     mainView.repaint();
                 }
             });
@@ -41,30 +41,30 @@ public class ControlPanelController extends Controller {
         controlPanelView.getPointWeightSlider().addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                JSlider source = (JSlider)e.getSource();
+                JSlider source = (JSlider) e.getSource();
 
                 if (!source.getValueIsAdjusting()) {
                     float weight = controlPanelView.getSliderWeight();
-                    controlPanelListener.pointWeightChanged(weight);
+                    controlPanelListener.changePointWeight(weight);
                     mainView.repaint();
                 }
             }
         });
 
-        controlPanelView.getSplineTypeCheckbox().addChangeListener(new ChangeListener() {
+        controlPanelView.getSplineTypeCheckbox().addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                JCheckBox source = (JCheckBox)e.getSource();
-                controlPanelListener.splineTypeChanged(source.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox source = (JCheckBox) e.getSource();
+                controlPanelListener.changeSplineType(source.isSelected());
                 mainView.repaint();
             }
         });
 
-        controlPanelView.getDrawLetterCheckbox().addChangeListener(new ChangeListener() {
+        controlPanelView.getDrawLetterCheckbox().addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                JCheckBox source = (JCheckBox)e.getSource();
-                controlPanelListener.drawLetterChanged(source.isSelected());
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox source = (JCheckBox) e.getSource();
+                controlPanelListener.changeDrawLetterMode(source.isSelected());
                 mainView.repaint();
             }
         });

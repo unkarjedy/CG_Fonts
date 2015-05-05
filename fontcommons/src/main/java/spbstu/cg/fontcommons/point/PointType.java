@@ -11,7 +11,8 @@ public enum PointType {
     CUSP,
     SMOOTH,
     SYMMETRIC,
-    HANDLER;
+    HANDLER,
+    BOUNDING_RECT_POINT;
 
     public boolean isControlPointType(){
         return this != NO_TYPE &&

@@ -4,7 +4,7 @@
 	<groupId>spbstu.cg</groupId>
 	<artifactId>fontcommons</artifactId>
 	<packaging>jar</packaging>
-	<version>0.5</version>
+	<version>1.0</version>
 	<name>fontcommons</name>
 
 	<build>

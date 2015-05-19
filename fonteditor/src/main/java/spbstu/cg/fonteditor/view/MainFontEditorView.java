@@ -1,5 +1,7 @@
 package spbstu.cg.fonteditor.view;
 
+import spbstu.cg.fontcommons.utils.IOUtils;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
@@ -7,9 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class MainFontEditorView extends JFrame {
+    private static int MAX_IMG_SIZE = 20000;
+
     private ProjectPanelView projectPanel;
     private LetterEditorView letterEditor;
     private ControlPanelView controlPanel;
@@ -117,10 +123,10 @@ public class MainFontEditorView extends JFrame {
     private void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        ImageIcon iconNew = new ImageIcon("res/newFile.png");
-        ImageIcon iconOpen = new ImageIcon("res/openFile.png");
-        ImageIcon iconSave = new ImageIcon("res/saveFile.png");
-        ImageIcon iconExit = new ImageIcon("res/exit.png");
+        ImageIcon iconNew = new ImageIcon(IOUtils.readResource("/newFile.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconOpen = new ImageIcon(IOUtils.readResource("/openFile.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconSave = new ImageIcon(IOUtils.readResource("/saveFile.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconExit = new ImageIcon(IOUtils.readResource("/exit.png", MAX_IMG_SIZE, this.getClass()));
 
         JMenu fileMenu = new JMenu("File");
         fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -179,10 +185,10 @@ public class MainFontEditorView extends JFrame {
 
         JToolBar toolbar = new JToolBar();
 
-        ImageIcon iconNewFont = new ImageIcon(this.getClass().getResource("/new_font.png").getFile());
-        ImageIcon iconNewLetter = new ImageIcon(this.getClass().getResource("/new_letter.png").getFile());
-        ImageIcon iconOpen = new ImageIcon(this.getClass().getResource("/font_load.png").getFile());
-        ImageIcon iconSave = new ImageIcon(this.getClass().getResource("/font_save.png").getFile());
+        ImageIcon iconNewFont = new ImageIcon(IOUtils.readResource("/new_font.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconNewLetter = new ImageIcon(IOUtils.readResource("/new_letter.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconOpen = new ImageIcon(IOUtils.readResource("/font_load.png", MAX_IMG_SIZE, this.getClass()));
+        ImageIcon iconSave = new ImageIcon(IOUtils.readResource("/font_save.png", MAX_IMG_SIZE, this.getClass()));
 
         newFontButton = new JButton(iconNewFont);
         newLetterButton = new JButton(iconNewLetter);
